@@ -1,38 +1,1258 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>إيصال قبض</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إيصال قبض</title>
 
-<style>
-body{background:#f5f7fa;font-family:system-ui}
-.container{max-width:500px;margin:auto;padding:20px}
-.card{background:#fff;padding:20px;border-radius:18px;box-shadow:0 8px 25px rgba(0,0,0,.06)}
-.title{font-size:22px;font-weight:800;margin-bottom:20px;text-align:center}
-.btn{width:100%;padding:14px;border:none;border-radius:14px;font-weight:800;cursor:pointer}
-.btn-primary{background:#0d6efd;color:#fff}
-</style>
+  <link rel="icon" type="image/png" href="icon.png">
+  <link rel="apple-touch-icon" href="icon.png">
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="إيصال قبض">
+  <meta name="theme-color" content="#0d6efd">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    *{
+      -webkit-user-select:none;
+      user-select:none;
+      -webkit-touch-callout:none;
+    }
+
+    body{
+      background:#f5f7fa;
+      font-family:system-ui;
+      padding-bottom:120px;
+    }
+
+    .container{
+      max-width:600px;
+      margin:auto;
+      padding:15px;
+    }
+
+    .top-bar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:20px;
+    }
+
+    .top-bar h1{
+      font-size:22px;
+      font-weight:800;
+    }
+
+    .top-bar-left{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .menu-btn{
+      width:45px;
+      height:45px;
+      border:none;
+      border-radius:12px;
+      background:#fff;
+      box-shadow:0 4px 12px rgba(0,0,0,.08);
+      font-size:22px;
+      cursor:pointer;
+    }
+
+    .logo{
+      width:45px;
+      height:45px;
+      border-radius:50%;
+      background:#0d6efd;
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:22px;
+    }
+
+    .card{
+      background:#fff;
+      padding:18px;
+      border-radius:18px;
+      box-shadow:0 8px 25px rgba(0,0,0,.06);
+      margin-bottom:15px;
+    }
+
+    .section-title{
+      font-weight:800;
+      margin-bottom:12px;
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
+
+    .input-group{
+      margin-bottom:15px;
+    }
+
+    .input-group label{
+      display:block;
+      font-weight:700;
+      margin-bottom:6px;
+      font-size:14px;
+    }
+
+    .input-group input{
+      width:100%;
+      padding:12px;
+      border-radius:12px;
+      border:1px solid #ddd;
+      font-size:16px;
+      background:#fff;
+    }
+
+    .quick-brands{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:10px;
+      margin-top:8px;
+    }
+
+    .brand-btn{
+      padding:6px;
+      border-radius:14px;
+      border:2px solid #e3e3e3;
+      background:#fff;
+      font-weight:800;
+      font-size:16px;
+      cursor:pointer;
+      height:38px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .brand-btn.active{
+      background:#0d6efd;
+      color:#fff;
+      border-color:#0d6efd;
+    }
+
+    .info-box{
+      background:linear-gradient(135deg,#f8fbff,#eef4ff);
+      padding:14px;
+      border-radius:16px;
+      margin-top:10px;
+      border:1.5px solid #dbe4ff;
+      box-shadow:0 8px 22px rgba(13,110,253,.08);
+    }
+
+    .info-row{
+      display:flex;
+      justify-content:space-between;
+      margin-bottom:8px;
+      gap:10px;
+    }
+
+    .bottom-bar{
+      position:fixed;
+      bottom:12px;
+      right:0;
+      left:0;
+      background:#fff;
+      border-top:1px solid #eee;
+      padding:12px;
+      z-index:10;
+    }
+
+    .bottom-wrap{
+      max-width:600px;
+      margin:auto;
+      display:flex;
+      gap:10px;
+    }
+
+    .btn{
+      flex:1;
+      padding:14px;
+      border:none;
+      border-radius:14px;
+      font-weight:800;
+      font-size:16px;
+      cursor:pointer;
+    }
+
+    .btn-primary{
+      background:#0d6efd;
+      color:#fff;
+    }
+
+    .btn-secondary{
+      background:linear-gradient(135deg,#f8fbff,#eef4ff);
+      color:#0d6efd;
+      border:1.5px solid #dbe4ff;
+      box-shadow:0 8px 22px rgba(13,110,253,.08);
+    }
+
+    /* شاشة البحث */
+    #searchOverlay{
+      position:fixed;
+      top:0;
+      left:0;
+      right:0;
+      bottom:0;
+      background:#fff;
+      z-index:999;
+      display:none;
+      padding:15px;
+    }
+
+    .search-top{
+      display:flex;
+      gap:10px;
+      margin-bottom:12px;
+    }
+
+    #searchInput{
+      flex:1;
+      padding:14px 16px;
+      border-radius:16px;
+      border:1.5px solid #dbe4ff;
+      font-size:16px;
+      background:linear-gradient(135deg,#f8fbff,#eef4ff);
+      color:#0f172a;
+      outline:none;
+      box-shadow:0 8px 22px rgba(13,110,253,.08);
+      transition:.25s ease;
+    }
+
+    #searchInput:focus{
+      border-color:#0d6efd;
+      box-shadow:0 0 0 4px rgba(13,110,253,.12),0 10px 25px rgba(13,110,253,.10);
+    }
+
+    #searchResults{
+      max-height:62vh;
+      overflow:auto;
+      border-radius:14px;
+      background:#fff;
+    }
+
+    .search-item{
+      padding:12px 14px;
+      border:1px solid #edf2ff;
+      border-radius:14px;
+      cursor:pointer;
+      font-size:15px;
+      line-height:1.2;
+      background:#fff;
+      margin-bottom:8px;
+      transition:.2s ease;
+    }
+
+    .search-item:hover{
+      background:#f8fbff;
+      border-color:#cfe0ff;
+      transform:translateY(-1px);
+      box-shadow:0 6px 16px rgba(13,110,253,.08);
+    }
+
+    .search-brand-box{
+      background:linear-gradient(135deg,#f8fbff,#eef4ff);
+      border:1.5px solid #dbe4ff;
+      padding:12px 14px;
+      border-radius:16px;
+      margin-bottom:12px;
+      font-weight:800;
+      color:#0d6efd;
+      box-shadow:0 8px 22px rgba(13,110,253,.08);
+    }
+
+    /* اقتراحات */
+    .suggest-box{
+      position:relative;
+    }
+
+    .suggest-list{
+      display:none;
+      margin-top:8px;
+      border-radius:14px;
+      background:#fff;
+      border:1px solid #edf2ff;
+      box-shadow:0 6px 16px rgba(13,110,253,.08);
+      max-height:220px;
+      overflow:auto;
+    }
+
+    .suggest-item{
+      padding:12px 14px;
+      cursor:pointer;
+      border-bottom:1px solid #f2f4f7;
+      font-size:15px;
+    }
+
+    .suggest-item:last-child{
+      border-bottom:none;
+    }
+
+    .suggest-item:hover{
+      background:#f8fbff;
+    }
+
+    /* حالة الطلب */
+    #statusText{
+      font-weight:700;
+      margin-bottom:10px;
+    }
+
+    .status-track{
+      width:100%;
+      height:10px;
+      background:#e9ecef;
+      border-radius:999px;
+      overflow:hidden;
+    }
+
+    #statusBar{
+      width:0%;
+      height:100%;
+      background:#0d6efd;
+      transition:width .35s ease;
+    }
+
+    #statusLog{
+      max-height:190px;
+      overflow:auto;
+      padding-left:2px;
+    }
+
+    #statusLog div{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      background:#ffffff;
+      border:1px solid #e6e9ef;
+      padding:8px 12px;
+      border-radius:12px;
+      margin-bottom:6px;
+      font-size:14px;
+      font-weight:600;
+      box-shadow:0 4px 10px rgba(0,0,0,.04);
+      opacity:0;
+      transform:translateY(-6px);
+      animation:fadeSlide .3s ease forwards;
+    }
+
+    @keyframes fadeSlide{
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    @keyframes pulseStrong {
+      0% { transform: scale(1); box-shadow: 0 0 0 rgba(13,110,253,0); }
+      50% { transform: scale(1.035); box-shadow: 0 0 18px rgba(13,110,253,.18); }
+      100% { transform: scale(1); box-shadow: 0 0 0 rgba(13,110,253,0); }
+    }
+
+    @keyframes glowStrong {
+      0% { transform: scale(1); box-shadow: 0 0 0 rgba(34,197,94,0); }
+      50% { transform: scale(1.02); box-shadow: 0 0 20px rgba(34,197,94,.35); }
+      100% { transform: scale(1); box-shadow: 0 0 0 rgba(34,197,94,0); }
+    }
+
+    @keyframes shakeSoft {
+      0% { transform: translateX(0); }
+      20% { transform: translateX(2px); }
+      40% { transform: translateX(-2px); }
+      60% { transform: translateX(2px); }
+      80% { transform: translateX(-2px); }
+      100% { transform: translateX(0); }
+    }
+
+    @keyframes barShine {
+      0% { left: 120%; }
+      100% { left: -35%; }
+    }
+
+    #statusCard {
+      transition: .25s ease;
+      margin-top: 15px;
+    }
+
+    #statusCard.processing{
+      border: 1px solid #dbe4ff;
+      box-shadow: 0 10px 28px rgba(13,110,253,.10);
+    }
+
+    #statusCard.done{
+      border: 1px solid #d9fbe6;
+      box-shadow: 0 10px 28px rgba(34,197,94,.12);
+    }
+
+    #statusCard.error{
+      border: 1px solid #ffd5d5;
+      box-shadow: 0 10px 28px rgba(220,38,38,.12);
+    }
+
+    .status-track{
+      position: relative;
+      width:100%;
+      height:10px;
+      background:#e9ecef;
+      border-radius:999px;
+      overflow:hidden;
+    }
+
+    #statusBar{
+      width:0%;
+      height:100%;
+      background:linear-gradient(90deg,#0d6efd,#4f8cff,#0d6efd);
+      background-size: 200% 100%;
+      transition: width .45s ease;
+      position: relative;
+    }
+
+    #statusBar::after{
+      content:"";
+      position:absolute;
+      top:0;
+      left:-35%;
+      width:35%;
+      height:100%;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent);
+      animation: barShine 1.8s linear infinite;
+    }
+
+    #statusText{
+      transition:.2s ease;
+    }
+
+    #statusLog div.running{
+      animation: fadeSlide .3s ease forwards, pulseStrong 1.2s infinite;
+    }
+
+    #statusLog div.done{
+      animation: fadeSlide .3s ease forwards, glowStrong .8s ease;
+    }
+
+    #statusLog div.error{
+      animation: fadeSlide .3s ease forwards, shakeSoft .35s ease;
+    }
+
+    /* Overlay كامل الشاشة */
+    #statusOverlay{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:flex-start;
+      justify-content:center;
+      padding-top:90px;
+      background:rgba(255,255,255,.18);
+      backdrop-filter:blur(8px);
+      -webkit-backdrop-filter:blur(8px);
+      z-index:3000;
+    }
+
+    #statusOverlay.show{
+      display:flex;
+    }
+
+    #statusOverlay .overlay-card{
+      width:min(92%, 560px);
+    }
+
+    #amountInput,
+    #paymentValueInput,
+    #discountValueInput{
+      direction:ltr;
+      text-align:right;
+      unicode-bidi:plaintext;
+    }
+  </style>
 </head>
 
 <body>
 
 <div class="container">
-  <div class="card">
-    <div class="title">إيصال قبض</div>
 
-    <p style="text-align:center;margin-bottom:20px;">
-      صفحة قيد التطوير
-    </p>
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <h1>إيصال قبض</h1>
+    </div>
 
-    <button class="btn btn-primary" onclick="goBack()">رجوع</button>
+    <div class="logo">
+      <i class="bi bi-cash-stack"></i>
+    </div>
+  </div>
+
+  <div class="input-group">
+    <label>المبلغ</label>
+    <input type="text" id="amountInput" placeholder="ادخل المبلغ" inputmode="numeric">
+  </div>
+
+  <div class="input-group">
+    <label>البراند</label>
+    <div class="quick-brands">
+      <button type="button" class="brand-btn" onclick="setBrand('FOREVER',this)">FOREVER</button>
+      <button type="button" class="brand-btn" onclick="setBrand('CHARACTER',this)">CHARACTER</button>
+      <button type="button" class="brand-btn" onclick="setBrand('ROSELLA',this)">ROSELLA</button>
+      <button type="button" class="brand-btn" onclick="setBrand('FUTURE',this)">FUTURE</button>
+    </div>
+  </div>
+
+  <div class="input-group">
+    <label>اسم الزبون</label>
+    <input type="text" id="customerName" placeholder="اضغط للبحث" onclick="openSearch()" readonly>
+  </div>
+
+  <div class="input-group">
+    <label>البيان</label>
+    <div class="suggest-box">
+      <input type="text" id="statementInput" placeholder="اكتب أو اختر البيان">
+      <div class="suggest-list" id="statementSuggestions"></div>
+    </div>
+  </div>
+
+  <div class="input-group" id="paymentValueGroup" style="display:none;">
+    <label>ادخل قيمة الدفعة</label>
+    <input type="text" id="paymentValueInput" placeholder="ادخل قيمة الدفعة" inputmode="numeric">
+  </div>
+
+  <div class="input-group">
+    <label>قيمة الخصم (اختياري)</label>
+    <input type="text" id="discountValueInput" placeholder="ادخل قيمة الخصم" inputmode="numeric">
+  </div>
+
+  <div class="input-group">
+    <label>سبب الخصم (اختياري)</label>
+    <div class="suggest-box">
+      <input type="text" id="discountReasonInput" placeholder="اكتب أو اختر سبب الخصم">
+      <div class="suggest-list" id="discountReasonSuggestions"></div>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <div class="info-row">
+      <div>المبلغ</div>
+      <div id="previewAmount">—</div>
+    </div>
+
+    <div class="info-row">
+      <div>البراند</div>
+      <div id="previewBrand">—</div>
+    </div>
+
+    <div class="info-row">
+      <div>اسم الزبون</div>
+      <div id="previewCustomer">—</div>
+    </div>
+
+    <div class="info-row">
+      <div>البيان</div>
+      <div id="previewStatement">—</div>
+    </div>
+
+    <div class="info-row" id="previewPaymentValueRow" style="display:none;">
+      <div>قيمة الدفعة</div>
+      <div id="previewPaymentValue">—</div>
+    </div>
+
+    <div class="info-row">
+      <div>قيمة الخصم</div>
+      <div id="previewDiscountValue">—</div>
+    </div>
+
+    <div class="info-row">
+      <div>سبب الخصم</div>
+      <div id="previewDiscountReason">—</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="bottom-bar">
+  <div class="bottom-wrap">
+    <button class="btn btn-secondary" onclick="clearForm()">تفريغ</button>
+   <button class="btn btn-primary" onclick="sendReceiptRequest()">إرسال إيصال قبض</button>
   </div>
 </div>
 
-<script>
-function goBack(){
-  window.location.href = "index.html";
+<div id="searchOverlay">
+  <div class="search-brand-box" id="searchBrandTitle">البراند: —</div>
+
+  <div class="search-top">
+    <input type="text" id="searchInput" placeholder="ابحث عن اسم الزبون">
+    <button class="btn btn-secondary" style="flex:0 0 auto;padding:12px 16px" onclick="closeSearch()">إلغاء</button>
+  </div>
+
+  <div id="searchResults"></div>
+</div>
+
+<div id="statusOverlay">
+  <div class="overlay-card">
+    <div id="statusCard" class="card" style="display:block;">
+      <div class="section-title">
+        <i class="bi bi-hourglass-split"></i>
+        حالة الطلب
+      </div>
+
+      <div id="statusText">جاري حفظ الإيصال...</div>
+
+      <div id="statusLog" style="
+        font-size:14px;
+        line-height:1.8;
+        margin-bottom:10px;
+        color:#444;
+      "></div>
+
+      <div class="status-track">
+        <div id="statusBar"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, get, child, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+const app = initializeApp({
+  apiKey: "AIzaSyDaQ7Ur6f7_ugSTy2_u0-gPEtUsFzhh82U",
+  authDomain: "kashf-system.firebaseapp.com",
+  databaseURL: "https://kashf-system-default-rtdb.firebaseio.com",
+  projectId: "kashf-system",
+  storageBucket: "kashf-system.firebasestorage.app",
+  messagingSenderId: "987561323340",
+  appId: "1:987561323340:web:19d72fce8456f2fdf9bde9"
+});
+
+const db = getDatabase(app);
+
+let selectedBrand = "";
+let currentFilteredResults = [];
+let customersByBrand = {
+  FOREVER: [],
+  CHARACTER: [],
+  ROSELLA: [],
+  FUTURE: []
+};
+
+const amountInput = document.getElementById("amountInput");
+const customerNameInput = document.getElementById("customerName");
+const statementInput = document.getElementById("statementInput");
+const paymentValueInput = document.getElementById("paymentValueInput");
+const discountValueInput = document.getElementById("discountValueInput");
+const discountReasonInput = document.getElementById("discountReasonInput");
+
+const paymentValueGroup = document.getElementById("paymentValueGroup");
+
+const previewAmount = document.getElementById("previewAmount");
+const previewBrand = document.getElementById("previewBrand");
+const previewCustomer = document.getElementById("previewCustomer");
+const previewStatement = document.getElementById("previewStatement");
+const previewPaymentValue = document.getElementById("previewPaymentValue");
+const previewPaymentValueRow = document.getElementById("previewPaymentValueRow");
+const previewDiscountValue = document.getElementById("previewDiscountValue");
+const previewDiscountReason = document.getElementById("previewDiscountReason");
+
+const overlay = document.getElementById("searchOverlay");
+const searchInput = document.getElementById("searchInput");
+const searchResults = document.getElementById("searchResults");
+const searchBrandTitle = document.getElementById("searchBrandTitle");
+
+const statusOverlay = document.getElementById("statusOverlay");
+const statusCard = document.getElementById("statusCard");
+const statusText = document.getElementById("statusText");
+const statusBar = document.getElementById("statusBar");
+const statusLog = document.getElementById("statusLog");
+
+
+const statementSuggestions = document.getElementById("statementSuggestions");
+const discountReasonSuggestions = document.getElementById("discountReasonSuggestions");
+
+/* إذا تريد تضيف خيارات جديدة للبيان، ضيفها هنا */
+const statementOptions = [
+  "تسديد",
+  "تصفير حساب",
+  "قيمة الدفعة",
+  "تسديد الفاتورة رقم"
+];
+
+/* إذا تريد تضيف أسباب خصم جديدة، ضيفها هنا */
+const discountReasonOptions = [
+  "خصم",
+  "خصم فاتورة رقم",
+  "خصم بلاك",
+  "خصم راس السنه",
+  "خصم عيد الحب",
+  "خصم عيد الفطر",
+  "خصم عيد الاضحى"
+];
+
+function setBrand(brand, btn){
+  selectedBrand = brand;
+  document.querySelectorAll(".brand-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  previewBrand.textContent = brand || "—";
+
+  customerNameInput.value = "";
+  previewCustomer.textContent = "—";
 }
+window.setBrand = setBrand;
+
+function normalizeSearchText(text){
+  return String(text || "")
+    .toLowerCase()
+    .trim()
+    .replace(/[أإآ]/g, "ا")
+    .replace(/ة/g, "ه")
+    .replace(/ى/g, "ي")
+    .replace(/ؤ/g, "و")
+    .replace(/ئ/g, "ي")
+    .replace(/\s+/g, " ")
+    .replace(/[-_]/g, "")
+    .replace(/[^\w\u0600-\u06FF ]/g, "");
+}
+
+function containsAllWords(sourceText, queryText) {
+  const source = normalizeSearchText(sourceText);
+  const words = normalizeSearchText(queryText).split(" ").filter(Boolean);
+
+  if (words.length === 0) return true;
+  return words.every(word => source.includes(word));
+}
+
+function scoreCustomerMatch(name, query){
+  const normalizedName = normalizeSearchText(name);
+  const normalizedQuery = normalizeSearchText(query);
+
+  if(!normalizedQuery) return 1;
+
+  const compactName = normalizedName.replace(/\s/g, "");
+  const compactQuery = normalizedQuery.replace(/\s/g, "");
+
+  let score = 0;
+
+  if(compactName === compactQuery) score += 1000;
+  if(normalizedName === normalizedQuery) score += 950;
+  if(compactName.startsWith(compactQuery)) score += 700;
+  if(normalizedName.startsWith(normalizedQuery)) score += 650;
+  if(compactName.includes(compactQuery)) score += 500;
+  if(normalizedName.includes(normalizedQuery)) score += 450;
+
+  return score;
+}
+
+async function loadCustomersFromFirebase(){
+  const snapshot = await get(child(ref(db), "customersByBrand"));
+  if(snapshot.exists()){
+    return snapshot.val();
+  }
+  return null;
+}
+
+async function loadFirebaseCustomers(){
+  try{
+    const firebaseData = await loadCustomersFromFirebase();
+
+    if(firebaseData && typeof firebaseData === "object"){
+      customersByBrand = {
+        FOREVER: Array.isArray(firebaseData.FOREVER) ? firebaseData.FOREVER : [],
+        CHARACTER: Array.isArray(firebaseData.CHARACTER) ? firebaseData.CHARACTER : [],
+        ROSELLA: Array.isArray(firebaseData.ROSELLA) ? firebaseData.ROSELLA : [],
+        FUTURE: Array.isArray(firebaseData.FUTURE) ? firebaseData.FUTURE : []
+      };
+
+      Object.keys(customersByBrand).forEach(brand => {
+        customersByBrand[brand] = customersByBrand[brand].map(item => {
+          if(typeof item === "string"){
+            return { id: Date.now() + Math.random(), name: item };
+          }
+          return item;
+        });
+      });
+    }
+  }catch(error){
+    console.log("تعذر تحميل الزباين", error);
+  }
+}
+
+function getCustomersForSearch(){
+  if(selectedBrand){
+    return [...(customersByBrand[selectedBrand] || [])].map(item => ({
+      id: item.id,
+      name: item.name,
+      brand: selectedBrand
+    }));
+  }
+
+  return [];
+}
+
+function openSearch(){
+  if(!selectedBrand){
+    alert("اختر البراند اولاً");
+    return;
+  }
+
+  overlay.style.display = "block";
+  searchInput.value = "";
+  searchBrandTitle.textContent = "البراند المختار: " + selectedBrand;
+
+  currentFilteredResults = [...getCustomersForSearch()].sort((a, b) =>
+    String(a.name || "").localeCompare(String(b.name || ""), "ar")
+  );
+
+  renderResults(currentFilteredResults);
+  searchInput.focus();
+}
+window.openSearch = openSearch;
+
+function closeSearch(){
+  overlay.style.display = "none";
+}
+window.closeSearch = closeSearch;
+
+searchInput.addEventListener("input", () => {
+  const text = searchInput.value.trim();
+  const allCustomers = getCustomersForSearch();
+
+  if (!normalizeSearchText(text)) {
+    currentFilteredResults = [...allCustomers].sort((a, b) =>
+      String(a.name || "").localeCompare(String(b.name || ""), "ar")
+    );
+    renderResults(currentFilteredResults);
+    return;
+  }
+
+  currentFilteredResults = allCustomers
+    .map(item => ({
+      item,
+      searchSource: item.name,
+      score: scoreCustomerMatch(item.name, text)
+    }))
+    .filter(entry => containsAllWords(entry.searchSource, text))
+    .sort((a, b) => b.score - a.score)
+    .map(entry => entry.item);
+
+  renderResults(currentFilteredResults);
+});
+
+function renderResults(list){
+  searchResults.innerHTML = "";
+
+  if(list.length === 0){
+    searchResults.innerHTML = '<div class="search-item">ماكو نتائج</div>';
+    return;
+  }
+
+  list.slice(0, 100).forEach(item => {
+    const div = document.createElement("div");
+    div.className = "search-item";
+    div.innerText = item.name;
+
+    div.onclick = () => {
+      customerNameInput.value = item.name;
+      previewCustomer.textContent = item.name;
+      closeSearch();
+    };
+
+    searchResults.appendChild(div);
+  });
+}
+
+function cleanNumericValue(value){
+  return String(value || "")
+    .replace(/[٠-٩]/g, d => String("٠١٢٣٤٥٦٧٨٩".indexOf(d)))
+    .replace(/[۰-۹]/g, d => String("۰۱۲۳۴۵۶۷۸۹".indexOf(d)))
+    .replace(/\D/g, "");
+}
+
+function formatThousands(value){
+  const clean = cleanNumericValue(value);
+  if(!clean) return "";
+  return Number(clean).toLocaleString("en-US");
+}
+
+function handleAmountInput(inputElement, previewElement){
+  inputElement.addEventListener("input", () => {
+    const clean = cleanNumericValue(inputElement.value);
+    inputElement.value = clean ? Number(clean).toLocaleString("en-US") : "";
+    if(previewElement){
+      previewElement.textContent = inputElement.value || "—";
+    }
+  });
+
+  inputElement.addEventListener("paste", (e) => {
+    e.preventDefault();
+    const pasted = (e.clipboardData || window.clipboardData).getData("text");
+    const clean = cleanNumericValue(pasted);
+    inputElement.value = clean ? Number(clean).toLocaleString("en-US") : "";
+    if(previewElement){
+      previewElement.textContent = inputElement.value || "—";
+    }
+  });
+}
+
+handleAmountInput(amountInput, previewAmount);
+handleAmountInput(paymentValueInput, previewPaymentValue);
+handleAmountInput(discountValueInput, previewDiscountValue);
+
+function renderSuggestions(inputElement, listElement, options, onChoose){
+  const text = normalizeSearchText(inputElement.value);
+  const filtered = options.filter(item => normalizeSearchText(item).includes(text));
+
+  listElement.innerHTML = "";
+
+  if(filtered.length === 0){
+    listElement.style.display = "none";
+    return;
+  }
+
+  filtered.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "suggest-item";
+    div.textContent = item;
+    div.onclick = () => {
+      inputElement.value = item;
+      listElement.style.display = "none";
+      onChoose(item);
+    };
+    listElement.appendChild(div);
+  });
+
+  listElement.style.display = "block";
+}
+
+function updateStatementUI(){
+  const statement = statementInput.value.trim();
+
+  previewStatement.textContent = statement || "—";
+
+  if(statement === "قيمة الدفعة"){
+    paymentValueGroup.style.display = "block";
+    previewPaymentValueRow.style.display = "flex";
+  }else{
+    paymentValueGroup.style.display = "none";
+    paymentValueInput.value = "";
+    previewPaymentValue.textContent = "—";
+    previewPaymentValueRow.style.display = "none";
+  }
+}
+
+statementInput.addEventListener("input", () => {
+  renderSuggestions(statementInput, statementSuggestions, statementOptions, (value) => {
+    previewStatement.textContent = value || "—";
+    updateStatementUI();
+  });
+  updateStatementUI();
+});
+
+statementInput.addEventListener("focus", () => {
+  renderSuggestions(statementInput, statementSuggestions, statementOptions, (value) => {
+    previewStatement.textContent = value || "—";
+    updateStatementUI();
+  });
+});
+
+discountReasonInput.addEventListener("input", () => {
+  renderSuggestions(discountReasonInput, discountReasonSuggestions, discountReasonOptions, (value) => {
+    previewDiscountReason.textContent = value || "—";
+  });
+  previewDiscountReason.textContent = discountReasonInput.value.trim() || "—";
+});
+
+discountReasonInput.addEventListener("focus", () => {
+  renderSuggestions(discountReasonInput, discountReasonSuggestions, discountReasonOptions, (value) => {
+    previewDiscountReason.textContent = value || "—";
+  });
+});
+
+document.addEventListener("click", (e) => {
+  if(!statementInput.parentElement.contains(e.target)){
+    statementSuggestions.style.display = "none";
+  }
+  if(!discountReasonInput.parentElement.contains(e.target)){
+    discountReasonSuggestions.style.display = "none";
+  }
+});
+
+function updatePreview(){
+  previewAmount.textContent = amountInput.value || "—";
+  previewBrand.textContent = selectedBrand || "—";
+  previewCustomer.textContent = customerNameInput.value.trim() || "—";
+  previewStatement.textContent = statementInput.value.trim() || "—";
+  previewDiscountValue.textContent = discountValueInput.value || "—";
+  previewDiscountReason.textContent = discountReasonInput.value.trim() || "—";
+  updateStatementUI();
+}
+
+amountInput.addEventListener("input", updatePreview);
+customerNameInput.addEventListener("input", updatePreview);
+paymentValueInput.addEventListener("input", updatePreview);
+discountValueInput.addEventListener("input", updatePreview);
+discountReasonInput.addEventListener("input", updatePreview);
+
+function showStatusOverlay(){
+  statusOverlay.classList.add("show");
+}
+
+function hideStatusOverlay(){
+  statusOverlay.classList.remove("show");
+}
+
+function resetStatusCard(delay = 1500) {
+  setTimeout(() => {
+    hideStatusOverlay();
+    statusBar.style.width = "0%";
+    statusText.textContent = "جاري حفظ الإيصال...";
+    statusLog.innerHTML = "";
+    statusCard.classList.remove("processing", "done", "error");
+    statusText.style.color = "";
+  }, delay);
+}
+
+function addStatusLog(message) {
+  if (!message) return;
+
+  let prefix = "• ";
+  let color = "#444";
+  let rowClass = "";
+  let bg = "#ffffff";
+  let borderColor = "#e6e9ef";
+
+  if (message.includes("تم")) {
+    prefix = "✅ ";
+    color = "#15803d";
+    rowClass = "done";
+    bg = "#ecfdf3";
+    borderColor = "#bbf7d0";
+  }
+  else if (message.includes("جاري")) {
+    prefix = "🔄 ";
+    color = "#0d6efd";
+    rowClass = "running";
+    bg = "#eef4ff";
+    borderColor = "#cfe0ff";
+  }
+  else if (message.includes("فشل") || message.includes("خطأ")) {
+    prefix = "❌ ";
+    color = "#dc2626";
+    rowClass = "error";
+    bg = "#fef2f2";
+    borderColor = "#fecaca";
+  }
+
+  const row = document.createElement("div");
+  row.className = rowClass;
+  row.innerHTML = `<span style="font-size:16px">${prefix}</span><span>${message}</span>`;
+  row.style.color = color;
+  row.style.background = bg;
+  row.style.borderColor = borderColor;
+
+  if (statusLog.children.length > 8) {
+    statusLog.removeChild(statusLog.firstChild);
+  }
+
+  statusLog.appendChild(row);
+  statusLog.scrollTop = statusLog.scrollHeight;
+}
+
+function updateStatus(status){
+  if(status === "sending"){
+    statusText.textContent = "جاري حفظ الإيصال...";
+    statusBar.style.width = "20%";
+    statusCard.classList.remove("done", "error");
+    statusCard.classList.add("processing");
+    addStatusLog("جاري حفظ الإيصال");
+  }
+  else if(status === "new"){
+    statusText.textContent = "تم إرسال البيانات، بانتظار المعالجة...";
+    statusBar.style.width = "50%";
+    statusCard.classList.remove("done", "error");
+    statusCard.classList.add("processing");
+    addStatusLog("تم إرسال البيانات، بانتظار المعالجة");
+  }
+  else if(status === "processing"){
+    statusText.textContent = "جارٍ معالجة بيانات الإيصال...";
+    statusBar.style.width = "70%";
+    statusCard.classList.remove("done", "error");
+    statusCard.classList.add("processing");
+    addStatusLog("جاري معالجة بيانات الإيصال");
+  }
+  else if(status === "done"){
+    statusText.textContent = "تم حفظ الإيصال بنجاح";
+    statusBar.style.width = "100%";
+    statusCard.classList.remove("processing", "error");
+    statusCard.classList.add("done");
+    addStatusLog("تم حفظ الإيصال بنجاح");
+  }
+  else if(status === "error"){
+    statusText.textContent = "صار خطأ أثناء حفظ الإيصال";
+    statusBar.style.width = "100%";
+    statusCard.classList.remove("processing", "done");
+    statusCard.classList.add("error");
+    addStatusLog("خطأ أثناء حفظ الإيصال");
+  }
+}
+
+async function saveReceiptToFirebase(payload){
+  const id = Date.now();
+  await set(ref(db, "receiptPayments/" + id), payload);
+}
+
+function clearForm(){
+  amountInput.value = "";
+  customerNameInput.value = "";
+  statementInput.value = "";
+  paymentValueInput.value = "";
+  discountValueInput.value = "";
+  discountReasonInput.value = "";
+  selectedBrand = "";
+
+  document.querySelectorAll(".brand-btn").forEach(b => b.classList.remove("active"));
+
+  previewAmount.textContent = "—";
+  previewBrand.textContent = "—";
+  previewCustomer.textContent = "—";
+  previewStatement.textContent = "—";
+  previewPaymentValue.textContent = "—";
+  previewDiscountValue.textContent = "—";
+  previewDiscountReason.textContent = "—";
+
+  paymentValueGroup.style.display = "none";
+  previewPaymentValueRow.style.display = "none";
+}
+window.clearForm = clearForm;
+
+
+
+
+async function sendReceiptRequest() {
+  const brand = selectedBrand.trim();
+  const customerName = customerNameInput.value.trim();
+  const amount = amountInput.value.trim();
+  const statement = statementInput.value.trim();
+  const paymentValue = paymentValueInput.value.trim();
+  const discountValue = discountValueInput.value.trim();
+  const discountReason = discountReasonInput.value.trim();
+
+  if (!brand) {
+    alert("اختر البراند");
+    return;
+  }
+
+  if (!customerName) {
+    alert("اختر الزبون");
+    return;
+  }
+
+  if (!amount) {
+    alert("ادخل المبلغ");
+    return;
+  }
+
+  if (!statement) {
+    alert("ادخل البيان");
+    return;
+  }
+
+  if (statement === "قيمة الدفعة" && !paymentValue) {
+    alert("ادخل قيمة الدفعة");
+    return;
+  }
+
+  const requestId = "REQ_" + Date.now();
+
+  const payload = {
+    id: requestId,
+    type: "receipt",
+    status: "pending",
+    brand: brand,
+    customerName: customerName,
+    amount: amount,
+    statement: statement,
+    paymentValue: paymentValue,
+    discountValue: discountValue,
+    discountReason: discountReason,
+    createdAt: new Date().toISOString()
+  };
+
+  try {
+    statusLog.innerHTML = "";
+    showStatusOverlay();
+
+    statusText.textContent = "جاري إرسال طلب إيصال القبض...";
+    statusBar.style.width = "15%";
+    statusCard.classList.remove("done", "error");
+    statusCard.classList.add("processing");
+    addStatusLog("جاري إرسال طلب إيصال القبض");
+
+    const requestRef = ref(db, "requests/receipt/latest");
+    await set(requestRef, payload);
+
+    statusText.textContent = "تم إرسال طلب إيصال القبض";
+    statusBar.style.width = "35%";
+    addStatusLog("تم إرسال الطلب إلى النظام");
+
+    const stopWatch = onValue(requestRef, (snapshot) => {
+      const data = snapshot.val();
+      if (!data) return;
+      if (data.id !== requestId) return;
+
+      if (data.status === "processing") {
+        statusText.textContent = data.message || "جاري تنفيذ إيصال القبض";
+        statusBar.style.width = "70%";
+        statusCard.classList.remove("done", "error");
+        statusCard.classList.add("processing");
+        addStatusLog(data.message || "جاري تنفيذ إيصال القبض");
+      }
+
+      if (data.status === "done") {
+        statusText.textContent = data.message || "تم تنفيذ إيصال القبض بنجاح";
+        statusBar.style.width = "100%";
+        statusCard.classList.remove("processing", "error");
+        statusCard.classList.add("done");
+        addStatusLog(data.message || "تم تنفيذ إيصال القبض بنجاح");
+
+        setTimeout(() => {
+          clearForm();
+          resetStatusCard(1200);
+        }, 500);
+
+        stopWatch();
+      }
+
+      if (data.status === "error") {
+        statusText.textContent = data.message || "صار خطأ أثناء تنفيذ إيصال القبض";
+        statusBar.style.width = "100%";
+        statusCard.classList.remove("processing", "done");
+        statusCard.classList.add("error");
+        addStatusLog(data.message || "صار خطأ أثناء تنفيذ إيصال القبض");
+
+        stopWatch();
+      }
+    });
+
+  } catch (error) {
+    console.error(error);
+    showStatusOverlay();
+    statusText.textContent = "فشل إرسال طلب إيصال القبض";
+    statusBar.style.width = "100%";
+    statusCard.classList.remove("processing", "done");
+    statusCard.classList.add("error");
+    addStatusLog("فشل إرسال الطلب إلى Firebase");
+  }
+}
+window.clearForm = clearForm;
+window.sendReceiptRequest = sendReceiptRequest;
+
+await loadFirebaseCustomers();
+updatePreview();
+
 </script>
 
 </body>
