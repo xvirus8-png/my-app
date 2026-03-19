@@ -60,33 +60,13 @@
 
     .top-tools{
       display:flex;
-      justify-content:space-between;
+      justify-content:flex-start;
       align-items:center;
       margin-bottom:6px;
       padding:0 4px;
     }
 
-    .top-tools-right{
-      display:flex;
-      align-items:center;
-      gap:8px;
-    }
-
     .history-btn{
-      border:none;
-      background:#1f1f1f;
-      color:#fff;
-      min-width:48px;
-      height:36px;
-      border-radius:12px;
-      font-size:22px;
-      cursor:pointer;
-      display:grid;
-      place-items:center;
-      box-shadow:0 4px 10px rgba(0,0,0,.25);
-    }
-
-    .back-btn{
       border:none;
       background:#1f1f1f;
       color:#fff;
@@ -471,11 +451,7 @@
 <body>
   <div class="app">
     <div class="top-tools">
-      <button class="back-btn" onclick="goBack()">←</button>
-
-      <div class="top-tools-right">
-        <button class="history-btn" onclick="openHistory()">🕘</button>
-      </div>
+      <button class="history-btn" onclick="openHistory()">🕘</button>
     </div>
 
     <div class="display-wrap">
@@ -533,10 +509,6 @@
     let showingResult = false;
     let selectedTarget = "first";
     let discountInfo = null;
-
-    function goBack(){
-      window.location.href = "index.html";
-    }
 
     function opSymbol(op){
       if(op === "/") return "÷";
