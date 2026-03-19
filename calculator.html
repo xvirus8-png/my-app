@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+  <title>Calculator</title>
+  <style>
+    :root{
+      --bg:#000000;
+      --display:#ffffff;
+      --btn-dark:#333333;
+      --btn-light:#505050;
+      --btn-op:#FF9F0A;
+      --btn-text-dark:#f4f4f4;
+      --btn-text-light:#f4f4f4;
+      --btn-text-op:#f8f8f8;
+      --gap:6px;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --indent: 36px;
+      --accent:#7dd3fc;
+    }
+
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+      -webkit-tap-highlight-color:transparent;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    html,body{
+      width:100%;
+      height:100%;
+      overflow:hidden;
+      background:#000;
+    }
+
+    body{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:#000;
+    }
+
+    .app{
+      width:100vw;
+      height:100vh;
+      background:var(--bg);
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-end;
+      padding:
+        calc(var(--safe-top) + 10px)
+        14px
+        calc(var(--safe-bottom) + 14px)
+        14px;
+      position:relative;
+    }
+
+    .top-tools{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:6px;
+      padding:0 4px;
+    }
+
+    .top-tools-right{
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    .history-btn{
+      border:none;
+      background:#1f1f1f;
+      color:#fff;
+      min-width:48px;
+      height:36px;
+      border-radius:12px;
+      font-size:22px;
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      box-shadow:0 4px 10px rgba(0,0,0,.25);
+    }
+
+    .back-btn{
+      border:none;
+      background:#1f1f1f;
+      color:#fff;
+      min-width:48px;
+      height:36px;
+      border-radius:12px;
+      font-size:22px;
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      box-shadow:0 4px 10px rgba(0,0,0,.25);
+    }
+
+    .display-wrap{
+      flex:1;
+      display:flex;
+      align-items:flex-end;
+      justify-content:flex-end;
+      padding:0 6px 14px 6px;
+      min-height:0;
+    }
+
+    /* ===== START DISPLAY SPACING CONTROL ===== */
+    .paper{
+      width:100%;
+      color:var(--display);
+      display:flex;
+      flex-direction:column;
+      align-items:flex-end;
+      justify-content:flex-end;
+      gap:0;
+      overflow-y:auto;
+      overflow-x:hidden;
+      scrollbar-width:none;
+      min-height:190px;
+      padding-bottom:4px;
+    }
+
+    .paper::-webkit-scrollbar{
+      display:none;
+    }
+
+    .line{
+      width:100%;
+      display:flex;
+      justify-content:flex-end;
+      align-items:center;
+      line-height:1;
+    }
+
+    .line.number-line{
+      margin:0;
+      line-height:.74;
+    }
+
+    .line.operator-line{
+      margin:0 0 -12px 0;
+      line-height:.72;
+    }
+
+    .line.indented{
+      padding-right:var(--indent);
+    }
+
+    .num{
+      font-size:clamp(44px, 10vw, 60px);
+      font-weight:500;
+      color:#ffffff;
+      letter-spacing:-1px;
+      text-align:right;
+      white-space:nowrap;
+      overflow-x:auto;
+      overflow-y:hidden;
+      max-width:100%;
+      display:block;
+      cursor:pointer;
+      border-radius:10px;
+      padding:2px 6px;
+      transition:.15s ease;
+      scrollbar-width:none;
+    }
+
+    .num::-webkit-scrollbar{
+      display:none;
+    }
+
+    .num.selected{
+      outline:2px solid rgba(125,211,252,.7);
+      background:rgba(125,211,252,.12);
+    }
+
+    .operator-alone{
+      font-size:clamp(48px, 10vw, 58px);
+      font-weight:500;
+      color:#ffffff;
+      line-height:.72;
+      text-align:right;
+      white-space:nowrap;
+      padding-right:2px;
+      cursor:pointer;
+      border-radius:10px;
+      padding-left:6px;
+      padding-right:6px;
+    }
+
+    .operator-alone.selected{
+      outline:2px solid rgba(125,211,252,.7);
+      background:rgba(125,211,252,.12);
+    }
+
+    .separator{
+      width:calc(100% - var(--indent));
+      max-width:100%;
+      height:4px;
+      border-radius:999px;
+      background:#ffffff;
+      margin:8px 0 8px 0;
+      align-self:flex-end;
+    }
+
+    .result-line .num{
+      font-size:clamp(46px, 10.4vw, 62px);
+      font-weight:600;
+    }
+
+    .discount-box{
+      width:100%;
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      background:#111827;
+      border:1px solid rgba(255,255,255,.08);
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+
+    .discount-row{
+      width:100%;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      color:#fff;
+      font-size:18px;
+      gap:10px;
+    }
+
+    .discount-row span:last-child{
+      font-weight:700;
+      color:#86efac;
+    }
+    /* ===== END DISPLAY SPACING CONTROL ===== */
+
+    .keys{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:var(--gap);
+      transform:scale(.96);
+      transform-origin:bottom center;
+    }
+
+    button{
+      border:none;
+      outline:none;
+      border-radius:999px;
+      aspect-ratio:1/1;
+      cursor:pointer;
+      user-select:none;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      padding:0;
+      line-height:1;
+      transition:transform .08s ease, filter .12s ease, background .12s ease, box-shadow .12s ease;
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    button:active{
+      transform:scale(.96);
+      filter:brightness(1.06);
+    }
+
+    .btn-dark{
+      background:var(--btn-dark);
+      color:var(--btn-text-dark);
+      font-size:clamp(40px, 8.2vw, 45px);
+      font-weight:500;
+      box-shadow:
+        inset 0 1.5px 0 rgba(255,255,255,.10),
+        inset 0 -1.5px 0 rgba(0,0,0,.25),
+        0 0 0 1px rgba(255,255,255,.03),
+        0 8px 18px rgba(0,0,0,.28);
+    }
+
+    .btn-light{
+      background:var(--btn-light);
+      color:var(--btn-text-light);
+      font-size:clamp(50px, 10vw, 54px);
+      font-weight:500;
+      box-shadow:
+        inset 0 1.5px 0 rgba(255,255,255,.26),
+        inset 0 -1.5px 0 rgba(0,0,0,.18),
+        0 0 14px rgba(255,255,255,.04),
+        0 8px 18px rgba(0,0,0,.26);
+    }
+
+    .btn-op{
+      background:var(--btn-op);
+      color:var(--btn-text-op);
+      font-size:clamp(58px, 11vw, 62px);
+      font-weight:500;
+      padding:0 0 2px 0;
+      box-shadow:
+        inset 0 1.5px 0 rgba(255,255,255,.24),
+        inset 0 -1.5px 0 rgba(0,0,0,.12),
+        0 0 16px rgba(255,159,10,.12),
+        0 8px 18px rgba(0,0,0,.24);
+    }
+
+    .btn-op.active{
+      background:#ffffff;
+      color:var(--btn-op);
+      box-shadow:
+        inset 0 1.5px 0 rgba(255,255,255,.3),
+        0 0 16px rgba(255,255,255,.12),
+        0 8px 18px rgba(0,0,0,.18);
+    }
+
+    .zero{
+      grid-column:span 2;
+      aspect-ratio:auto;
+      height:auto;
+      display:grid;
+      place-items:center;
+      padding:0;
+    }
+
+    .btn-text{
+      font-size:clamp(37px, 7.8vw, 40px);
+      font-weight:500;
+      letter-spacing:0;
+      color:#f4f4f4;
+    }
+
+    .btn-icon{
+      font-size:clamp(50px, 10vw, 55px);
+      font-weight:500;
+      color:#f4f4f4;
+    }
+
+    .history-overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.55);
+      display:none;
+      align-items:flex-end;
+      z-index:50;
+    }
+
+    .history-overlay.show{
+      display:flex;
+    }
+
+    .history-sheet{
+      width:100%;
+      max-height:70vh;
+      background:#0f172a;
+      border-top-left-radius:22px;
+      border-top-right-radius:22px;
+      padding:16px;
+      overflow:auto;
+      color:#fff;
+    }
+
+    .history-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:14px;
+    }
+
+    .history-head h3{
+      font-size:22px;
+    }
+
+    .close-history{
+      border:none;
+      background:#1e293b;
+      color:#fff;
+      width:42px;
+      height:42px;
+      border-radius:12px;
+      font-size:20px;
+      cursor:pointer;
+    }
+
+    .history-list{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .history-item{
+      border:none;
+      background:#111827;
+      color:#fff;
+      width:100%;
+      padding:14px;
+      border-radius:16px;
+      text-align:right;
+      cursor:pointer;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      aspect-ratio:auto;
+      box-shadow:none;
+    }
+
+    .history-item-title{
+      font-size:18px;
+      font-weight:700;
+    }
+
+    .history-item-sub{
+      font-size:15px;
+      opacity:.8;
+    }
+
+    .history-empty{
+      padding:18px;
+      text-align:center;
+      opacity:.7;
+    }
+
+    @media (max-width: 390px){
+      :root{
+        --indent: 28px;
+      }
+
+      .paper{
+        min-height:155px;
+      }
+
+      .num{
+        font-size:clamp(40px, 9vw, 52px);
+      }
+
+      .operator-alone{
+        font-size:clamp(44px, 9vw, 52px);
+      }
+
+      .result-line .num{
+        font-size:clamp(42px, 9.4vw, 54px);
+      }
+
+      .btn-dark{
+        font-size:clamp(38px, 7.8vw, 42px);
+      }
+
+      .btn-light{
+        font-size:clamp(46px, 9vw, 50px);
+      }
+
+      .btn-op{
+        font-size:clamp(54px, 10vw, 58px);
+      }
+
+      .btn-text{
+        font-size:clamp(33px, 6.8vw, 37px);
+      }
+
+      .btn-icon{
+        font-size:clamp(46px, 9vw, 50px);
+      }
+
+      .discount-row{
+        font-size:16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="top-tools">
+      <button class="back-btn" onclick="goBack()">←</button>
+
+      <div class="top-tools-right">
+        <button class="history-btn" onclick="openHistory()">🕘</button>
+      </div>
+    </div>
+
+    <div class="display-wrap">
+      <div class="paper" id="paper"></div>
+    </div>
+
+    <div class="keys">
+      <button class="btn-light btn-icon" onclick="backspace()">⌫</button>
+      <button class="btn-light btn-text" onclick="clearAll()">حذف</button>
+      <button class="btn-light" onclick="handlePercent()">%</button>
+      <button class="btn-op" data-op="/" onclick="setOperator('/')">÷</button>
+
+      <button class="btn-dark" onclick="inputNumber('7')">7</button>
+      <button class="btn-dark" onclick="inputNumber('8')">8</button>
+      <button class="btn-dark" onclick="inputNumber('9')">9</button>
+      <button class="btn-op" data-op="*" onclick="setOperator('*')">×</button>
+
+      <button class="btn-dark" onclick="inputNumber('4')">4</button>
+      <button class="btn-dark" onclick="inputNumber('5')">5</button>
+      <button class="btn-dark" onclick="inputNumber('6')">6</button>
+      <button class="btn-op" data-op="-" onclick="setOperator('-')">−</button>
+
+      <button class="btn-dark" onclick="inputNumber('1')">1</button>
+      <button class="btn-dark" onclick="inputNumber('2')">2</button>
+      <button class="btn-dark" onclick="inputNumber('3')">3</button>
+      <button class="btn-op" data-op="+" onclick="setOperator('+')">+</button>
+
+      <button class="btn-dark zero" onclick="inputNumber('0')">0</button>
+      <button class="btn-dark" onclick="inputDot()">.</button>
+      <button class="btn-op" onclick="calculate()">=</button>
+    </div>
+  </div>
+
+  <div class="history-overlay" id="historyOverlay" onclick="closeHistory(event)">
+    <div class="history-sheet" onclick="event.stopPropagation()">
+      <div class="history-head">
+        <h3>الهستوري</h3>
+        <button class="close-history" onclick="closeHistory()">✕</button>
+      </div>
+      <div class="history-list" id="historyList"></div>
+    </div>
+  </div>
+
+  <script>
+    const paper = document.getElementById("paper");
+    const opButtons = document.querySelectorAll(".btn-op[data-op]");
+    const historyOverlay = document.getElementById("historyOverlay");
+    const historyList = document.getElementById("historyList");
+    const HISTORY_KEY = "calc_history_v3";
+
+    let firstValue = "0";
+    let operator = null;
+    let secondValue = "";
+    let resultValue = null;
+    let showingResult = false;
+    let selectedTarget = "first";
+    let discountInfo = null;
+
+    function goBack(){
+      window.location.href = "index.html";
+    }
+
+    function opSymbol(op){
+      if(op === "/") return "÷";
+      if(op === "*") return "×";
+      if(op === "-") return "−";
+      return op || "";
+    }
+
+    function formatNumber(value){
+      if (value === "Error") return "Error";
+      if (value == null || value === "") return "0";
+
+      const str = String(value);
+      if (str.includes("e") || str.includes("E")) return str;
+
+      const isNegative = str.startsWith("-");
+      const pure = isNegative ? str.slice(1) : str;
+      const parts = pure.split(".");
+      const intPart = parts[0] || "0";
+      const decPart = parts[1];
+      const formattedInt = Number(intPart).toLocaleString("en-US");
+
+      return (isNegative ? "-" : "") + formattedInt + (decPart !== undefined ? "." + decPart : "");
+    }
+
+    function clearDiscountInfo(){
+      discountInfo = null;
+    }
+
+    function snapshotState(){
+      return {
+        firstValue,
+        operator,
+        secondValue,
+        resultValue,
+        showingResult,
+        selectedTarget,
+        discountInfo
+      };
+    }
+
+    function restoreState(state){
+      firstValue = state.firstValue ?? "0";
+      operator = state.operator ?? null;
+      secondValue = state.secondValue ?? "";
+      resultValue = state.resultValue ?? null;
+      showingResult = !!state.showingResult;
+      selectedTarget = state.selectedTarget ?? "first";
+      discountInfo = state.discountInfo ?? null;
+      normalizeSelection();
+      updateDisplay();
+    }
+
+    function hasMeaningfulData(){
+      return !(firstValue === "0" && !operator && secondValue === "" && !showingResult && !discountInfo);
+    }
+
+    function getHistory(){
+      try{
+        return JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
+      }catch{
+        return [];
+      }
+    }
+
+    function setHistory(items){
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(items));
+    }
+
+    function saveCurrentToHistory(){
+      if (!hasMeaningfulData()) return;
+
+      const items = getHistory();
+      items.unshift({
+        id: Date.now(),
+        state: snapshotState(),
+        title: getStateTitle(),
+        sub: new Date().toLocaleString("ar-IQ")
+      });
+
+      setHistory(items.slice(0, 50));
+    }
+
+    function getStateTitle(){
+      if (discountInfo){
+        return `خصم ${discountInfo.rate}%`;
+      }
+      if (showingResult && resultValue != null && operator){
+        return `${formatNumber(firstValue)} ${opSymbol(operator)} ${formatNumber(secondValue)} = ${formatNumber(resultValue)}`;
+      }
+      if (operator){
+        return `${formatNumber(firstValue)} ${opSymbol(operator)} ${formatNumber(secondValue || "0")}`;
+      }
+      return formatNumber(firstValue);
+    }
+
+    function renderHistory(){
+      const items = getHistory();
+      historyList.innerHTML = "";
+
+      if (!items.length){
+        historyList.innerHTML = '<div class="history-empty">ماكو عناصر بالهستوري</div>';
+        return;
+      }
+
+      items.forEach(item => {
+        const btn = document.createElement("button");
+        btn.className = "history-item";
+        btn.innerHTML = `
+          <div class="history-item-title">${item.title}</div>
+          <div class="history-item-sub">${item.sub}</div>
+        `;
+        btn.onclick = () => {
+          restoreState(item.state);
+          historyOverlay.classList.remove("show");
+        };
+        historyList.appendChild(btn);
+      });
+    }
+
+    function openHistory(){
+      renderHistory();
+      historyOverlay.classList.add("show");
+    }
+    window.openHistory = openHistory;
+
+    function closeHistory(e){
+      if (!e || e.target === historyOverlay || e.type === "click"){
+        historyOverlay.classList.remove("show");
+      }
+    }
+    window.closeHistory = closeHistory;
+
+    function normalizeSelection(){
+      if (showingResult){
+        if (!["first","second","result","operator"].includes(selectedTarget)) selectedTarget = "result";
+        return;
+      }
+
+      if (selectedTarget === "result") selectedTarget = operator ? (secondValue !== "" ? "second" : "operator") : "first";
+      if (selectedTarget === "second" && !operator) selectedTarget = "first";
+      if (selectedTarget === "operator" && !operator) selectedTarget = "first";
+      if (!selectedTarget) selectedTarget = operator ? (secondValue !== "" ? "second" : "operator") : "first";
+    }
+
+    function selectTarget(target){
+      if (showingResult && target === "result"){
+        selectedTarget = "result";
+        updateDisplay();
+        return;
+      }
+
+      if (showingResult && target !== "result"){
+        showingResult = false;
+        resultValue = null;
+      }
+
+      if (target === "second" && !operator) return;
+      if (target === "operator" && !operator) return;
+
+      selectedTarget = target;
+      updateDisplay();
+    }
+
+    function scrollNumToEnd(el){
+      requestAnimationFrame(() => {
+        el.scrollLeft = el.scrollWidth;
+      });
+    }
+
+    function updateDisplay(){
+      paper.innerHTML = "";
+
+      const firstLine = document.createElement("div");
+      firstLine.className = "line number-line indented";
+      const firstNum = document.createElement("div");
+      firstNum.className = "num" + (selectedTarget === "first" ? " selected" : "");
+      firstNum.textContent = formatNumber(firstValue);
+      firstNum.onclick = () => selectTarget("first");
+      firstLine.appendChild(firstNum);
+      paper.appendChild(firstLine);
+      scrollNumToEnd(firstNum);
+
+      if (operator){
+        const opLine = document.createElement("div");
+        opLine.className = "line operator-line";
+        const opDiv = document.createElement("div");
+        opDiv.className = "operator-alone" + (selectedTarget === "operator" ? " selected" : "");
+        opDiv.textContent = opSymbol(operator);
+        opDiv.onclick = () => selectTarget("operator");
+        opLine.appendChild(opDiv);
+        paper.appendChild(opLine);
+
+        const secondLine = document.createElement("div");
+        secondLine.className = "line number-line indented";
+        const secondNum = document.createElement("div");
+        secondNum.className = "num" + (selectedTarget === "second" ? " selected" : "");
+        secondNum.textContent = formatNumber(secondValue === "" ? "0" : secondValue);
+        secondNum.onclick = () => selectTarget("second");
+        secondLine.appendChild(secondNum);
+        paper.appendChild(secondLine);
+        scrollNumToEnd(secondNum);
+      }
+
+      if (showingResult && resultValue !== null){
+        const line = document.createElement("div");
+        line.className = "separator";
+        paper.appendChild(line);
+
+        const resultLine = document.createElement("div");
+        resultLine.className = "line result-line";
+        const resultNum = document.createElement("div");
+        resultNum.className = "num" + (selectedTarget === "result" ? " selected" : "");
+        resultNum.textContent = formatNumber(resultValue);
+        resultNum.onclick = () => selectTarget("result");
+        resultLine.appendChild(resultNum);
+        paper.appendChild(resultLine);
+        scrollNumToEnd(resultNum);
+      }
+
+      if (discountInfo){
+        const box = document.createElement("div");
+        box.className = "discount-box";
+        box.innerHTML = `
+          <div class="discount-row"><span>النسبة</span><span>${discountInfo.rate}%</span></div>
+          <div class="discount-row"><span>قيمة الخصم</span><span>${formatNumber(discountInfo.discount)}</span></div>
+          <div class="discount-row"><span>بعد الخصم</span><span>${formatNumber(discountInfo.net)}</span></div>
+        `;
+        paper.appendChild(box);
+      }
+
+      paper.scrollTop = paper.scrollHeight;
+      setActiveOperator();
+    }
+
+    function setActiveOperator(){
+      opButtons.forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.op === operator && !showingResult && selectedTarget === "operator");
+      });
+    }
+
+    function resetFromResultForNewInput(){
+      firstValue = "0";
+      operator = null;
+      secondValue = "";
+      resultValue = null;
+      showingResult = false;
+      selectedTarget = "first";
+      clearDiscountInfo();
+    }
+
+    function getTargetValue(target){
+      if (target === "first") return firstValue;
+      if (target === "second") return secondValue;
+      if (target === "result") return resultValue;
+      return "";
+    }
+
+    function setTargetValue(target, value){
+      if (target === "first") firstValue = value;
+      else if (target === "second") secondValue = value;
+      else if (target === "result") resultValue = value;
+    }
+
+    function inputNumber(num){
+      clearDiscountInfo();
+
+      if (showingResult && selectedTarget === "result"){
+        resetFromResultForNewInput();
+      }
+
+      if (selectedTarget === "operator"){
+        selectedTarget = "second";
+      }
+
+      if (showingResult && selectedTarget !== "result"){
+        showingResult = false;
+        resultValue = null;
+      }
+
+      let target = selectedTarget;
+      if (!target || target === "result") target = "first";
+
+      if (target === "second" && !operator){
+        target = "first";
+        selectedTarget = "first";
+      }
+
+      let value = getTargetValue(target);
+      value = (value == null || value === "") ? "" : String(value);
+
+      if (value === "0") value = num;
+      else if (value === "") value = num;
+      else value += num;
+
+      setTargetValue(target, value);
+      updateDisplay();
+    }
+    window.inputNumber = inputNumber;
+
+    function inputDot(){
+      clearDiscountInfo();
+
+      if (showingResult && selectedTarget === "result"){
+        resetFromResultForNewInput();
+      }
+
+      if (selectedTarget === "operator"){
+        selectedTarget = "second";
+      }
+
+      if (showingResult && selectedTarget !== "result"){
+        showingResult = false;
+        resultValue = null;
+      }
+
+      let target = selectedTarget;
+      if (!target || target === "result") target = "first";
+      if (target === "second" && !operator){
+        target = "first";
+        selectedTarget = "first";
+      }
+
+      let value = String(getTargetValue(target) ?? "");
+      if (value === "") value = "0.";
+      else if (!value.includes(".")) value += ".";
+
+      setTargetValue(target, value);
+      updateDisplay();
+    }
+    window.inputDot = inputDot;
+
+    function backspace(){
+      clearDiscountInfo();
+
+      if (showingResult && selectedTarget === "result"){
+        showingResult = false;
+        resultValue = null;
+        selectedTarget = operator ? (secondValue !== "" ? "second" : "operator") : "first";
+        updateDisplay();
+        return;
+      }
+
+      if (selectedTarget === "operator" && operator){
+        operator = null;
+        secondValue = "";
+        selectedTarget = "first";
+        updateDisplay();
+        return;
+      }
+
+      let target = selectedTarget;
+      if (!target || target === "result") target = operator ? (secondValue !== "" ? "second" : "first") : "first";
+
+      if (target === "second" && !operator){
+        target = "first";
+        selectedTarget = "first";
+      }
+
+      let value = String(getTargetValue(target) ?? "");
+      value = value.slice(0, -1);
+
+      if (target === "first"){
+        firstValue = (value === "" || value === "-") ? "0" : value;
+      } else if (target === "second"){
+        secondValue = (value === "" || value === "-") ? "" : value;
+      }
+
+      updateDisplay();
+    }
+    window.backspace = backspace;
+
+    function clearAll(){
+      saveCurrentToHistory();
+      firstValue = "0";
+      operator = null;
+      secondValue = "";
+      resultValue = null;
+      showingResult = false;
+      selectedTarget = "first";
+      clearDiscountInfo();
+      updateDisplay();
+    }
+    window.clearAll = clearAll;
+
+    function handlePercent(){
+      clearDiscountInfo();
+
+      let rawValue = "0";
+
+      if (showingResult && resultValue !== null){
+        rawValue = String(resultValue);
+      } else if (selectedTarget === "second" && secondValue !== ""){
+        rawValue = String(secondValue);
+      } else if (selectedTarget === "first"){
+        rawValue = String(firstValue);
+      } else if (operator && secondValue !== ""){
+        rawValue = String(secondValue);
+      } else {
+        rawValue = String(firstValue);
+      }
+
+      const base = parseFloat(rawValue);
+      if (isNaN(base)) {
+        alert("ماكو رقم صالح للحساب");
+        return;
+      }
+
+      const input = prompt("ادخل النسبة");
+      if (input === null) return;
+
+      const rate = parseFloat(String(input).trim().replace(",", "."));
+      if (isNaN(rate)) {
+        alert("النسبة غير صحيحة");
+        return;
+      }
+
+      const discount = base * (rate / 100);
+      const net = base - discount;
+
+      discountInfo = {
+        rate: rate,
+        discount: String(discount),
+        net: String(net)
+      };
+
+      updateDisplay();
+    }
+    window.handlePercent = handlePercent;
+
+    function compute(a, b, op){
+      switch(op){
+        case "+": return a + b;
+        case "-": return a - b;
+        case "*": return a * b;
+        case "/": return b === 0 ? "Error" : a / b;
+        default: return b;
+      }
+    }
+
+    function setOperator(op){
+      clearDiscountInfo();
+
+      if (showingResult){
+        firstValue = String(resultValue);
+        operator = op;
+        secondValue = "";
+        resultValue = null;
+        showingResult = false;
+        selectedTarget = "operator";
+        updateDisplay();
+        return;
+      }
+
+      if (!operator){
+        operator = op;
+        selectedTarget = "operator";
+      } else if (operator && secondValue === ""){
+        operator = op;
+        selectedTarget = "operator";
+      } else {
+        const result = compute(parseFloat(firstValue), parseFloat(secondValue), operator);
+
+        if (result === "Error"){
+          firstValue = "Error";
+          operator = null;
+          secondValue = "";
+          resultValue = null;
+          showingResult = false;
+          selectedTarget = "first";
+          updateDisplay();
+          return;
+        }
+
+        firstValue = String(result);
+        operator = op;
+        secondValue = "";
+        selectedTarget = "operator";
+      }
+
+      updateDisplay();
+    }
+    window.setOperator = setOperator;
+
+    function calculate(){
+      clearDiscountInfo();
+
+      if (!operator || secondValue === "") return;
+
+      const result = compute(parseFloat(firstValue), parseFloat(secondValue), operator);
+
+      if (result === "Error"){
+        firstValue = "Error";
+        operator = null;
+        secondValue = "";
+        resultValue = null;
+        showingResult = false;
+        selectedTarget = "first";
+        updateDisplay();
+        return;
+      }
+
+      resultValue = String(result);
+      showingResult = true;
+      selectedTarget = "result";
+      updateDisplay();
+    }
+    window.calculate = calculate;
+
+    updateDisplay();
+  </script>
+</body>
+</html>
