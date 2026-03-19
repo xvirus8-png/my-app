@@ -472,8 +472,8 @@ to{
 
 <div class="bottom-bar">
   <div class="bottom-wrap">
-    <button class="btn btn-secondary" onclick="simulateImport('excel')">استيراد Excel</button>
-    <button class="btn btn-primary" onclick="simulateImport('pdf')">استيراد PDF</button>
+ <button class="btn btn-secondary" onclick="sendInvoiceRequest('excel')">استيراد Excel</button>
+<button class="btn btn-primary" onclick="sendInvoiceRequest('pdf')">استيراد PDF</button>
   </div>
 </div>
 
@@ -490,8 +490,7 @@ to{
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
+import { getDatabase, ref, get, child, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 const app = initializeApp({
   apiKey: "AIzaSyDaQ7Ur6f7_ugSTy2_u0-gPEtUsFzhh82U",
   authDomain: "kashf-system.firebaseapp.com",
@@ -911,6 +910,104 @@ function simulateImport(type){
   resetStatusCard(1800);
 }, 2400);
 }
+
+async function sendInvoiceRequest(fileType) {
+  const invoiceNo = invoiceNumber.value.trim();
+  const customerName = invoiceCustomer.value.trim();
+  const brand = selectedBrand.trim();
+
+  if (!invoiceNo) {
+    alert("ادخل رقم الفاتورة");
+    return;
+  }
+
+  if (!brand) {
+    alert("اختر البراند");
+    return;
+  }
+
+  if (!customerName) {
+    alert("اختر الزبون");
+    return;
+  }
+
+  const requestId = "REQ_" + Date.now();
+
+  const payload = {
+    id: requestId,
+    type: "fetch_invoice",
+    status: "pending",
+    brand: brand,
+    invoiceNo: invoiceNo,
+    customerName: customerName,
+    fileType: fileType || "pdf",
+    createdAt: new Date().toISOString()
+  };
+
+  try {
+    showStatusCard();
+    statusText.textContent = "جاري إرسال الطلب...";
+    statusBar.style.width = "15%";
+    statusCard.classList.remove("done", "error");
+    statusCard.classList.add("processing");
+    addStatusLog("جاري إرسال الطلب");
+
+    const requestRef = ref(db, "requests/latest");
+    await set(requestRef, payload);
+
+    statusText.textContent = "تم إرسال الطلب";
+    statusBar.style.width = "35%";
+    addStatusLog("تم إرسال الطلب إلى النظام");
+
+    const stopWatch = onValue(requestRef, (snapshot) => {
+      const data = snapshot.val();
+      if (!data) return;
+      if (data.id !== requestId) return;
+
+      if (data.status === "processing") {
+        statusText.textContent = data.message || "جاري تنفيذ الطلب";
+        statusBar.style.width = "70%";
+        statusCard.classList.remove("done", "error");
+        statusCard.classList.add("processing");
+        addStatusLog(data.message || "جاري تنفيذ الطلب");
+      }
+
+      if (data.status === "done") {
+        statusText.textContent = data.message || "تمت العملية بنجاح";
+        statusBar.style.width = "100%";
+        statusCard.classList.remove("processing", "error");
+        statusCard.classList.add("done");
+        addStatusLog(data.message || "تمت العملية بنجاح");
+
+        setTimeout(() => {
+          clearInvoiceForm();
+          resetStatusCard(1200);
+        }, 500);
+
+        stopWatch();
+      }
+
+      if (data.status === "error") {
+        statusText.textContent = data.message || "صار خطأ أثناء التنفيذ";
+        statusBar.style.width = "100%";
+        statusCard.classList.remove("processing", "done");
+        statusCard.classList.add("error");
+        addStatusLog(data.message || "صار خطأ أثناء التنفيذ");
+        stopWatch();
+      }
+    });
+
+  } catch (error) {
+    console.error(error);
+    showStatusCard();
+    statusText.textContent = "فشل إرسال الطلب";
+    statusBar.style.width = "100%";
+    statusCard.classList.remove("processing", "done");
+    statusCard.classList.add("error");
+    addStatusLog("فشل إرسال الطلب إلى Firebase");
+  }
+}
+window.sendInvoiceRequest = sendInvoiceRequest;
 window.simulateImport = simulateImport;
 
 await loadFirebaseCustomers();
