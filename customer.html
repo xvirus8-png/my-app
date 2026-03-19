@@ -1,38 +1,1239 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>بطاقة زبون</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>بطاقة زبون</title>
 
-<style>
-body{background:#f5f7fa;font-family:system-ui}
-.container{max-width:500px;margin:auto;padding:20px}
-.card{background:#fff;padding:20px;border-radius:18px;box-shadow:0 8px 25px rgba(0,0,0,.06)}
-.title{font-size:22px;font-weight:800;margin-bottom:20px;text-align:center}
-.btn{width:100%;padding:14px;border:none;border-radius:14px;font-weight:800;cursor:pointer}
-.btn-primary{background:#0d6efd;color:#fff}
-</style>
+  <link rel="icon" type="image/png" href="icon.png">
+  <link rel="apple-touch-icon" href="icon.png">
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="بطاقة زبون">
+  <meta name="theme-color" content="#0d6efd">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    *{
+      -webkit-user-select:none;
+      user-select:none;
+      -webkit-touch-callout:none;
+    }
+
+    body{
+      background:#f5f7fa;
+      font-family:system-ui;
+      padding-bottom:120px;
+    }
+
+    .container{
+      max-width:600px;
+      margin:auto;
+      padding:15px;
+    }
+
+    .top-bar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:20px;
+    }
+
+    .top-bar h1{
+      font-size:22px;
+      font-weight:800;
+    }
+
+    .top-bar-left{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .menu-btn{
+      width:45px;
+      height:45px;
+      border:none;
+      border-radius:12px;
+      background:#fff;
+      box-shadow:0 4px 12px rgba(0,0,0,.08);
+      font-size:22px;
+      cursor:pointer;
+    }
+
+    .logo{
+      width:45px;
+      height:45px;
+      border-radius:50%;
+      background:#0d6efd;
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:22px;
+    }
+
+    .card{
+      background:#fff;
+      padding:18px;
+      border-radius:18px;
+      box-shadow:0 8px 25px rgba(0,0,0,.06);
+      margin-bottom:15px;
+    }
+
+    .section-title{
+      font-weight:800;
+      margin-bottom:12px;
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
+
+    .input-group{
+      margin-bottom:15px;
+    }
+
+    .input-group label{
+      display:block;
+      font-weight:700;
+      margin-bottom:6px;
+      font-size:14px;
+    }
+
+    .input-group input,
+    .input-group select{
+      width:100%;
+      padding:12px;
+      border-radius:12px;
+      border:1px solid #ddd;
+      font-size:16px;
+      background:#fff;
+    }
+
+    .quick-brands{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:10px;
+      margin-top:8px;
+    }
+
+    .brand-btn{
+      padding:6px;
+      border-radius:14px;
+      border:2px solid #e3e3e3;
+      background:#fff;
+      font-weight:800;
+      font-size:16px;
+      cursor:pointer;
+      height:38px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .brand-btn.active{
+      background:#0d6efd;
+      color:#fff;
+      border-color:#0d6efd;
+    }
+
+    .info-box{
+      background:linear-gradient(135deg,#f8fbff,#eef4ff);
+      padding:14px;
+      border-radius:16px;
+      margin-top:10px;
+      border:1.5px solid #dbe4ff;
+      box-shadow:0 8px 22px rgba(13,110,253,.08);
+    }
+
+    .info-row{
+      display:flex;
+      justify-content:space-between;
+      margin-bottom:8px;
+      gap:10px;
+    }
+
+    .bottom-bar{
+      position:fixed;
+      bottom:12px;
+      right:0;
+      left:0;
+      background:#fff;
+      border-top:1px solid #eee;
+      padding:12px;
+      z-index:10;
+    }
+
+    .bottom-wrap{
+      max-width:600px;
+      margin:auto;
+      display:flex;
+      gap:10px;
+    }
+
+    .btn{
+      flex:1;
+      padding:14px;
+      border:none;
+      border-radius:14px;
+      font-weight:800;
+      font-size:16px;
+      cursor:pointer;
+    }
+
+    .btn-primary{
+      background:#0d6efd;
+      color:#fff;
+    }
+
+    .btn-secondary{
+      background:linear-gradient(135deg,#f8fbff,#eef4ff);
+      color:#0d6efd;
+      border:1.5px solid #dbe4ff;
+      box-shadow:0 8px 22px rgba(13,110,253,.08);
+    }
+
+    /* شاشة البحث */
+    #searchOverlay{
+      position:fixed;
+      top:0;
+      left:0;
+      right:0;
+      bottom:0;
+      background:#fff;
+      z-index:999;
+      display:none;
+      padding:15px;
+    }
+
+    .search-top{
+      display:flex;
+      gap:10px;
+      margin-bottom:12px;
+    }
+
+    #searchInput{
+      flex:1;
+      padding:14px 16px;
+      border-radius:16px;
+      border:1.5px solid #dbe4ff;
+      font-size:16px;
+      background:linear-gradient(135deg,#f8fbff,#eef4ff);
+      color:#0f172a;
+      outline:none;
+      box-shadow:0 8px 22px rgba(13,110,253,.08);
+      transition:.25s ease;
+    }
+
+    #searchInput:focus{
+      border-color:#0d6efd;
+      box-shadow:0 0 0 4px rgba(13,110,253,.12),0 10px 25px rgba(13,110,253,.10);
+    }
+
+    #searchResults{
+      max-height:62vh;
+      overflow:auto;
+      border-radius:14px;
+      background:#fff;
+    }
+
+    .search-item{
+      padding:12px 14px;
+      border:1px solid #edf2ff;
+      border-radius:14px;
+      cursor:pointer;
+      font-size:15px;
+      line-height:1.2;
+      background:#fff;
+      margin-bottom:8px;
+      transition:.2s ease;
+    }
+
+    .search-item:hover{
+      background:#f8fbff;
+      border-color:#cfe0ff;
+      transform:translateY(-1px);
+      box-shadow:0 6px 16px rgba(13,110,253,.08);
+    }
+
+    .search-brand-box{
+      background:linear-gradient(135deg,#f8fbff,#eef4ff);
+      border:1.5px solid #dbe4ff;
+      padding:12px 14px;
+      border-radius:16px;
+      margin-bottom:12px;
+      font-weight:800;
+      color:#0d6efd;
+      box-shadow:0 8px 22px rgba(13,110,253,.08);
+    }
+
+    /* القائمة الجانبية - من اليمين */
+    .sidebar-overlay{
+      position:fixed;
+      top:0;
+      right:0;
+      left:0;
+      bottom:0;
+      background:rgba(0,0,0,.35);
+      z-index:1000;
+      display:none;
+    }
+
+    .sidebar{
+      position:fixed;
+      top:0;
+      right:-50%;
+      width:50%;
+      height:100%;
+      background:#fff;
+      z-index:1001;
+      padding:20px;
+      box-shadow:-4px 0 16px rgba(0,0,0,.12);
+      transition:.25s;
+    }
+
+    .sidebar.open{
+      right:0;
+    }
+
+    .sidebar-overlay.show{
+      display:block;
+    }
+
+    .sidebar-title{
+      font-size:20px;
+      font-weight:800;
+      margin-bottom:20px;
+    }
+
+    .sidebar-item{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:14px;
+      border-radius:12px;
+      background:#e9eef7;
+      margin-bottom:10px;
+      cursor:pointer;
+      font-weight:700;
+      border:1px solid #d6deea;
+    }
+
+    .sidebar-item i{
+      font-size:20px;
+      color:#0b5ed7;
+    }
+
+    .sidebar-item:active{
+      background:#dbe4f2;
+      transform:scale(0.98);
+    }
+
+    .hidden-file{
+      position:absolute;
+      width:0;
+      height:0;
+      opacity:0;
+      pointer-events:none;
+    }
+
+    /* حالة الطلب */
+    #statusText{
+      font-weight:700;
+      margin-bottom:10px;
+    }
+
+    .status-track{
+      width:100%;
+      height:10px;
+      background:#e9ecef;
+      border-radius:999px;
+      overflow:hidden;
+    }
+
+    #statusBar{
+      width:0%;
+      height:100%;
+      background:#0d6efd;
+      transition:width .35s ease;
+    }
+
+    #statusLog{
+      max-height:190px;
+      overflow:auto;
+      padding-left:2px;
+    }
+
+    #statusLog div{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      background:#ffffff;
+      border:1px solid #e6e9ef;
+      padding:8px 12px;
+      border-radius:12px;
+      margin-bottom:6px;
+      font-size:14px;
+      font-weight:600;
+      box-shadow:0 4px 10px rgba(0,0,0,.04);
+      opacity:0;
+      transform:translateY(-6px);
+      animation:fadeSlide .3s ease forwards;
+    }
+
+    @keyframes fadeSlide{
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    @keyframes pulseStrong {
+      0% { transform: scale(1); box-shadow: 0 0 0 rgba(13,110,253,0); }
+      50% { transform: scale(1.035); box-shadow: 0 0 18px rgba(13,110,253,.18); }
+      100% { transform: scale(1); box-shadow: 0 0 0 rgba(13,110,253,0); }
+    }
+
+    @keyframes glowStrong {
+      0% { transform: scale(1); box-shadow: 0 0 0 rgba(34,197,94,0); }
+      50% { transform: scale(1.02); box-shadow: 0 0 20px rgba(34,197,94,.35); }
+      100% { transform: scale(1); box-shadow: 0 0 0 rgba(34,197,94,0); }
+    }
+
+    @keyframes shakeSoft {
+      0% { transform: translateX(0); }
+      20% { transform: translateX(2px); }
+      40% { transform: translateX(-2px); }
+      60% { transform: translateX(2px); }
+      80% { transform: translateX(-2px); }
+      100% { transform: translateX(0); }
+    }
+
+    @keyframes barShine {
+      0% { left: 120%; }
+      100% { left: -35%; }
+    }
+
+    #statusCard {
+      transition: .25s ease;
+      margin-top: 15px;
+    }
+
+    #statusCard.processing{
+      border: 1px solid #dbe4ff;
+      box-shadow: 0 10px 28px rgba(13,110,253,.10);
+    }
+
+    #statusCard.done{
+      border: 1px solid #d9fbe6;
+      box-shadow: 0 10px 28px rgba(34,197,94,.12);
+    }
+
+    #statusCard.error{
+      border: 1px solid #ffd5d5;
+      box-shadow: 0 10px 28px rgba(220,38,38,.12);
+    }
+
+    .status-track{
+      position: relative;
+      width:100%;
+      height:10px;
+      background:#e9ecef;
+      border-radius:999px;
+      overflow:hidden;
+    }
+
+    #statusBar{
+      width:0%;
+      height:100%;
+      background:linear-gradient(90deg,#0d6efd,#4f8cff,#0d6efd);
+      background-size: 200% 100%;
+      transition: width .45s ease;
+      position: relative;
+    }
+
+    #statusBar::after{
+      content:"";
+      position:absolute;
+      top:0;
+      left:-35%;
+      width:35%;
+      height:100%;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent);
+      animation: barShine 1.8s linear infinite;
+    }
+
+    #statusText{
+      transition:.2s ease;
+    }
+
+    #statusLog div.running{
+      animation: fadeSlide .3s ease forwards, pulseStrong 1.2s infinite;
+    }
+
+    #statusLog div.done{
+      animation: fadeSlide .3s ease forwards, glowStrong .8s ease;
+    }
+
+    #statusLog div.error{
+      animation: fadeSlide .3s ease forwards, shakeSoft .35s ease;
+    }
+
+    /* Overlay حالة الطلب فوق كل الشاشة */
+    #statusOverlay{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:flex-start;
+      justify-content:center;
+      padding-top:90px;
+      background:rgba(255,255,255,.18);
+      backdrop-filter:blur(8px);
+      -webkit-backdrop-filter:blur(8px);
+      z-index:3000;
+    }
+
+    #statusOverlay.show{
+      display:flex;
+    }
+
+    #statusOverlay .overlay-card{
+      width:min(92%, 560px);
+    }
+  </style>
 </head>
 
 <body>
 
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-title">القائمة</div>
+
+  <div class="sidebar-item" onclick="document.getElementById('governoratesFile').click(); toggleSidebar();">
+    <i class="bi bi-geo-alt"></i>
+    <span>استيراد المحافظات</span>
+  </div>
+
+  <div class="sidebar-item" onclick="document.getElementById('delegatesFile').click(); toggleSidebar();">
+    <i class="bi bi-people"></i>
+    <span>استيراد المندوبين</span>
+  </div>
+
+  <div class="sidebar-item" onclick="document.getElementById('discountsFile').click(); toggleSidebar();">
+    <i class="bi bi-percent"></i>
+    <span>استيراد الخصومات</span>
+  </div>
+
+  <div class="sidebar-item" onclick="deleteSavedLists(); toggleSidebar();">
+    <i class="bi bi-trash3"></i>
+    <span>حذف البيانات</span>
+  </div>
+
+  <input type="file" id="governoratesFile" class="hidden-file" accept=".xlsx,.xls">
+  <input type="file" id="delegatesFile" class="hidden-file" accept=".xlsx,.xls">
+  <input type="file" id="discountsFile" class="hidden-file" accept=".xlsx,.xls">
+</div>
+
 <div class="container">
-  <div class="card">
-    <div class="title">بطاقة زبون</div>
 
-    <p style="text-align:center;margin-bottom:20px;">
-      صفحة قيد التطوير
-    </p>
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <button class="menu-btn" onclick="toggleSidebar()">
+        <i class="bi bi-list"></i>
+      </button>
+      <h1>بطاقة زبون</h1>
+    </div>
 
-    <button class="btn btn-primary" onclick="goBack()">رجوع</button>
+    <div class="logo">
+      <i class="bi bi-person-badge"></i>
+    </div>
+  </div>
+
+  <div class="input-group">
+    <label>اسم الزبون</label>
+    <input type="text" id="customerName" placeholder="اكتب أو الصق اسم الزبون">
+  </div>
+
+  <div class="input-group">
+    <label>رقم الزبون</label>
+    <input type="text" id="customerNumber" placeholder="اكتب أو الصق رقم الزبون" inputmode="numeric" maxlength="11">
+  </div>
+
+  <div class="input-group">
+    <label>المحافظة</label>
+    <input type="text" id="governorateInput" placeholder="اضغط للبحث" onclick="openSearch('governorate')" readonly>
+  </div>
+
+  <div class="input-group">
+    <label>البراند</label>
+    <div class="quick-brands">
+      <button type="button" class="brand-btn" onclick="setBrand('FOREVER',this)">FOREVER</button>
+      <button type="button" class="brand-btn" onclick="setBrand('CHARACTER',this)">CHARACTER</button>
+      <button type="button" class="brand-btn" onclick="setBrand('ROSELLA',this)">ROSELLA</button>
+      <button type="button" class="brand-btn" onclick="setBrand('FUTURE',this)">FUTURE</button>
+    </div>
+  </div>
+
+  <div class="input-group">
+    <label>اسم المندوب</label>
+    <select id="delegateSelect">
+      <option value="">اختر المندوب</option>
+    </select>
+  </div>
+
+  <div class="input-group">
+    <label>الخصم</label>
+    <select id="discountSelect">
+      <option value="">اختر الخصم</option>
+    </select>
+  </div>
+
+  <div class="info-box">
+    <div class="info-row">
+      <div>اسم الزبون</div>
+      <div id="previewName">—</div>
+    </div>
+
+    <div class="info-row">
+      <div>رقم الزبون</div>
+      <div id="previewNumber">—</div>
+    </div>
+
+    <div class="info-row">
+      <div>المحافظة</div>
+      <div id="previewGovernorate">—</div>
+    </div>
+
+    <div class="info-row">
+      <div>البراند</div>
+      <div id="previewBrand">—</div>
+    </div>
+
+    <div class="info-row">
+      <div>المندوب</div>
+      <div id="previewDelegate">—</div>
+    </div>
+
+    <div class="info-row">
+      <div>الخصم</div>
+      <div id="previewDiscount">—</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="bottom-bar">
+  <div class="bottom-wrap">
+    <button class="btn btn-secondary" onclick="clearForm()">تفريغ</button>
+    <button class="btn btn-primary" id="saveBtn" onclick="saveCustomerCard()">حفظ</button>
   </div>
 </div>
 
-<script>
-function goBack(){
-  window.location.href = "index.html";
+<div id="searchOverlay">
+  <div class="search-brand-box" id="searchTitle">القائمة: —</div>
+
+  <div class="search-top">
+    <input type="text" id="searchInput" placeholder="ابحث">
+    <button class="btn btn-secondary" style="flex:0 0 auto;padding:12px 16px" onclick="closeSearch()">إلغاء</button>
+  </div>
+
+  <div id="searchResults"></div>
+</div>
+
+<div id="statusOverlay">
+  <div class="overlay-card">
+    <div id="statusCard" class="card" style="display:block;">
+      <div class="section-title">
+        <i class="bi bi-hourglass-split"></i>
+        حالة الطلب
+      </div>
+
+      <div id="statusText">جاري حفظ البطاقة...</div>
+
+      <div id="statusLog" style="
+        font-size:14px;
+        line-height:1.8;
+        margin-bottom:10px;
+        color:#444;
+      "></div>
+
+      <div class="status-track">
+        <div id="statusBar"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, set, get, child, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const app = initializeApp({
+  apiKey: "AIzaSyDaQ7Ur6f7_ugSTy2_u0-gPEtUsFzhh82U",
+  authDomain: "kashf-system.firebaseapp.com",
+  databaseURL: "https://kashf-system-default-rtdb.firebaseio.com",
+  projectId: "kashf-system",
+  storageBucket: "kashf-system.firebasestorage.app",
+  messagingSenderId: "987561323340",
+  appId: "1:987561323340:web:19d72fce8456f2fdf9bde9"
+});
+
+const db = getDatabase(app);
+const DELETE_PASSWORD = "1564";
+
+let selectedBrand = "";
+let currentSearchMode = "";
+let currentFilteredResults = [];
+
+let listsData = {
+  governorates: [],
+  delegates: [],
+  discounts: []
+};
+
+const customerName = document.getElementById("customerName");
+const customerNumber = document.getElementById("customerNumber");
+const governorateInput = document.getElementById("governorateInput");
+const delegateSelect = document.getElementById("delegateSelect");
+const discountSelect = document.getElementById("discountSelect");
+
+const previewName = document.getElementById("previewName");
+const previewNumber = document.getElementById("previewNumber");
+const previewGovernorate = document.getElementById("previewGovernorate");
+const previewBrand = document.getElementById("previewBrand");
+const previewDelegate = document.getElementById("previewDelegate");
+const previewDiscount = document.getElementById("previewDiscount");
+
+const overlay = document.getElementById("searchOverlay");
+const searchInput = document.getElementById("searchInput");
+const searchResults = document.getElementById("searchResults");
+const searchTitle = document.getElementById("searchTitle");
+
+const statusOverlay = document.getElementById("statusOverlay");
+const statusCard = document.getElementById("statusCard");
+const statusText = document.getElementById("statusText");
+const statusBar = document.getElementById("statusBar");
+const statusLog = document.getElementById("statusLog");
+const saveBtn = document.getElementById("saveBtn");
+
+function toggleSidebar(){
+  document.getElementById("sidebar").classList.toggle("open");
+  document.getElementById("sidebarOverlay").classList.toggle("show");
 }
+window.toggleSidebar = toggleSidebar;
+
+function normalizeSearchText(text){
+  return String(text || "")
+    .toLowerCase()
+    .trim()
+    .replace(/[أإآ]/g, "ا")
+    .replace(/ة/g, "ه")
+    .replace(/ى/g, "ي")
+    .replace(/ؤ/g, "و")
+    .replace(/ئ/g, "ي")
+    .replace(/\s+/g, " ")
+    .replace(/[-_]/g, "")
+    .replace(/[^\w\u0600-\u06FF ]/g, "");
+}
+
+function containsAllWords(sourceText, queryText) {
+  const source = normalizeSearchText(sourceText);
+  const words = normalizeSearchText(queryText).split(" ").filter(Boolean);
+  if (words.length === 0) return true;
+  return words.every(word => source.includes(word));
+}
+
+function scoreMatch(name, query){
+  const normalizedName = normalizeSearchText(name);
+  const normalizedQuery = normalizeSearchText(query);
+
+  if(!normalizedQuery) return 1;
+
+  const compactName = normalizedName.replace(/\s/g, "");
+  const compactQuery = normalizedQuery.replace(/\s/g, "");
+
+  let score = 0;
+
+  if(compactName === compactQuery) score += 1000;
+  if(normalizedName === normalizedQuery) score += 950;
+  if(compactName.startsWith(compactQuery)) score += 700;
+  if(normalizedName.startsWith(normalizedQuery)) score += 650;
+  if(compactName.includes(compactQuery)) score += 500;
+  if(normalizedName.includes(normalizedQuery)) score += 450;
+
+  return score;
+}
+
+function setBrand(brand, btn){
+  selectedBrand = brand;
+  document.querySelectorAll(".brand-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  previewBrand.textContent = brand || "—";
+}
+window.setBrand = setBrand;
+
+function fillSelect(selectElement, list, placeholder){
+  selectElement.innerHTML = `<option value="">${placeholder}</option>`;
+  list.forEach(item => {
+    const option = document.createElement("option");
+    option.value = item;
+    option.textContent = item;
+    selectElement.appendChild(option);
+  });
+}
+
+function updatePreview(){
+  previewName.textContent = customerName.value.trim() || "—";
+  previewNumber.textContent = customerNumber.value.trim() || "—";
+  previewGovernorate.textContent = governorateInput.value.trim() || "—";
+  previewBrand.textContent = selectedBrand || "—";
+  previewDelegate.textContent = delegateSelect.value || "—";
+  previewDiscount.textContent = discountSelect.value || "—";
+}
+
+customerName.addEventListener("input", updatePreview);
+
+customerNumber.addEventListener("input", () => {
+  let value = customerNumber.value;
+
+  value = value
+    .replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d))
+    .replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d));
+
+  value = value.replace(/\D/g, "");
+
+  if (value.startsWith("964")) {
+    value = "0" + value.slice(3);
+  }
+
+  value = value.slice(0, 11);
+
+  customerNumber.dir = "ltr";
+  customerNumber.value = value;
+
+  updatePreview();
+});
+
+delegateSelect.addEventListener("change", updatePreview);
+discountSelect.addEventListener("change", updatePreview);
+
+function openSearch(mode){
+  currentSearchMode = mode;
+  overlay.style.display = "block";
+  searchInput.value = "";
+
+  if(mode === "governorate"){
+    searchTitle.textContent = "المحافظات";
+    currentFilteredResults = [...listsData.governorates].sort((a,b) => String(a).localeCompare(String(b), "ar"));
+  }
+
+  renderSearchResults(currentFilteredResults);
+  searchInput.focus();
+}
+window.openSearch = openSearch;
+
+function closeSearch(){
+  overlay.style.display = "none";
+}
+window.closeSearch = closeSearch;
+
+searchInput.addEventListener("input", () => {
+  const text = searchInput.value.trim();
+
+  let sourceList = [];
+  if(currentSearchMode === "governorate"){
+    sourceList = [...listsData.governorates];
+  }
+
+  if(!normalizeSearchText(text)){
+    currentFilteredResults = sourceList.sort((a,b) => String(a).localeCompare(String(b), "ar"));
+    renderSearchResults(currentFilteredResults);
+    return;
+  }
+
+  currentFilteredResults = sourceList
+    .map(item => ({
+      item,
+      score: scoreMatch(item, text)
+    }))
+    .filter(entry => containsAllWords(entry.item, text))
+    .sort((a,b) => b.score - a.score)
+    .map(entry => entry.item);
+
+  renderSearchResults(currentFilteredResults);
+});
+
+function renderSearchResults(list){
+  searchResults.innerHTML = "";
+
+  if(list.length === 0){
+    searchResults.innerHTML = '<div class="search-item">ماكو نتائج</div>';
+    return;
+  }
+
+  list.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "search-item";
+    div.textContent = item;
+
+    div.onclick = () => {
+      if(currentSearchMode === "governorate"){
+        governorateInput.value = item;
+      }
+      updatePreview();
+      closeSearch();
+    };
+
+    searchResults.appendChild(div);
+  });
+}
+
+async function saveListToFirebase(key, data){
+  await set(ref(db, "customerCardLists/" + key), data);
+}
+
+async function loadListsFromFirebase(){
+  const snapshot = await get(child(ref(db), "customerCardLists"));
+  if(snapshot.exists()){
+    return snapshot.val();
+  }
+  return null;
+}
+
+async function deleteListsFromFirebase(){
+  await remove(ref(db, "customerCardLists"));
+}
+
+async function loadFirebaseLists(){
+  try{
+    const firebaseData = await loadListsFromFirebase();
+
+    if(firebaseData && typeof firebaseData === "object"){
+      listsData = {
+        governorates: Array.isArray(firebaseData.governorates) ? firebaseData.governorates : [],
+        delegates: Array.isArray(firebaseData.delegates) ? firebaseData.delegates : [],
+        discounts: Array.isArray(firebaseData.discounts) ? firebaseData.discounts : []
+      };
+    } else {
+      listsData = {
+        governorates: [],
+        delegates: [],
+        discounts: []
+      };
+    }
+
+    fillSelect(delegateSelect, listsData.delegates, "اختر المندوب");
+    fillSelect(discountSelect, listsData.discounts, "اختر الخصم");
+  }catch(error){
+    console.log("تعذر تحميل القوائم", error);
+  }
+}
+
+function getColumnValuesFromRows(rows){
+  if(!rows.length) return [];
+
+  const firstKey = Object.keys(rows[0])[0];
+  if(!firstKey) return [];
+
+  const values = rows
+    .map(row => String(row[firstKey] || "").trim())
+    .filter(Boolean);
+
+  return [...new Set(values)];
+}
+
+function handleExcelImport(fileInputId, targetKey, successName){
+  document.getElementById(fileInputId).addEventListener("change", async function(e){
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = async function(evt){
+      try{
+        const data = new Uint8Array(evt.target.result);
+        const workbook = XLSX.read(data, { type: "array" });
+        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(sheet);
+
+        if (!rows.length) {
+          alert("فشل الاستيراد: ملف الإكسل فارغ");
+          return;
+        }
+
+        const values = getColumnValuesFromRows(rows);
+
+        if(!values.length){
+          alert("فشل الاستيراد: ماكو بيانات صالحة");
+          return;
+        }
+
+        listsData[targetKey] = values;
+        await saveListToFirebase(targetKey, values);
+
+        if(targetKey === "delegates"){
+          fillSelect(delegateSelect, listsData.delegates, "اختر المندوب");
+        } else if(targetKey === "discounts"){
+          fillSelect(discountSelect, listsData.discounts, "اختر الخصم");
+        }
+
+        alert("تم استيراد " + successName + " بنجاح. العدد: " + values.length);
+      }catch(error){
+        alert("فشل الاستيراد: " + error.message);
+      }finally{
+        e.target.value = "";
+      }
+    };
+
+    reader.onerror = function(){
+      alert("فشل الاستيراد: تعذر قراءة الملف");
+      e.target.value = "";
+    };
+
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+handleExcelImport("governoratesFile", "governorates", "المحافظات");
+handleExcelImport("delegatesFile", "delegates", "المندوبين");
+handleExcelImport("discountsFile", "discounts", "الخصومات");
+
+async function deleteSavedLists(){
+  const password = prompt("ادخل الباسورد لحذف البيانات");
+  if(password === null) return;
+
+  if(password !== DELETE_PASSWORD){
+    alert("الباسورد غير صحيح");
+    return;
+  }
+
+  try{
+    await deleteListsFromFirebase();
+  }catch(error){
+    console.log("تعذر حذف البيانات", error);
+  }
+
+  listsData = {
+    governorates: [],
+    delegates: [],
+    discounts: []
+  };
+
+  fillSelect(delegateSelect, [], "اختر المندوب");
+  fillSelect(discountSelect, [], "اختر الخصم");
+
+  governorateInput.value = "";
+  delegateSelect.value = "";
+  discountSelect.value = "";
+
+  updatePreview();
+  alert("تم حذف البيانات بنجاح");
+}
+window.deleteSavedLists = deleteSavedLists;
+
+function showStatusOverlay(){
+  statusOverlay.classList.add("show");
+}
+
+function hideStatusOverlay(){
+  statusOverlay.classList.remove("show");
+}
+
+function resetStatusCard(delay = 1500) {
+  setTimeout(() => {
+    hideStatusOverlay();
+    statusBar.style.width = "0%";
+    statusText.textContent = "جاري حفظ البطاقة...";
+    statusLog.innerHTML = "";
+    statusCard.classList.remove("processing", "done", "error");
+    statusText.style.color = "";
+  }, delay);
+}
+
+function addStatusLog(message) {
+  if (!message) return;
+
+  let prefix = "• ";
+  let color = "#444";
+  let rowClass = "";
+  let bg = "#ffffff";
+  let borderColor = "#e6e9ef";
+
+  if (message.includes("تم")) {
+    prefix = "✅ ";
+    color = "#15803d";
+    rowClass = "done";
+    bg = "#ecfdf3";
+    borderColor = "#bbf7d0";
+  }
+  else if (message.includes("جاري")) {
+    prefix = "🔄 ";
+    color = "#0d6efd";
+    rowClass = "running";
+    bg = "#eef4ff";
+    borderColor = "#cfe0ff";
+  }
+  else if (message.includes("فشل") || message.includes("خطأ")) {
+    prefix = "❌ ";
+    color = "#dc2626";
+    rowClass = "error";
+    bg = "#fef2f2";
+    borderColor = "#fecaca";
+  }
+
+  const row = document.createElement("div");
+  row.className = rowClass;
+  row.innerHTML = `<span style="font-size:16px">${prefix}</span><span>${message}</span>`;
+  row.style.color = color;
+  row.style.background = bg;
+  row.style.borderColor = borderColor;
+
+  if (statusLog.children.length > 8) {
+    statusLog.removeChild(statusLog.firstChild);
+  }
+
+  statusLog.appendChild(row);
+  statusLog.scrollTop = statusLog.scrollHeight;
+}
+
+function updateStatus(status){
+  if(status === "sending"){
+    statusText.textContent = "جاري حفظ البطاقة...";
+    statusBar.style.width = "20%";
+    statusCard.classList.remove("done", "error");
+    statusCard.classList.add("processing");
+    addStatusLog("جاري حفظ البطاقة");
+  } 
+  else if(status === "new"){
+    statusText.textContent = "تم إرسال البيانات، بانتظار المعالجة...";
+    statusBar.style.width = "50%";
+    statusCard.classList.remove("done", "error");
+    statusCard.classList.add("processing");
+    addStatusLog("تم إرسال البيانات، بانتظار المعالجة");
+  }
+  else if(status === "processing"){
+    statusText.textContent = "جارٍ معالجة بيانات البطاقة...";
+    statusBar.style.width = "70%";
+    statusCard.classList.remove("done", "error");
+    statusCard.classList.add("processing");
+    addStatusLog("جاري معالجة بيانات البطاقة");
+  }
+  else if(status === "done"){
+    statusText.textContent = "تم حفظ البطاقة بنجاح";
+    statusBar.style.width = "100%";
+    statusCard.classList.remove("processing", "error");
+    statusCard.classList.add("done");
+    addStatusLog("تم حفظ البطاقة بنجاح");
+  }
+  else if(status === "error"){
+    statusText.textContent = "صار خطأ أثناء حفظ البطاقة";
+    statusBar.style.width = "100%";
+    statusCard.classList.remove("processing", "done");
+    statusCard.classList.add("error");
+    addStatusLog("خطأ أثناء حفظ البطاقة");
+  }
+}
+
+function clearForm(){
+  customerName.value = "";
+  customerNumber.value = "";
+  governorateInput.value = "";
+  selectedBrand = "";
+  delegateSelect.value = "";
+  discountSelect.value = "";
+
+  document.querySelectorAll(".brand-btn").forEach(b => b.classList.remove("active"));
+  updatePreview();
+}
+window.clearForm = clearForm;
+
+async function saveCustomerCardToFirebase(payload){
+  const id = Date.now();
+  await set(ref(db, "customerCards/" + id), payload);
+}
+
+async function saveCustomerCard(){
+  if(!customerName.value.trim()){
+    alert("ادخل اسم الزبون");
+    return;
+  }
+
+  if(customerNumber.value.trim().length !== 11){
+    alert("رقم الزبون لازم يكون 11 رقم");
+    return;
+  }
+
+  if(!governorateInput.value.trim()){
+    alert("اختر المحافظة");
+    return;
+  }
+
+  if(!selectedBrand){
+    alert("اختر البراند");
+    return;
+  }
+
+  if(!delegateSelect.value){
+    alert("اختر المندوب");
+    return;
+  }
+
+  if(!discountSelect.value){
+    alert("اختر الخصم");
+    return;
+  }
+
+  saveBtn.disabled = true;
+  saveBtn.textContent = "جاري الحفظ...";
+
+  try{
+    statusLog.innerHTML = "";
+    showStatusOverlay();
+    updateStatus("sending");
+
+    const payload = {
+      name: customerName.value.trim(),
+      number: customerNumber.value.trim(),
+      governorate: governorateInput.value.trim(),
+      brand: selectedBrand,
+      delegate: delegateSelect.value,
+      discount: discountSelect.value,
+      time: Date.now()
+    };
+
+    setTimeout(() => updateStatus("new"), 500);
+    setTimeout(() => updateStatus("processing"), 1200);
+
+    await new Promise(resolve => setTimeout(resolve, 1600));
+    await saveCustomerCardToFirebase(payload);
+
+    updateStatus("done");
+
+    setTimeout(() => {
+      clearForm();
+    }, 400);
+
+    resetStatusCard(1800);
+  }catch(error){
+    updateStatus("error");
+    resetStatusCard(2200);
+    alert("صار خطأ أثناء الحفظ");
+  }finally{
+    setTimeout(() => {
+      saveBtn.disabled = false;
+      saveBtn.textContent = "حفظ";
+    }, 400);
+  }
+}
+window.saveCustomerCard = saveCustomerCard;
+
+await loadFirebaseLists();
+updatePreview();
 </script>
 
 </body>
