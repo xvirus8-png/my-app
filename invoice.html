@@ -5,40 +5,915 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>فاتورة بيع</title>
 
-<style>
-body{background:#f5f7fa;font-family:system-ui}
-.container{max-width:500px;margin:auto;padding:20px}
-.card{background:#fff;padding:20px;border-radius:18px;box-shadow:0 8px 25px rgba(0,0,0,.06)}
-.title{font-size:22px;font-weight:800;margin-bottom:20px;text-align:center}
-.btn{width:100%;padding:14px;border:none;border-radius:14px;font-weight:800;cursor:pointer}
-.btn-primary{background:#0d6efd;color:#fff}
-</style>
-</head>
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="نظام المحاسبة">
+<meta name="apple-mobile-web-app-title" content="فاتورة بيع">
 <meta name="theme-color" content="#0d6efd">
-<link rel="apple-touch-icon" href="icon.png">
-<link rel="icon" type="image/png" href="icon.png">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+*{
+  -webkit-user-select:none;
+  user-select:none;
+  -webkit-touch-callout:none;
+}
+
+body{
+  background:#f5f7fa;
+  font-family:system-ui;
+  padding-bottom:120px;
+}
+
+.container{
+  max-width:600px;
+  margin:auto;
+  padding:15px;
+}
+
+.top-bar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.top-bar h1{
+  font-size:22px;
+  font-weight:800;
+}
+
+.logo{
+  width:45px;
+  height:45px;
+  border-radius:50%;
+  background:#0d6efd;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+}
+
+.card{
+  background:#fff;
+  padding:18px;
+  border-radius:18px;
+  box-shadow:0 8px 25px rgba(0,0,0,.06);
+  margin-bottom:15px;
+}
+
+.section-title{
+  font-weight:800;
+  margin-bottom:12px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.input-group{
+  margin-bottom:15px;
+}
+
+.input-group label{
+  display:block;
+  font-weight:700;
+  margin-bottom:6px;
+  font-size:14px;
+}
+
+.input-group input{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid #ddd;
+  font-size:16px;
+  background:#fff;
+}
+
+.quick-brands{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin-top:8px;
+}
+
+.brand-btn{
+  padding:6px;
+  border-radius:14px;
+  border:2px solid #e3e3e3;
+  background:#fff;
+  font-weight:800;
+  font-size:16px;
+  cursor:pointer;
+  height:38px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.brand-btn.active{
+  background:#0d6efd;
+  color:#fff;
+  border-color:#0d6efd;
+}
+
+.info-box{
+  background:linear-gradient(135deg,#f8fbff,#eef4ff);
+  padding:14px;
+  border-radius:16px;
+  margin-top:10px;
+  border:1.5px solid #dbe4ff;
+  box-shadow:0 8px 22px rgba(13,110,253,.08);
+}
+
+.info-row{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:8px;
+  gap:10px;
+}
+
+.bottom-bar{
+  position:fixed;
+  bottom:12px;
+  right:0;
+  left:0;
+  background:#fff;
+  border-top:1px solid #eee;
+  padding:12px;
+  z-index:10;
+}
+
+.bottom-wrap{
+  max-width:600px;
+  margin:auto;
+  display:flex;
+  gap:10px;
+}
+
+.btn{
+  flex:1;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  font-weight:800;
+  font-size:16px;
+  cursor:pointer;
+}
+
+.btn-primary{
+  background:#0d6efd;
+  color:#fff;
+}
+
+.btn-secondary{
+  background:linear-gradient(135deg,#f8fbff,#eef4ff);
+  color:#0d6efd;
+  border:1.5px solid #dbe4ff;
+  box-shadow:0 8px 22px rgba(13,110,253,.08);
+}
+
+/* شاشة البحث */
+#searchOverlay{
+position:fixed;
+top:0;
+left:0;
+right:0;
+bottom:0;
+background:#fff;
+z-index:999;
+display:none;
+padding:15px;
+}
+
+.search-top{
+display:flex;
+gap:10px;
+margin-bottom:12px;
+}
+
+#searchInput{
+flex:1;
+padding:14px 16px;
+border-radius:16px;
+border:1.5px solid #dbe4ff;
+font-size:16px;
+background:linear-gradient(135deg,#f8fbff,#eef4ff);
+color:#0f172a;
+outline:none;
+box-shadow:0 8px 22px rgba(13,110,253,.08);
+transition:.25s ease;
+}
+
+#searchInput:focus{
+border-color:#0d6efd;
+box-shadow:0 0 0 4px rgba(13,110,253,.12),0 10px 25px rgba(13,110,253,.10);
+}
+
+#searchResults{
+max-height:52vh;
+overflow:auto;
+border-radius:14px;
+background:#fff;
+}
+
+.search-item{
+padding:12px 14px;
+border:1px solid #edf2ff;
+border-radius:14px;
+cursor:pointer;
+font-size:15px;
+line-height:1.2;
+background:#fff;
+margin-bottom:8px;
+transition:.2s ease;
+}
+
+.search-item:hover{
+background:#f8fbff;
+border-color:#cfe0ff;
+transform:translateY(-1px);
+box-shadow:0 6px 16px rgba(13,110,253,.08);
+}
+
+.search-brand-box{
+background:linear-gradient(135deg,#f8fbff,#eef4ff);
+border:1.5px solid #dbe4ff;
+padding:12px 14px;
+border-radius:16px;
+margin-bottom:12px;
+font-weight:800;
+color:#0d6efd;
+box-shadow:0 8px 22px rgba(13,110,253,.08);
+}
+
+/* حالة الطلب - نفس الكشف */
+#statusText{
+font-weight:700;
+margin-bottom:10px;
+}
+
+.status-track{
+width:100%;
+height:10px;
+background:#e9ecef;
+border-radius:999px;
+overflow:hidden;
+}
+#statusBar{
+width:0%;
+height:100%;
+background:#0d6efd;
+transition:width .35s ease;
+}
+/* حركة جاري */
+@keyframes pulse {
+0% { transform: scale(1); }
+50% { transform: scale(1.03); }
+100% { transform: scale(1); }
+}
+
+/* حركة تم */
+@keyframes glow {
+0% { box-shadow: 0 0 0 rgba(34,197,94,0); }
+50% { box-shadow: 0 0 12px rgba(34,197,94,.4); }
+100% { box-shadow: 0 0 0 rgba(34,197,94,0); }
+}
+
+#statusLog div{
+display:flex;
+align-items:center;
+gap:8px;
+background:#ffffff;
+border:1px solid #e6e9ef;
+padding:8px 12px;
+border-radius:12px;
+margin-bottom:6px;
+font-size:14px;
+font-weight:600;
+box-shadow:0 4px 10px rgba(0,0,0,.04);
+opacity:0;
+transform:translateY(-6px);
+animation:fadeSlide .3s ease forwards;
+}
+
+@keyframes fadeSlide{
+to{
+  opacity:1;
+  transform:translateY(0);
+}
+}
+@keyframes pulseStrong {
+  0% { transform: scale(1); box-shadow: 0 0 0 rgba(13,110,253,0); }
+  50% { transform: scale(1.035); box-shadow: 0 0 18px rgba(13,110,253,.18); }
+  100% { transform: scale(1); box-shadow: 0 0 0 rgba(13,110,253,0); }
+}
+
+@keyframes glowStrong {
+  0% { transform: scale(1); box-shadow: 0 0 0 rgba(34,197,94,0); }
+  50% { transform: scale(1.02); box-shadow: 0 0 20px rgba(34,197,94,.35); }
+  100% { transform: scale(1); box-shadow: 0 0 0 rgba(34,197,94,0); }
+}
+
+@keyframes shakeSoft {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(2px); }
+  40% { transform: translateX(-2px); }
+  60% { transform: translateX(2px); }
+  80% { transform: translateX(-2px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes barShine {
+  0% { left: 120%; }
+  100% { left: -35%; }
+}
+
+#statusCard {
+  transition: .25s ease;
+  margin-top: 15px;
+}
+
+#statusCard.processing{
+  border: 1px solid #dbe4ff;
+  box-shadow: 0 10px 28px rgba(13,110,253,.10);
+}
+
+#statusCard.done{
+  border: 1px solid #d9fbe6;
+  box-shadow: 0 10px 28px rgba(34,197,94,.12);
+}
+
+#statusCard.error{
+  border: 1px solid #ffd5d5;
+  box-shadow: 0 10px 28px rgba(220,38,38,.12);
+}
+
+.status-track{
+  position: relative;
+  width:100%;
+  height:10px;
+  background:#e9ecef;
+  border-radius:999px;
+  overflow:hidden;
+}
+
+#statusBar{
+  width:0%;
+  height:100%;
+  background:linear-gradient(90deg,#0d6efd,#4f8cff,#0d6efd);
+  background-size: 200% 100%;
+  transition: width .45s ease;
+  position: relative;
+}
+
+#statusBar::after{
+  content:"";
+  position:absolute;
+  top:0;
+  left:-35%;
+  width:35%;
+  height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent);
+  animation: barShine 1.8s linear infinite;
+}
+
+#statusText{
+  transition:.2s ease;
+}
+
+#statusLog div.running{
+  animation: fadeSlide .3s ease forwards, pulseStrong 1.2s infinite;
+}
+
+#statusLog div.done{
+  animation: fadeSlide .3s ease forwards, glowStrong .8s ease;
+}
+
+#statusLog div.error{
+  animation: fadeSlide .3s ease forwards, shakeSoft .35s ease;
+}
+</style>
+</head>
 
 <body>
 
 <div class="container">
-  <div class="card">
-    <div class="title">فاتورة بيع</div>
 
-    <p style="text-align:center;margin-bottom:20px;">
-      صفحة قيد التطوير
-    </p>
+  <div class="top-bar">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div class="logo">
+        <i class="bi bi-receipt-cutoff"></i>
+      </div>
+      <h1>استيراد فاتورة بيع</h1>
+    </div>
+  </div>
 
-    <button class="btn btn-primary" onclick="goBack()">رجوع</button>
+  <div class="input-group">
+    <input type="text" id="invoiceNumber" placeholder="ادخل رقم الفاتورة" inputmode="numeric" pattern="[0-9]*">
+  </div>
+
+  <div class="input-group">
+    <div class="quick-brands">
+      <button type="button" class="brand-btn" onclick="setBrand('FOREVER',this)">FOREVER</button>
+      <button type="button" class="brand-btn" onclick="setBrand('CHARACTER',this)">CHARACTER</button>
+      <button type="button" class="brand-btn" onclick="setBrand('ROSELLA',this)">ROSELLA</button>
+      <button type="button" class="brand-btn" onclick="setBrand('FUTURE',this)">FUTURE</button>
+    </div>
+  </div>
+
+  <div class="input-group">
+    <label>اسم الزبون</label>
+    <input type="text" id="invoiceCustomer" placeholder="اضغط للبحث" onclick="openSearch()" readonly>
+  </div>
+
+  <div class="info-box">
+    <div class="info-row">
+      <div>البراند</div>
+      <div id="previewBrand">—</div>
+    </div>
+
+    <div class="info-row">
+      <div>اسم الزبون</div>
+      <div id="previewCustomer">—</div>
+    </div>
+
+    <div class="info-row">
+      <div>رقم الفاتورة</div>
+      <div id="previewInvoice">—</div>
+    </div>
+  </div>
+
+  <div id="statusCard" class="card" style="display:none;">
+    <div class="section-title">
+      <i class="bi bi-hourglass-split"></i>
+      حالة الطلب
+    </div>
+
+    <div id="statusText">جاري الاستيراد...</div>
+
+    <div id="statusLog" style="
+      font-size:14px;
+      line-height:1.8;
+      margin-bottom:10px;
+      color:#444;
+    "></div>
+
+    <div class="status-track">
+      <div id="statusBar"></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="bottom-bar">
+  <div class="bottom-wrap">
+    <button class="btn btn-secondary" onclick="simulateImport('excel')">استيراد Excel</button>
+    <button class="btn btn-primary" onclick="simulateImport('pdf')">استيراد PDF</button>
   </div>
 </div>
 
-<script>
-function goBack(){
-  window.location.href = "index.html";
+<div id="searchOverlay">
+  <div class="search-brand-box" id="searchBrandTitle">البراند: —</div>
+
+  <div class="search-top">
+    <input type="text" id="searchInput" placeholder="ابحث عن اسم الزبون">
+    <button class="btn btn-secondary" style="flex:0 0 auto;padding:12px 16px" onclick="closeSearch()">إلغاء</button>
+  </div>
+
+  <div id="searchResults"></div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const app = initializeApp({
+  apiKey: "AIzaSyDaQ7Ur6f7_ugSTy2_u0-gPEtUsFzhh82U",
+  authDomain: "kashf-system.firebaseapp.com",
+  databaseURL: "https://kashf-system-default-rtdb.firebaseio.com",
+  projectId: "kashf-system",
+  storageBucket: "kashf-system.firebasestorage.app",
+  messagingSenderId: "987561323340",
+  appId: "1:987561323340:web:19d72fce8456f2fdf9bde9"
+});
+
+const db = getDatabase(app);
+
+let selectedBrand = "";
+let currentFilteredResults = [];
+
+let customersByBrand = {
+  FOREVER: [],
+  CHARACTER: [],
+  ROSELLA: [],
+  FUTURE: []
+};
+
+const previewBrand = document.getElementById("previewBrand");
+const previewCustomer = document.getElementById("previewCustomer");
+const previewInvoice = document.getElementById("previewInvoice");
+
+const invoiceNumber = document.getElementById("invoiceNumber");
+const invoiceCustomer = document.getElementById("invoiceCustomer");
+
+const overlay = document.getElementById("searchOverlay");
+const searchInput = document.getElementById("searchInput");
+const results = document.getElementById("searchResults");
+const searchBrandTitle = document.getElementById("searchBrandTitle");
+
+const statusCard = document.getElementById("statusCard");
+const statusText = document.getElementById("statusText");
+const statusBar = document.getElementById("statusBar");
+const statusLog = document.getElementById("statusLog");
+
+async function loadCustomersFromFirebase(){
+  const snapshot = await get(child(ref(db), "customersByBrand"));
+  if(snapshot.exists()){
+    return snapshot.val();
+  }
+  return null;
 }
+
+async function loadFirebaseCustomers(){
+  try{
+    const firebaseData = await loadCustomersFromFirebase();
+
+    if(firebaseData && typeof firebaseData === "object"){
+      customersByBrand = {
+        FOREVER: Array.isArray(firebaseData.FOREVER) ? firebaseData.FOREVER : [],
+        CHARACTER: Array.isArray(firebaseData.CHARACTER) ? firebaseData.CHARACTER : [],
+        ROSELLA: Array.isArray(firebaseData.ROSELLA) ? firebaseData.ROSELLA : [],
+        FUTURE: Array.isArray(firebaseData.FUTURE) ? firebaseData.FUTURE : []
+      };
+
+      Object.keys(customersByBrand).forEach(brand => {
+        customersByBrand[brand] = customersByBrand[brand].map(item => {
+          if(typeof item === "string"){
+            return { id: Date.now() + Math.random(), name: item };
+          }
+          return item;
+        });
+      });
+    }else{
+      customersByBrand = {
+        FOREVER: [],
+        CHARACTER: [],
+        ROSELLA: [],
+        FUTURE: []
+      };
+    }
+  }catch(error){
+    console.log("تعذر تحميل الزباين من Firebase", error);
+    customersByBrand = {
+      FOREVER: [],
+      CHARACTER: [],
+      ROSELLA: [],
+      FUTURE: []
+    };
+  }
+}
+
+function setBrand(brand, btn){
+  selectedBrand = brand;
+
+  document.querySelectorAll(".brand-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+
+  previewBrand.textContent = brand;
+  invoiceCustomer.value = "";
+  previewCustomer.textContent = "—";
+}
+window.setBrand = setBrand;
+
+invoiceNumber.addEventListener("input", () => {
+  previewInvoice.textContent = invoiceNumber.value.trim() || "—";
+});
+
+function getCustomersForSearch(){
+  if(selectedBrand){
+    return [...(customersByBrand[selectedBrand] || [])].map(item => ({
+      id: item.id,
+      name: item.name,
+      brand: selectedBrand
+    }));
+  }
+
+  let allCustomers = [];
+
+  Object.keys(customersByBrand).forEach(brand => {
+    (customersByBrand[brand] || []).forEach(item => {
+      allCustomers.push({
+        id: item.id,
+        name: item.name,
+        brand: brand
+      });
+    });
+  });
+
+  return allCustomers;
+}
+
+function normalizeSearchText(text){
+  return String(text || "")
+    .toLowerCase()
+    .trim()
+    .replace(/[أإآ]/g, "ا")
+    .replace(/ة/g, "ه")
+    .replace(/ى/g, "ي")
+    .replace(/ؤ/g, "و")
+    .replace(/ئ/g, "ي")
+    .replace(/\s+/g, " ")
+    .replace(/[-_]/g, "")
+    .replace(/[^\w\u0600-\u06FF ]/g, "");
+}
+
+function containsAllWords(sourceText, queryText) {
+  const source = normalizeSearchText(sourceText);
+  const words = normalizeSearchText(queryText).split(" ").filter(Boolean);
+
+  if (words.length === 0) return true;
+
+  return words.every(word => source.includes(word));
+}
+
+function scoreCustomerMatch(name, query){
+  const normalizedName = normalizeSearchText(name);
+  const normalizedQuery = normalizeSearchText(query);
+
+  if(!normalizedQuery) return 1;
+
+  const compactName = normalizedName.replace(/\s/g, "");
+  const compactQuery = normalizedQuery.replace(/\s/g, "");
+
+  let score = 0;
+
+  if(compactName === compactQuery) score += 1000;
+  if(normalizedName === normalizedQuery) score += 950;
+
+  if(compactName.startsWith(compactQuery)) score += 700;
+  if(normalizedName.startsWith(normalizedQuery)) score += 650;
+
+  if(compactName.includes(compactQuery)) score += 500;
+  if(normalizedName.includes(normalizedQuery)) score += 450;
+
+  const words = normalizedName.split(" ").filter(Boolean);
+  const queryWords = normalizedQuery.split(" ").filter(Boolean);
+
+  queryWords.forEach(qWord => {
+    words.forEach(word => {
+      if(word === qWord) score += 120;
+      else if(word.startsWith(qWord)) score += 80;
+      else if(word.includes(qWord)) score += 40;
+    });
+  });
+
+  const allQueryWordsExist = queryWords.every(qWord =>
+    words.some(word => word.includes(qWord))
+  );
+
+  if(allQueryWordsExist && queryWords.length > 1){
+    score += 300;
+  }
+
+  return score;
+}
+
+function openSearch(){
+  if(!selectedBrand){
+    alert("اختر البراند اولاً");
+    return;
+  }
+
+  overlay.style.display = "block";
+  searchInput.value = "";
+  searchBrandTitle.textContent = "البراند المختار: " + selectedBrand;
+
+  currentFilteredResults = [...getCustomersForSearch()].sort((a, b) =>
+    String(a.name || "").localeCompare(String(b.name || ""), "ar")
+  );
+
+  renderResults(currentFilteredResults);
+  searchInput.focus();
+}
+window.openSearch = openSearch;
+
+function closeSearch(){
+  overlay.style.display = "none";
+}
+window.closeSearch = closeSearch;
+
+searchInput.addEventListener("input", () => {
+  const text = searchInput.value.trim();
+  const allCustomers = getCustomersForSearch();
+
+  if (!normalizeSearchText(text)) {
+    currentFilteredResults = [...allCustomers].sort((a, b) =>
+      String(a.name || "").localeCompare(String(b.name || ""), "ar")
+    );
+
+    renderResults(currentFilteredResults);
+    return;
+  }
+
+  currentFilteredResults = allCustomers
+    .map(item => {
+      return {
+        item,
+        searchSource: item.name,
+        score: scoreCustomerMatch(item.name, text)
+      };
+    })
+    .filter(entry => containsAllWords(entry.searchSource, text))
+    .sort((a, b) => b.score - a.score)
+    .map(entry => entry.item);
+
+  renderResults(currentFilteredResults);
+});
+
+function renderResults(list){
+  results.innerHTML = "";
+
+  if(list.length === 0){
+    results.innerHTML = '<div class="search-item">ماكو نتائج</div>';
+    return;
+  }
+
+  if(list.length > 100){
+    const note = document.createElement("div");
+    note.className = "search-item";
+    note.style.fontWeight = "800";
+    note.style.background = "#fff8e1";
+    note.innerText = "تم عرض أول 100 نتيجة من أصل " + list.length;
+    results.appendChild(note);
+  }
+
+  list.slice(0, 100).forEach(item => {
+    const div = document.createElement("div");
+    div.className = "search-item";
+    div.innerText = item.name;
+
+    div.onclick = () => {
+      invoiceCustomer.value = item.name;
+      previewCustomer.textContent = item.name;
+      closeSearch();
+    };
+
+    results.appendChild(div);
+  });
+}
+
+function showStatusCard(){
+  statusCard.style.display = "block";
+}
+
+function resetStatusCard(delay = 1500) {
+  setTimeout(() => {
+    statusCard.style.display = "none";
+    statusBar.style.width = "0%";
+    statusText.textContent = "جاري الاستيراد...";
+    statusLog.innerHTML = "";
+    statusCard.classList.remove("processing", "done", "error");
+    statusText.style.color = "";
+  }, delay);
+}
+
+function addStatusLog(message) {
+  if (!message) return;
+
+  let prefix = "• ";
+  let color = "#444";
+  let rowClass = "";
+  let bg = "#ffffff";
+  let borderColor = "#e6e9ef";
+
+  if (message.includes("تم")) {
+    prefix = "✅ ";
+    color = "#15803d";
+    rowClass = "done";
+    bg = "#ecfdf3";
+    borderColor = "#bbf7d0";
+  }
+  else if (message.includes("جاري")) {
+    prefix = "🔄 ";
+    color = "#0d6efd";
+    rowClass = "running";
+    bg = "#eef4ff";
+    borderColor = "#cfe0ff";
+  }
+  else if (message.includes("فشل") || message.includes("خطأ")) {
+    prefix = "❌ ";
+    color = "#dc2626";
+    rowClass = "error";
+    bg = "#fef2f2";
+    borderColor = "#fecaca";
+  }
+
+  statusLog.innerHTML = "";
+
+  const row = document.createElement("div");
+  row.className = rowClass;
+  row.innerHTML = `<span style="font-size:16px">${prefix}</span><span>${message}</span>`;
+  row.style.color = color;
+  row.style.background = bg;
+  row.style.borderColor = borderColor;
+
+  statusLog.appendChild(row);
+}
+
+function updateStatus(status){
+  if(status === "sending"){
+    statusText.textContent = "جاري استيراد ملف الإكسل...";
+    statusBar.style.width = "20%";
+    statusCard.classList.remove("done", "error");
+    statusCard.classList.add("processing");
+    addStatusLog("جاري استيراد ملف الإكسل");
+  } 
+  else if(status === "new"){
+    statusText.textContent = "تم رفع الملف، بانتظار المعالجة...";
+    statusBar.style.width = "50%";
+    statusCard.classList.remove("done", "error");
+    statusCard.classList.add("processing");
+    addStatusLog("تم رفع الملف، بانتظار المعالجة");
+  }
+  else if(status === "processing"){
+    statusText.textContent = "جارٍ معالجة بيانات الفاتورة...";
+    statusBar.style.width = "70%";
+    statusCard.classList.remove("done", "error");
+    statusCard.classList.add("processing");
+    addStatusLog("جاري معالجة بيانات الفاتورة");
+  }
+  else if(status === "done"){
+    statusText.textContent = "تم استيراد الفاتورة بنجاح";
+    statusBar.style.width = "100%";
+    statusCard.classList.remove("processing", "error");
+    statusCard.classList.add("done");
+    addStatusLog("تم استيراد الفاتورة بنجاح");
+  }
+  else if(status === "error"){
+    statusText.textContent = "صار خطأ أثناء استيراد الفاتورة";
+    statusBar.style.width = "100%";
+    statusCard.classList.remove("processing", "done");
+    statusCard.classList.add("error");
+    addStatusLog("خطأ أثناء استيراد الفاتورة");
+  }
+}
+function clearInvoiceForm(){
+  selectedBrand = "";
+
+  invoiceNumber.value = "";
+  invoiceCustomer.value = "";
+
+  previewBrand.textContent = "—";
+  previewCustomer.textContent = "—";
+  previewInvoice.textContent = "—";
+
+  document.querySelectorAll(".brand-btn").forEach(b => b.classList.remove("active"));
+}
+function simulateImport(type){
+  if(!invoiceNumber.value.trim()){
+    alert("ادخل رقم الفاتورة");
+    return;
+  }
+
+  if(!selectedBrand){
+    alert("اختر البراند");
+    return;
+  }
+
+  if(!invoiceCustomer.value.trim()){
+    alert("اختر الزبون");
+    return;
+  }
+
+  showStatusCard();
+  updateStatus("sending");
+
+  setTimeout(() => {
+    updateStatus("new");
+  }, 600);
+
+  setTimeout(() => {
+    updateStatus("processing");
+  }, 1400);
+
+  setTimeout(() => {
+  updateStatus("done");
+
+  setTimeout(() => {
+    clearInvoiceForm();
+  }, 400);
+
+  resetStatusCard(1800);
+}, 2400);
+}
+window.simulateImport = simulateImport;
+
+await loadFirebaseCustomers();
 </script>
 
 </body>
