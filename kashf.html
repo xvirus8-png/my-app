@@ -34,9 +34,6 @@ body{
 background:#f5f7fa;
 font-family:system-ui;
 padding-bottom:120px;
-
-overflow: hidden;
-height: 100vh;
 }
 
 .container{
@@ -393,18 +390,18 @@ display:none;
 .sidebar{
 position:fixed;
 top:0;
-left:-50%; /* نفس عرضها */
-width:50%; /* تاخذ نص الشاشة */
+right:-280px;
+width:280px;
 height:100%;
 background:#fff;
 z-index:1001;
 padding:20px;
-box-shadow:4px 0 16px rgba(0,0,0,.12);
+box-shadow:-4px 0 16px rgba(0,0,0,.12);
 transition:.25s;
 }
 
 .sidebar.open{
-left:0;
+right:0;
 }
 
 .sidebar-overlay.show{
@@ -423,31 +420,19 @@ align-items:center;
 gap:10px;
 padding:14px;
 border-radius:12px;
-
-/* لون أغمق شوي */
-background:#e9eef7;
-
+background:#f7f8fb;
 margin-bottom:10px;
 cursor:pointer;
 font-weight:700;
-
-/* يعطي عمق */
-border:1px solid #d6deea;
 }
 
-/* لون الأيقونة أغمق */
 .sidebar-item i{
 font-size:20px;
-color:#0b5ed7;
+color:#0d6efd;
 }
 
-/* تأثير عند اللمس */
-.sidebar-item:active{
-background:#dbe4f2;
-transform:scale(0.98);
-}
 .hidden-file{
-  display:none;
+display:none;
 }
 
 /* حالة الطلب */
@@ -632,18 +617,18 @@ to{
 
 <div class="container">
 
-<div class="top-bar">
-  <div style="display:flex; align-items:center; gap:10px;">
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <button class="menu-btn" onclick="toggleSidebar()">
+        <i class="bi bi-list"></i>
+      </button>
+      <h1>طلب كشف حساب</h1>
+    </div>
+
     <div class="logo">
       <i class="bi bi-receipt"></i>
     </div>
-    <h1>طلب كشف حساب</h1>
   </div>
-
-  <button class="menu-btn" onclick="toggleSidebar()">
-    <i class="bi bi-list"></i>
-  </button>
-</div>
 
   
 
@@ -1836,78 +1821,7 @@ function waitForRestartBayan() {
     }
   });
 }
-// تحميل البيانات أولاً
 await loadFirebaseCustomers();
-
-// ===============================
-// سحب من اليمين لليسار للرجوع
-// ===============================
-
-// بداية اللمسة
-let startX = 0;
-
-// مكان الإصبع الحالي
-let currentX = 0;
-
-// هل السحب مفعل
-let isDragging = false;
-
-// الصفحة كلها تتحرك أثناء السحب
-const page = document.body;
-
-document.addEventListener("touchstart", (e) => {
-  const x = e.touches[0].clientX;
-
-  // يبدأ فقط من آخر 35 بكسل من يم الشاشة
-  if (x > window.innerWidth - 35) {
-    startX = x;
-    currentX = x;
-    isDragging = true;
-
-    // نخلي الحركة فورية أثناء السحب
-    page.style.transition = "none";
-  } else {
-    isDragging = false;
-  }
-});
-
-document.addEventListener("touchmove", (e) => {
-  if (!isDragging) return;
-
-  currentX = e.touches[0].clientX;
-  const diff = currentX - startX;
-
-  // نسمح فقط بالسحب لليسار
-  if (diff < 0) {
-    page.style.transform = `translateX(${diff}px)`;
-  }
-});
-
-document.addEventListener("touchend", () => {
-  if (!isDragging) return;
-
-  const diff = currentX - startX;
-
-  // نخلي الرجوع أو الإلغاء ناعم
-  page.style.transition = "transform 0.25s ease";
-
-  // إذا السحب كان كافي
-  if (diff < -120) {
-    page.style.transform = "translateX(-100%)";
-
-    setTimeout(() => {
-      window.location.href = "index.html";
-    }, 200);
-  } else {
-    // إذا السحب ما كفى، ترجع الصفحة مكانها
-    page.style.transform = "translateX(0)";
-  }
-
-  // إعادة ضبط
-  isDragging = false;
-  startX = 0;
-  currentX = 0;
-});
 </script>
 
 </body>
