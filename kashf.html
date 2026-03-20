@@ -1,236 +1,180 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>طلب كشف حساب</title>
-  
-  <!-- الأيقونة -->
-  <link rel="icon" type="image/png" href="icon.png">
-  <link rel="apple-touch-icon" href="icon.png">
-  
-  <!-- وضع التطبيق -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="كشف حساب">
-  
-  <!-- لون المتصفح -->
-  <meta name="theme-color" content="#0d6efd">
-  
-  <!-- مكتبات -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-  
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>فاتورة بيع</title>
+
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="فاتورة بيع">
+<meta name="theme-color" content="#0d6efd">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-* {
-  -webkit-user-select: none;
-  user-select: none;
-  -webkit-touch-callout: none;
+*{
+  -webkit-user-select:none;
+  user-select:none;
+  -webkit-touch-callout:none;
 }
+
 body{
-background:#f5f7fa;
-font-family:system-ui;
-padding-bottom:120px;
+  background:#f5f7fa;
+  font-family:system-ui;
+  padding-bottom:120px;
 }
 
 .container{
-max-width:600px;
-margin:auto;
-padding:15px;
+  max-width:600px;
+  margin:auto;
+  padding:15px;
 }
 
 .top-bar{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
 }
 
 .top-bar h1{
-font-size:22px;
-font-weight:800;
-}
-
-.top-bar-left{
-display:flex;
-align-items:center;
-gap:10px;
-}
-
-.menu-btn{
-width:45px;
-height:45px;
-border:none;
-border-radius:12px;
-background:#fff;
-box-shadow:0 4px 12px rgba(0,0,0,.08);
-font-size:22px;
-cursor:pointer;
+  font-size:22px;
+  font-weight:800;
 }
 
 .logo{
-width:45px;
-height:45px;
-border-radius:50%;
-background:#0d6efd;
-color:#fff;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:22px;
+  width:45px;
+  height:45px;
+  border-radius:50%;
+  background:#0d6efd;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
 }
 
 .card{
-background:#fff;
-padding:18px;
-border-radius:18px;
-box-shadow:0 8px 25px rgba(0,0,0,.06);
-margin-bottom:15px;
+  background:#fff;
+  padding:18px;
+  border-radius:18px;
+  box-shadow:0 8px 25px rgba(0,0,0,.06);
+  margin-bottom:15px;
 }
 
 .section-title{
-font-weight:800;
-margin-bottom:12px;
-display:flex;
-align-items:center;
-gap:6px;
+  font-weight:800;
+  margin-bottom:12px;
+  display:flex;
+  align-items:center;
+  gap:6px;
 }
 
 .input-group{
-margin-bottom:15px;
+  margin-bottom:15px;
 }
 
 .input-group label{
-display:block;
-font-weight:700;
-margin-bottom:6px;
-font-size:14px;
+  display:block;
+  font-weight:700;
+  margin-bottom:6px;
+  font-size:14px;
 }
 
 .input-group input{
-width:100%;
-padding:12px;
-border-radius:12px;
-border:1px solid #ddd;
-font-size:16px;
-}
-
-.input-group select{
-width:100%;
-padding:12px;
-border-radius:12px;
-border:1px solid #ddd;
-font-size:16px;
-background:#fff;
-}
-
-.year-row{
-display:flex;
-gap:10px;
-align-items:center;
-}
-
-.year-row select{
-flex:1;
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid #ddd;
+  font-size:16px;
+  background:#fff;
 }
 
 .quick-brands{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:10px;
-margin-top:8px;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin-top:8px;
 }
 
 .brand-btn{
-padding:6px;
-border-radius:14px;
-border:2px solid #e3e3e3;
-background:#fff;
-font-weight:800;
-font-size:16px;
-cursor:pointer;
-height:38px;
-display:flex;
-align-items:center;
-justify-content:center;
+  padding:6px;
+  border-radius:14px;
+  border:2px solid #e3e3e3;
+  background:#fff;
+  font-weight:800;
+  font-size:16px;
+  cursor:pointer;
+  height:38px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
 .brand-btn.active{
-background:#0d6efd;
-color:#fff;
-border-color:#0d6efd;
+  background:#0d6efd;
+  color:#fff;
+  border-color:#0d6efd;
 }
 
 .info-box{
-background:linear-gradient(135deg,#f8fbff,#eef4ff);
-padding:14px;
-border-radius:16px;
-margin-top:10px;
-border:1.5px solid #dbe4ff;
-box-shadow:0 8px 22px rgba(13,110,253,.08);
+  background:linear-gradient(135deg,#f8fbff,#eef4ff);
+  padding:14px;
+  border-radius:16px;
+  margin-top:10px;
+  border:1.5px solid #dbe4ff;
+  box-shadow:0 8px 22px rgba(13,110,253,.08);
 }
 
 .info-row{
-display:flex;
-justify-content:space-between;
-margin-bottom:8px;
-gap:10px;
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:8px;
+  gap:10px;
 }
 
-.bottom-bar{ position:fixed; bottom:12px; right:0; left:0; background:#fff; border-top:1px solid #eee; padding:12px; z-index:10; }
+.bottom-bar{
+  position:fixed;
+  bottom:12px;
+  right:0;
+  left:0;
+  background:#fff;
+  border-top:1px solid #eee;
+  padding:12px;
+  z-index:10;
+}
 
 .bottom-wrap{
-max-width:600px;
-margin:auto;
-display:flex;
-gap:10px;
+  max-width:600px;
+  margin:auto;
+  display:flex;
+  gap:10px;
 }
 
 .btn{
-flex:1;
-padding:14px;
-border:none;
-border-radius:14px;
-font-weight:800;
-font-size:16px;
-cursor:pointer;
+  flex:1;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  font-weight:800;
+  font-size:16px;
+  cursor:pointer;
 }
 
 .btn-primary{
-background:#0d6efd;
-color:#fff;
+  background:#0d6efd;
+  color:#fff;
 }
 
 .btn-secondary{
-background:linear-gradient(135deg,#f8fbff,#eef4ff);
-color:#0d6efd;
-border:1.5px solid #dbe4ff;
-box-shadow:0 8px 22px rgba(13,110,253,.08);
-}
-
-.year-btn-save{
-width:48px;
-height:48px;
-border:none;
-border-radius:12px;
-background:linear-gradient(135deg,#0d6efd,#0b5ed7);
-color:#fff;
-font-size:20px;
-display:flex;
-align-items:center;
-justify-content:center;
-cursor:pointer;
-box-shadow:0 8px 18px rgba(13,110,253,.20);
-transition:.2s ease;
-flex:0 0 48px;
-}
-
-.year-btn-save:hover{
-transform:translateY(-1px);
-box-shadow:0 10px 22px rgba(13,110,253,.26);
+  background:linear-gradient(135deg,#f8fbff,#eef4ff);
+  color:#0d6efd;
+  border:1.5px solid #dbe4ff;
+  box-shadow:0 8px 22px rgba(13,110,253,.08);
 }
 
 /* شاشة البحث */
@@ -296,22 +240,6 @@ transform:translateY(-1px);
 box-shadow:0 6px 16px rgba(13,110,253,.08);
 }
 
-.search-item.select-mode{
-display:flex;
-align-items:center;
-gap:10px;
-}
-
-.search-item-name{
-flex:1;
-}
-
-.search-checkbox{
-width:20px;
-height:20px;
-accent-color:#0d6efd;
-}
-
 .search-brand-box{
 background:linear-gradient(135deg,#f8fbff,#eef4ff);
 border:1.5px solid #dbe4ff;
@@ -323,119 +251,7 @@ color:#0d6efd;
 box-shadow:0 8px 22px rgba(13,110,253,.08);
 }
 
-.search-actions{
-display:flex;
-align-items:center;
-gap:8px;
-flex-wrap:wrap;
-margin-bottom:10px;
-}
-
-#selectionTools{
-display:flex;
-gap:8px;
-flex-wrap:wrap;
-}
-
-.mini-btn{
-border:none;
-border-radius:12px;
-padding:10px 14px;
-font-size:14px;
-font-weight:800;
-cursor:pointer;
-background:#eef1f5;
-color:#222;
-}
-
-.mini-btn.primary{
-background:#0d6efd;
-color:#fff;
-}
-
-.mini-btn.danger{
-background:#fbe7e7;
-color:#b42318;
-}
-
-.selected-count-box{
-background:#f7f8fb;
-border:1px solid #eceff3;
-padding:10px 12px;
-border-radius:12px;
-margin-bottom:10px;
-font-weight:800;
-}
-
-.bulk-send-bar{
-position:sticky;
-bottom:0;
-background:#fff;
-padding-top:12px;
-margin-top:12px;
-}
-
-/* القائمة الجانبية */
-.sidebar-overlay{
-position:fixed;
-top:0;
-right:0;
-left:0;
-bottom:0;
-background:rgba(0,0,0,.35);
-z-index:1000;
-display:none;
-}
-
-.sidebar{
-position:fixed;
-top:0;
-right:-280px;
-width:280px;
-height:100%;
-background:#fff;
-z-index:1001;
-padding:20px;
-box-shadow:-4px 0 16px rgba(0,0,0,.12);
-transition:.25s;
-}
-
-.sidebar.open{
-right:0;
-}
-
-.sidebar-overlay.show{
-display:block;
-}
-
-.sidebar-title{
-font-size:20px;
-font-weight:800;
-margin-bottom:20px;
-}
-
-.sidebar-item{
-display:flex;
-align-items:center;
-gap:10px;
-padding:14px;
-border-radius:12px;
-background:#f7f8fb;
-margin-bottom:10px;
-cursor:pointer;
-font-weight:700;
-}
-
-.sidebar-item i{
-font-size:20px;
-color:#0d6efd;
-}
-
-.hidden-file{
-display:none;
-}
-
-/* حالة الطلب */
+/* حالة الطلب - نفس الكشف */
 #statusText{
 font-weight:700;
 margin-bottom:10px;
@@ -468,23 +284,18 @@ transition:width .35s ease;
 100% { box-shadow: 0 0 0 rgba(34,197,94,0); }
 }
 
-  
-  #statusLog div{
+#statusLog div{
 display:flex;
 align-items:center;
 gap:8px;
-
 background:#ffffff;
 border:1px solid #e6e9ef;
 padding:8px 12px;
 border-radius:12px;
 margin-bottom:6px;
-
 font-size:14px;
 font-weight:600;
-
 box-shadow:0 4px 10px rgba(0,0,0,.04);
-
 opacity:0;
 transform:translateY(-6px);
 animation:fadeSlide .3s ease forwards;
@@ -521,7 +332,6 @@ to{
   0% { left: 120%; }
   100% { left: -35%; }
 }
-
 
 #statusCard {
   transition: .25s ease;
@@ -588,474 +398,80 @@ to{
   animation: fadeSlide .3s ease forwards, shakeSoft .35s ease;
 }
 
-
-/* Overlay حالة الطلب فوق كل الشاشة */
-#statusOverlay{
-position:fixed;
-inset:0;
-display:none;
-align-items:flex-start;
-justify-content:center;
-padding-top:90px;
-background:rgba(255,255,255,.18);
-backdrop-filter:blur(8px);
--webkit-backdrop-filter:blur(8px);
-z-index:3000;
-}
-
-#statusOverlay.show{
-display:flex;
-}
-
-#statusOverlay .overlay-card{
-width:min(92%, 560px);
-}
-
-
-
-/* تحسينات انميشن ناعمة بدون تغيير الوظائف */
-@keyframes pageFadeIn {
-  from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
+/* brand animation like kashf */
 @keyframes softPop {
   0% { transform: scale(1); }
-  50% { transform: scale(0.97); }
+  50% { transform: scale(.96); }
   100% { transform: scale(1); }
 }
 
-@keyframes overlaySlideUp {
-  from { opacity: 0; transform: translateY(22px); }
-  to { opacity: 1; transform: translateY(0); }
+.brand-btn{
+  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease, background .22s ease;
 }
 
-body{
-  animation: pageFadeIn .45s ease;
-}
-
-.top-bar,
-.input-group,
-.section-title,
-.info-box,
-.bottom-bar{
-  animation: pageFadeIn .45s ease;
-}
-
-.input-group:nth-of-type(1){ animation-delay:.03s; }
-.input-group:nth-of-type(2){ animation-delay:.06s; }
-.input-group:nth-of-type(3){ animation-delay:.09s; }
-.info-box{ animation-delay:.12s; }
-.bottom-bar{ animation-delay:.15s; }
-
-.top-bar,
-.input-group,
-.section-title,
-.info-box,
-.bottom-bar{
-  animation-fill-mode: both;
-}
-
-.card,
-.info-box,
-.menu-btn,
-.brand-btn,
-.btn,
-.year-btn-save,
-.search-item,
-.sidebar-item,
-#searchInput,
-.input-group input,
-.input-group select{
-  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease, background-color .22s ease, opacity .22s ease;
-}
-
-.menu-btn:hover,
-.year-btn-save:hover,
-.btn:hover,
-.brand-btn:hover,
-.sidebar-item:hover,
-.search-item:hover,
-.info-box:hover{
-  transform: translateY(-2px);
-}
-
-.menu-btn:active,
-.year-btn-save:active,
-.btn:active,
-.brand-btn:active,
-.sidebar-item:active,
-.search-item:active{
+.brand-btn:active{
   animation: softPop .22s ease;
 }
 
 .brand-btn.active{
-  animation: pulse .35s ease;
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 10px 22px rgba(13,110,253,.20);
 }
 
-.input-group input:focus,
-.input-group select:focus{
-  border-color:#0d6efd;
-  box-shadow:0 0 0 4px rgba(13,110,253,.10), 0 10px 24px rgba(13,110,253,.08);
-  outline:none;
+/* fullscreen status overlay like kashf */
+#statusOverlay{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:flex-start;
+  justify-content:center;
+  padding-top:90px;
+  background:rgba(255,255,255,.18);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  z-index:3000;
 }
 
-#searchOverlay{
-  opacity:0;
-  transform: translateY(18px);
-  pointer-events:none;
-  transition: opacity .28s ease, transform .28s ease;
-}
-
-#searchOverlay.show{
-  display:block;
-  opacity:1;
-  transform: translateY(0);
-  pointer-events:auto;
-}
-
-#searchOverlay .search-top,
-#searchOverlay .search-actions,
-#searchOverlay .selected-count-box,
-#searchOverlay .search-brand-box,
-#searchOverlay #searchResults,
-#searchOverlay .bulk-send-bar{
-  animation: overlaySlideUp .28s ease;
-}
-
-.search-item{
-  animation: fadeSlide .25s ease forwards;
+#statusOverlay.show{
+  display:flex;
 }
 
 #statusOverlay .overlay-card{
-  animation: overlaySlideUp .3s ease;
+  width:min(92%,560px);
+  animation:overlaySlideUp .3s ease;
+}
+
+@keyframes overlaySlideUp{
+  from{opacity:0;transform:translateY(22px);}
+  to{opacity:1;transform:translateY(0);}
 }
 
 
-
-:root{
-  --ease-premium:cubic-bezier(.22,1,.36,1);
+/* colors */
+.excel-btn{
+  background:#16a34a !important;
+  color:#fff !important;
+}
+.pdf-btn{
+  background:#dc2626 !important;
+  color:#fff !important;
 }
 
-body::before{
-content:"";
-position:fixed;
-inset:0;
-pointer-events:none;
-background:
-radial-gradient(circle at 12% 10%, rgba(13,110,253,.07), transparent 24%),
-radial-gradient(circle at 88% 18%, rgba(79,140,255,.06), transparent 22%),
-radial-gradient(circle at 50% 100%, rgba(13,110,253,.05), transparent 26%);
-z-index:-1;
-animation:bgFloat 12s ease-in-out infinite alternate;
+/* eye blink */
+@keyframes blinkEye{
+  0%, 90%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.1); }
 }
 
-@keyframes bgFloat{
-0%{transform:translateY(0) scale(1);}
-100%{transform:translateY(-8px) scale(1.02);}
+.section-title:has(👁️){
+  display:flex;
+  align-items:center;
+  gap:6px;
 }
 
-.container{
-animation:pageEnter .7s var(--ease-premium);
-}
-
-@keyframes pageEnter{
-0%{opacity:0;transform:translateY(24px) scale(.985);}
-100%{opacity:1;transform:translateY(0) scale(1);}
-}
-
-.top-bar,.input-group,.section-title,.info-box{
-animation:softRise .65s var(--ease-premium);
-animation-fill-mode:both;
-}
-
-.top-bar{animation-delay:.02s}
-.input-group:nth-of-type(1){animation-delay:.08s}
-.input-group:nth-of-type(2){animation-delay:.14s}
-.input-group:nth-of-type(3){animation-delay:.20s}
-.section-title{animation-delay:.26s}
-.info-box{animation-delay:.32s}
-
-@keyframes softRise{
-from{opacity:0;transform:translateY(14px);}
-to{opacity:1;transform:translateY(0);}
-}
-
-.card,.info-box,.menu-btn,.year-btn-save,.brand-btn,.btn,.search-item,.sidebar-item,#statusCard{
-transition:transform .24s var(--ease-premium), box-shadow .24s var(--ease-premium), border-color .24s ease, background .24s ease, opacity .24s ease;
-will-change:transform;
-}
-
-.card:hover,.info-box:hover{
-transform:translateY(-2px);
-box-shadow:0 14px 32px rgba(0,0,0,.08);
-}
-
-.menu-btn:hover,.year-btn-save:hover,.btn:hover,.sidebar-item:hover{
-transform:translateY(-2px) scale(1.01);
-}
-
-.menu-btn:active,.year-btn-save:active,.btn:active,.brand-btn:active,.sidebar-item:active,.search-item:active{
-transform:scale(.97);
-}
-
-.brand-btn{
-position:relative;
-overflow:hidden;
-}
-
-.brand-btn::after,.btn-primary::after,.year-btn-save::after{
-content:"";
-position:absolute;
-top:0;
-left:-120%;
-width:80%;
-height:100%;
-background:linear-gradient(90deg, transparent, rgba(255,255,255,.48), transparent);
-transform:skewX(-20deg);
-transition:left .65s var(--ease-premium);
-pointer-events:none;
-}
-
-.brand-btn:hover::after,.btn-primary:hover::after,.year-btn-save:hover::after{
-left:135%;
-}
-
-.brand-btn.active{
-transform:translateY(-1px) scale(1.02);
-box-shadow:0 12px 24px rgba(13,110,253,.18);
-animation:activeBrandPop .35s var(--ease-premium);
-}
-
-@keyframes activeBrandPop{
-0%{transform:scale(.92);}
-70%{transform:scale(1.04);}
-100%{transform:translateY(-1px) scale(1.02);}
-}
-
-.input-group input,
-.input-group select,
-#searchInput{
-transition:border-color .22s ease, box-shadow .22s ease, transform .22s ease, background .22s ease;
-}
-
-.input-group input:focus,
-.input-group select:focus,
-#searchInput:focus{
-transform:translateY(-1px);
-}
-
-#searchOverlay{
-opacity:0;
-visibility:hidden;
-transform:translateY(18px) scale(.985);
-transition:opacity .28s ease, transform .32s var(--ease-premium), visibility .28s ease;
-}
-
-#searchOverlay.show{
-opacity:1;
-visibility:visible;
-transform:translateY(0) scale(1);
-}
-
-.search-item{
-transform-origin:center;
-animation:resultIn .28s var(--ease-premium) both;
-}
-
-.search-item:nth-child(1){animation-delay:.01s}
-.search-item:nth-child(2){animation-delay:.03s}
-.search-item:nth-child(3){animation-delay:.05s}
-.search-item:nth-child(4){animation-delay:.07s}
-.search-item:nth-child(5){animation-delay:.09s}
-.search-item:nth-child(6){animation-delay:.11s}
-
-@keyframes resultIn{
-from{opacity:0;transform:translateY(10px) scale(.985);}
-to{opacity:1;transform:translateY(0) scale(1);}
-}
-
-.sidebar{
-transition:right .32s var(--ease-premium), box-shadow .28s ease;
-}
-
-.sidebar.open{
-box-shadow:-14px 0 30px rgba(0,0,0,.15);
-}
-
-.sidebar-overlay{
-backdrop-filter:blur(3px);
--webkit-backdrop-filter:blur(3px);
-animation:overlayFade .25s ease;
-}
-
-@keyframes overlayFade{
-from{opacity:0;} to{opacity:1;}
-}
-
-.bottom-bar{
-backdrop-filter:blur(12px);
--webkit-backdrop-filter:blur(12px);
-background:rgba(255,255,255,.88);
-border:1px solid rgba(255,255,255,.6);
-box-shadow:0 -8px 24px rgba(0,0,0,.05);
-}
-
-.btn-primary{
-position:relative;
-overflow:hidden;
-box-shadow:0 10px 24px rgba(13,110,253,.24);
-}
-
-.btn-primary:hover{
-box-shadow:0 14px 30px rgba(13,110,253,.28);
-}
-
-#statusOverlay{
-background:rgba(255,255,255,.22);
-animation:overlayFade .25s ease;
-}
-
-#statusCard.processing{
-animation:statusBreath 1.7s ease-in-out infinite;
-}
-
-#statusCard.done{
-animation:donePop .55s var(--ease-premium);
-}
-
-#statusCard.error{
-animation:errorShake .38s ease;
-}
-
-@keyframes statusBreath{
-0%,100%{transform:translateY(0) scale(1);}
-50%{transform:translateY(-1px) scale(1.01);}
-}
-
-@keyframes donePop{
-0%{transform:scale(.96);opacity:.8;}
-65%{transform:scale(1.02);opacity:1;}
-100%{transform:scale(1);}
-}
-
-@keyframes errorShake{
-0%,100%{transform:translateX(0);}
-25%{transform:translateX(4px);}
-50%{transform:translateX(-4px);}
-75%{transform:translateX(2px);}
-}
-
-#statusBar{
-background:linear-gradient(90deg,#0d6efd,#6ea8fe,#0d6efd);
-background-size:200% 100%;
-animation:barFlow 2.2s linear infinite;
-}
-
-@keyframes barFlow{
-0%{background-position:0% 50%;}
-100%{background-position:200% 50%;}
-}
-
-@media (prefers-reduced-motion: reduce){
-  *, *::before, *::after{
-    animation:none !important;
-    transition:none !important;
-    scroll-behavior:auto !important;
-  }
-}
-
-
-/* === Success Animation Added === */
-@keyframes successPop {
-  0% { transform: scale(0.8); opacity: 0; }
-  50% { transform: scale(1.1); opacity: 1; }
-  100% { transform: scale(1); }
-}
-@keyframes successGlow {
-  0% { box-shadow: 0 0 0 rgba(34,197,94,0); }
-  50% { box-shadow: 0 0 25px rgba(34,197,94,.5); }
-  100% { box-shadow: 0 0 0 rgba(34,197,94,0); }
-}
-@keyframes checkBounce {
-  0% { transform: scale(0); }
-  60% { transform: scale(1.3); }
-  100% { transform: scale(1); }
-}
-.success-check {
-  font-size: 42px;
-  text-align: center;
-  margin-bottom: 10px;
-  animation: checkBounce .5s ease;
-}
-#statusCard.success-anim {
-  animation: successPop .4s ease, successGlow 1s ease;
-}
-
-
-/* === Ultra Success Effects Added === */
-@keyframes overlayFlash {
-  0% { opacity: 0; }
-  25% { opacity: .22; }
-  100% { opacity: 0; }
-}
-@keyframes confettiFall {
-  0% { transform: translateY(-120px) rotate(0deg); opacity: 1; }
-  100% { transform: translateY(115vh) rotate(720deg); opacity: 0; }
-}
-@keyframes confettiSwing {
-  0% { margin-left: 0; }
-  50% { margin-left: 18px; }
-  100% { margin-left: -18px; }
-}
-@keyframes donePulseStrong {
-  0% { transform: scale(1); }
-  35% { transform: scale(1.02); }
-  70% { transform: scale(1.01); }
-  100% { transform: scale(1); }
-}
-#statusOverlay.success-celebration::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  background:radial-gradient(circle at center, rgba(34,197,94,.18), rgba(255,255,255,0) 60%);
-  animation: overlayFlash .85s ease forwards;
-}
-#statusCard.success-anim{
-  animation: successPop .4s ease, successGlow 1s ease, donePulseStrong .9s ease;
-}
-#confettiLayer{
-  position:fixed;
-  inset:0;
-  overflow:hidden;
-  pointer-events:none;
-  z-index:3500;
-  display:none;
-}
-#confettiLayer.show{
-  display:block;
-}
-.confetti-piece{
-  position:absolute;
-  top:-40px;
-  width:10px;
-  height:18px;
-  border-radius:4px;
-  opacity:0;
-  animation-name: confettiFall, confettiSwing;
-  animation-timing-function: linear, ease-in-out;
-  animation-fill-mode: forwards, forwards;
-}
-.confetti-piece.shape-circle{
-  width:12px;
-  height:12px;
-  border-radius:50%;
-}
-.confetti-piece.shape-strip{
-  width:8px;
-  height:22px;
-  border-radius:3px;
+.section-title span.eye{
+  display:inline-block;
+  animation: blinkEye 3s infinite;
 }
 
 </style>
@@ -1063,130 +479,85 @@ animation:barFlow 2.2s linear infinite;
 
 <body>
 
-<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
-
-<div class="sidebar" id="sidebar">
-  <div class="sidebar-title">القائمة</div>
-
-  <div class="sidebar-item" onclick="document.getElementById('excelFile').click(); toggleSidebar();">
-    <i class="bi bi-file-earmark-excel"></i>
-    <span>استيراد Excel</span>
-  </div>
-
-  <div class="sidebar-item" onclick="restartBayanFromWeb(); toggleSidebar();">
-    <i class="bi bi-arrow-clockwise"></i>
-    <span>إعادة تشغيل البيان</span>
-  </div>
-
-  <div class="sidebar-item" onclick="deleteSavedData(); toggleSidebar();">
-    <i class="bi bi-trash3"></i>
-    <span>حذف البيانات</span>
-  </div>
-
-  <input type="file" id="excelFile" class="hidden-file" accept=".xlsx,.xls">
-</div>
-
 <div class="container">
 
   <div class="top-bar">
-    <div class="top-bar-left">
-      <button class="menu-btn" onclick="toggleSidebar()">
-        <i class="bi bi-list"></i>
-      </button>
-      <h1>طلب كشف حساب</h1>
-    </div>
-
-    <div class="logo">
-      <i class="bi bi-receipt"></i>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div class="logo">
+        <i class="bi bi-receipt-cutoff"></i>
+      </div>
+      <h1>استيراد فاتورة بيع</h1>
     </div>
   </div>
 
-  
+  <div class="input-group">
+    <label class="section-title">رقم الفاتورة</label>
+<input type="text" id="invoiceNumber" placeholder="ادخل رقم الفاتورة" inputmode="numeric" pattern="[0-9]*">
+  </div>
 
-    <div class="input-group">
-     
-
-      <label>اختر السنة</label>
-<div class="year-row">
-        <select id="yearSelect">
-          <option value="2020">2020</option>
-          <option value="2021">2021</option>
-          <option value="2022">2022</option>
-          <option value="2023">2023</option>
-          <option value="2024">2024</option>
-          <option value="2025">2025</option>
-          <option value="2026" selected>2026</option>
-        </select>
-
-        <button type="button" class="year-btn-save" onclick="sendYearToFirebase()">
-          <i class="bi bi-check2-circle"></i>
-        </button>
-      </div>
-    </div>
-
-    <div class="input-group">
-      
-      <label>اختر البراند</label>
+  <div class="input-group">
+    <label class="section-title">اختر البراند</label>
 <div class="quick-brands">
-        <button type="button" class="brand-btn" onclick="setBrand('FOREVER',this)">FOREVER</button>
-        <button type="button" class="brand-btn" onclick="setBrand('CHARACTER',this)">CHARACTER</button>
-        <button type="button" class="brand-btn" onclick="setBrand('ROSELLA',this)">ROSELLA</button>
-        <button type="button" class="brand-btn active" id="defaultAllBrandBtn" onclick="setBrand('ALL',this)">الكل</button>
-      </div>
+      <button type="button" class="brand-btn" onclick="setBrand('FOREVER',this)">FOREVER</button>
+      <button type="button" class="brand-btn" onclick="setBrand('CHARACTER',this)">CHARACTER</button>
+      <button type="button" class="brand-btn" onclick="setBrand('ROSELLA',this)">ROSELLA</button>
+      <button type="button" class="brand-btn" onclick="setBrand('FUTURE',this)">FUTURE</button>
     </div>
+  </div>
 
-<div class="input-group">
-  <label>اسم الزبون</label>
-  <input type="text" id="customerName" placeholder="اضغط للبحث" onclick="openSearch()" readonly>
-</div>
+  <div class="input-group">
+    <label>اسم الزبون</label>
+    <input type="text" id="invoiceCustomer" placeholder="اضغط للبحث" onclick="openSearch()" readonly>
+  </div>
 
-<div class="section-title">المعاينة 👁️</div>
-
+  <label class="section-title">المعاينة <span class="eye">👁️</span></label>
 <div class="info-box">
-  <div class="info-row">
-    <div>البراند</div>
-    <div id="previewBrand">—</div>
+    <div class="info-row">
+      <div>البراند</div>
+      <div id="previewBrand">—</div>
+    </div>
+
+    <div class="info-row">
+      <div>اسم الزبون</div>
+      <div id="previewCustomer">—</div>
+    </div>
+
+    <div class="info-row">
+      <div>رقم الفاتورة</div>
+      <div id="previewInvoice">—</div>
+    </div>
   </div>
 
-  <div class="info-row">
-    <div>اسم الزبون</div>
-    <div id="previewCustomer">—</div>
-  </div>
-</div>
+  <div id="statusOverlay">
+    <div class="overlay-card">
+      <div id="statusCard" class="card" style="display:block;">
+        <div class="section-title">
+          <i class="bi bi-hourglass-split"></i>
+          حالة الطلب
+        </div>
 
-<div id="statusOverlay">
-  <div class="overlay-card">
-    <div id="statusCard" class="card" style="display:block;">
-      <div id="successIcon" style="display:none;" class="success-check">✅</div>
-      <div class="section-title">
-        <i class="bi bi-hourglass-split"></i>
-        حالة الطلب
-      </div>
+        <div id="statusText">جاري الاستيراد...</div>
 
-      <div id="statusText">جاري إرسال الطلب...</div>
+        <div id="statusLog" style="
+          font-size:14px;
+          line-height:1.8;
+          margin-bottom:10px;
+          color:#444;
+        "></div>
 
-      <div id="statusLog" style="
-        font-size:14px;
-        line-height:1.8;
-        margin-bottom:10px;
-        color:#444;
-      "></div>
-
-      <div class="status-track">
-        <div id="statusBar"></div>
+        <div class="status-track">
+          <div id="statusBar"></div>
+        </div>
       </div>
     </div>
   </div>
-</div>
-
-<div id="confettiLayer"></div>
 
 </div>
 
 <div class="bottom-bar">
   <div class="bottom-wrap">
-    <button class="btn btn-secondary" onclick="clearForm()">تفريغ</button>
- <button class="btn btn-primary" id="submitBtn" onclick="submitRequest()">إرسال الطلب</button>
+ <button class="btn btn-secondary excel-btn" onclick="sendInvoiceRequest('excel')">استيراد Excel</button>
+<button class="btn btn-primary pdf-btn" onclick="sendInvoiceRequest('pdf')">استيراد PDF</button>
   </div>
 </div>
 
@@ -1198,31 +569,12 @@ animation:barFlow 2.2s linear infinite;
     <button class="btn btn-secondary" style="flex:0 0 auto;padding:12px 16px" onclick="closeSearch()">إلغاء</button>
   </div>
 
-  <div class="search-actions">
-    <button type="button" class="mini-btn primary" id="startSelectBtn" onclick="startSelectionMode()">تحديد</button>
-
-    <div id="selectionTools" style="display:none;">
-      <button type="button" class="mini-btn" onclick="selectAllVisible()">تحديد الكل</button>
-      <button type="button" class="mini-btn" onclick="clearSelectedCustomers()">إلغاء التحديد</button>
-      <button type="button" class="mini-btn danger" onclick="endSelectionMode()">إنهاء</button>
-    </div>
-  </div>
-
-  <div id="selectedCountBox" class="selected-count-box" style="display:none;">
-    عدد المحددين: <span id="selectedCount">0</span>
-  </div>
-
   <div id="searchResults"></div>
-
-  <div id="bulkSendBar" class="bulk-send-bar" style="display:none;">
-    <button type="button" class="btn btn-primary" id="bulkSendBtn" onclick="sendSelectedCustomers()">إرسال المحددين (<span id="bulkCount">0</span>)</button>
-  </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, set, get, child, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
+import { getDatabase, ref, get, child, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 const app = initializeApp({
   apiKey: "AIzaSyDaQ7Ur6f7_ugSTy2_u0-gPEtUsFzhh82U",
   authDomain: "kashf-system.firebaseapp.com",
@@ -1235,12 +587,7 @@ const app = initializeApp({
 
 const db = getDatabase(app);
 
-const DELETE_PASSWORD = "1564";
-
-let selectedBrand = "ALL";
-let lastRequestTime = null;
-let selectionMode = false;
-let selectedCustomers = new Set();
+let selectedBrand = "";
 let currentFilteredResults = [];
 
 let customersByBrand = {
@@ -1250,33 +597,70 @@ let customersByBrand = {
   FUTURE: []
 };
 
-const previewCustomer = document.getElementById("previewCustomer");
 const previewBrand = document.getElementById("previewBrand");
+const previewCustomer = document.getElementById("previewCustomer");
+const previewInvoice = document.getElementById("previewInvoice");
+
+const invoiceNumber = document.getElementById("invoiceNumber");
+const invoiceCustomer = document.getElementById("invoiceCustomer");
+
 const overlay = document.getElementById("searchOverlay");
 const searchInput = document.getElementById("searchInput");
 const results = document.getElementById("searchResults");
 const searchBrandTitle = document.getElementById("searchBrandTitle");
+
 const statusCard = document.getElementById("statusCard");
 const statusText = document.getElementById("statusText");
 const statusBar = document.getElementById("statusBar");
 const statusLog = document.getElementById("statusLog");
 const statusOverlay = document.getElementById("statusOverlay");
-let lastRestartMessage = "";
-const startSelectBtn = document.getElementById("startSelectBtn");
-const selectionTools = document.getElementById("selectionTools");
-const selectedCountBox = document.getElementById("selectedCountBox");
-const selectedCount = document.getElementById("selectedCount");
-const bulkSendBar = document.getElementById("bulkSendBar");
 
-const submitBtn = document.getElementById("submitBtn");
-const bulkCount = document.getElementById("bulkCount");
-
-previewBrand.textContent = "ALL";
-function toggleSidebar(){
-  document.getElementById("sidebar").classList.toggle("open");
-  document.getElementById("sidebarOverlay").classList.toggle("show");
+async function loadCustomersFromFirebase(){
+  const snapshot = await get(child(ref(db), "customersByBrand"));
+  if(snapshot.exists()){
+    return snapshot.val();
+  }
+  return null;
 }
-window.toggleSidebar = toggleSidebar;
+
+async function loadFirebaseCustomers(){
+  try{
+    const firebaseData = await loadCustomersFromFirebase();
+
+    if(firebaseData && typeof firebaseData === "object"){
+      customersByBrand = {
+        FOREVER: Array.isArray(firebaseData.FOREVER) ? firebaseData.FOREVER : [],
+        CHARACTER: Array.isArray(firebaseData.CHARACTER) ? firebaseData.CHARACTER : [],
+        ROSELLA: Array.isArray(firebaseData.ROSELLA) ? firebaseData.ROSELLA : [],
+        FUTURE: Array.isArray(firebaseData.FUTURE) ? firebaseData.FUTURE : []
+      };
+
+      Object.keys(customersByBrand).forEach(brand => {
+        customersByBrand[brand] = customersByBrand[brand].map(item => {
+          if(typeof item === "string"){
+            return { id: Date.now() + Math.random(), name: item };
+          }
+          return item;
+        });
+      });
+    }else{
+      customersByBrand = {
+        FOREVER: [],
+        CHARACTER: [],
+        ROSELLA: [],
+        FUTURE: []
+      };
+    }
+  }catch(error){
+    console.log("تعذر تحميل الزباين من Firebase", error);
+    customersByBrand = {
+      FOREVER: [],
+      CHARACTER: [],
+      ROSELLA: [],
+      FUTURE: []
+    };
+  }
+}
 
 function setBrand(brand, btn){
   selectedBrand = brand;
@@ -1285,87 +669,17 @@ function setBrand(brand, btn){
   btn.classList.add("active");
 
   previewBrand.textContent = brand;
-  document.getElementById("customerName").value = "";
+  invoiceCustomer.value = "";
   previewCustomer.textContent = "—";
 }
 window.setBrand = setBrand;
 
-function clearForm(){
-  selectedBrand = "";
-  previewCustomer.textContent = "—";
-  previewBrand.textContent = "—";
-  document.getElementById("customerName").value = "";
-  document.querySelectorAll(".brand-btn").forEach(b => b.classList.remove("active"));
-}
-window.clearForm = clearForm;
-function setSubmitLoading(isLoading) {
-  if (!submitBtn) return;
-  
-  submitBtn.disabled = isLoading;
-  submitBtn.textContent = isLoading ? "جاري الإرسال..." : "إرسال الطلب";
-  submitBtn.style.opacity = isLoading ? "0.7" : "1";
-  submitBtn.style.cursor = isLoading ? "not-allowed" : "pointer";
-}
-function setBulkSendLoading(isLoading, count = null) {
-  if (!bulkSendBtn) return;
-  
-  bulkSendBtn.disabled = isLoading;
-  bulkSendBtn.style.opacity = isLoading ? "0.7" : "1";
-  bulkSendBtn.style.cursor = isLoading ? "not-allowed" : "pointer";
-  
-  if (isLoading) {
-    bulkSendBtn.textContent = "جاري الإرسال...";
-  } else {
-    const finalCount = count ?? selectedCustomers.size;
-    bulkSendBtn.innerHTML = 'إرسال المحددين (<span id="bulkCount">' + finalCount + '</span>)';
-  }
-}
-function updateSelectedUI(){
-  const count = selectedCustomers.size;
-  selectedCount.textContent = count;
-  bulkCount.textContent = count;
-  selectedCountBox.style.display = selectionMode ? "block" : "none";
-  bulkSendBar.style.display = selectionMode && count > 0 ? "block" : "none";
-  startSelectBtn.style.display = selectionMode ? "none" : "inline-flex";
-  selectionTools.style.display = selectionMode ? "flex" : "none";
-}
-
-function startSelectionMode(){
-  selectionMode = true;
-  selectedCustomers.clear();
-  updateSelectedUI();
-  renderResults(currentFilteredResults);
-}
-window.startSelectionMode = startSelectionMode;
-
-function endSelectionMode(){
-  selectionMode = false;
-  selectedCustomers.clear();
-  updateSelectedUI();
-  renderResults(currentFilteredResults);
-}
-window.endSelectionMode = endSelectionMode;
-
-function clearSelectedCustomers(){
-  selectedCustomers.clear();
-  updateSelectedUI();
-  renderResults(currentFilteredResults);
-}
-window.clearSelectedCustomers = clearSelectedCustomers;
-
-function selectAllVisible(){
-  currentFilteredResults.forEach(item => {
-    const key = getCustomerKey(item);
-    selectedCustomers.add(key);
-  });
-
-  updateSelectedUI();
-  renderResults(currentFilteredResults);
-}
-window.selectAllVisible = selectAllVisible;
+invoiceNumber.addEventListener("input", () => {
+  previewInvoice.textContent = invoiceNumber.value.trim() || "—";
+});
 
 function getCustomersForSearch(){
-  if(selectedBrand !== "ALL"){
+  if(selectedBrand){
     return [...(customersByBrand[selectedBrand] || [])].map(item => ({
       id: item.id,
       name: item.name,
@@ -1388,37 +702,6 @@ function getCustomersForSearch(){
   return allCustomers;
 }
 
-function getCustomerKey(item){
-  if(typeof item === "number" || typeof item === "string"){
-    return String(item);
-  }
-
-  return String(item.id);
-}
-
-function openSearch(){
-  if(!selectedBrand){
-    alert("اختر البراند اولاً");
-    return;
-  }
-
-  overlay.classList.add("show");
-  searchInput.value = "";
-  searchBrandTitle.textContent = "البراند المختار: " + selectedBrand;
-
-  selectionMode = false;
-  selectedCustomers.clear();
-  updateSelectedUI();
-
-  currentFilteredResults = [...getCustomersForSearch()].sort((a, b) =>
-    String(a.name || "").localeCompare(String(b.name || ""), "ar")
-  );
-
-  renderResults(currentFilteredResults);
-  searchInput.focus();
-}
-window.openSearch = openSearch;
-
 function normalizeSearchText(text){
   return String(text || "")
     .toLowerCase()
@@ -1432,14 +715,16 @@ function normalizeSearchText(text){
     .replace(/[-_]/g, "")
     .replace(/[^\w\u0600-\u06FF ]/g, "");
 }
+
 function containsAllWords(sourceText, queryText) {
   const source = normalizeSearchText(sourceText);
   const words = normalizeSearchText(queryText).split(" ").filter(Boolean);
-  
+
   if (words.length === 0) return true;
-  
+
   return words.every(word => source.includes(word));
 }
+
 function scoreCustomerMatch(name, query){
   const normalizedName = normalizeSearchText(name);
   const normalizedQuery = normalizeSearchText(query);
@@ -1482,46 +767,58 @@ function scoreCustomerMatch(name, query){
   return score;
 }
 
+function openSearch(){
+  if(!selectedBrand){
+    alert("اختر البراند اولاً");
+    return;
+  }
+
+  overlay.style.display = "block";
+  searchInput.value = "";
+  searchBrandTitle.textContent = "البراند المختار: " + selectedBrand;
+
+  currentFilteredResults = [...getCustomersForSearch()].sort((a, b) =>
+    String(a.name || "").localeCompare(String(b.name || ""), "ar")
+  );
+
+  renderResults(currentFilteredResults);
+  searchInput.focus();
+}
+window.openSearch = openSearch;
+
 function closeSearch(){
-  overlay.classList.remove("show");
-  selectionMode = false;
-  selectedCustomers.clear();
-  updateSelectedUI();
+  overlay.style.display = "none";
 }
 window.closeSearch = closeSearch;
-
 
 searchInput.addEventListener("input", () => {
   const text = searchInput.value.trim();
   const allCustomers = getCustomersForSearch();
-  
+
   if (!normalizeSearchText(text)) {
     currentFilteredResults = [...allCustomers].sort((a, b) =>
       String(a.name || "").localeCompare(String(b.name || ""), "ar")
     );
-    
+
     renderResults(currentFilteredResults);
     return;
   }
-  
+
   currentFilteredResults = allCustomers
     .map(item => {
-      const searchSource = selectedBrand === "ALL" ?
-        (item.name + " " + item.brand) :
-        item.name;
-      
       return {
         item,
-        searchSource,
-        score: scoreCustomerMatch(searchSource, text)
+        searchSource: item.name,
+        score: scoreCustomerMatch(item.name, text)
       };
     })
     .filter(entry => containsAllWords(entry.searchSource, text))
     .sort((a, b) => b.score - a.score)
     .map(entry => entry.item);
-  
+
   renderResults(currentFilteredResults);
 });
+
 function renderResults(list){
   results.innerHTML = "";
 
@@ -1540,79 +837,15 @@ function renderResults(list){
   }
 
   list.slice(0, 100).forEach(item => {
-    const isObjectItem = typeof item === "object" && item !== null;
-    const name = isObjectItem ? item.name : "";
-    const itemBrand = isObjectItem ? item.brand : selectedBrand;
-
-
-    let displayName = name;
-    if(selectedBrand === "ALL"){
-      displayName = name + " — " + itemBrand;
-    }
-
     const div = document.createElement("div");
-    div.className = "search-item" + (selectionMode ? " select-mode" : "");
+    div.className = "search-item";
+    div.innerText = item.name;
 
-    if(selectionMode){
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.className = "search-checkbox";
-
-      const key = getCustomerKey(item);
-      checkbox.checked = selectedCustomers.has(key);
-
-      checkbox.addEventListener("click", (e) => {
-        e.stopPropagation();
-      });
-
-      checkbox.addEventListener("change", () => {
-        if(selectedCustomers.has(key)){
-          selectedCustomers.delete(key);
-        }else{
-          selectedCustomers.add(key);
-        }
-        updateSelectedUI();
-      });
-
-      const span = document.createElement("div");
-      span.className = "search-item-name";
-      span.innerText = displayName;
-
-      div.appendChild(checkbox);
-      div.appendChild(span);
-
-      div.onclick = () => {
-        if(selectedCustomers.has(key)){
-          selectedCustomers.delete(key);
-        }else{
-          selectedCustomers.add(key);
-        }
-        updateSelectedUI();
-        renderResults(currentFilteredResults);
-      };
-    }else{
-      div.innerText = displayName;
-
-      div.onclick = () => {
-        document.getElementById("customerName").value = name;
-        previewCustomer.textContent = name;
-
-        if(selectedBrand === "ALL"){
-          selectedBrand = itemBrand;
-          previewBrand.textContent = itemBrand;
-
-          document.querySelectorAll(".brand-btn").forEach(b => b.classList.remove("active"));
-          const btns = document.querySelectorAll(".brand-btn");
-          btns.forEach(btn => {
-            if(btn.textContent.trim().toUpperCase() === itemBrand){
-              btn.classList.add("active");
-            }
-          });
-        }
-
-        closeSearch();
-      };
-    }
+    div.onclick = () => {
+      invoiceCustomer.value = item.name;
+      previewCustomer.textContent = item.name;
+      closeSearch();
+    };
 
     results.appendChild(div);
   });
@@ -1623,749 +856,26 @@ function showStatusCard(){
   statusCard.style.display = "block";
 }
 
-function hideStatusCard(){
-  statusOverlay.classList.remove("show");
-}
-
-function prepareStatusCard(mode = "processing"){
-  statusLog.innerHTML = "";
-  statusBar.style.width = "0%";
-  statusText.style.color = "";
-  statusCard.classList.remove("processing", "done", "error");
-
-  if(mode === "processing"){
-    statusCard.classList.add("processing");
-    statusText.style.color = "#0d6efd";
-  }else if(mode === "done"){
-    statusCard.classList.add("done");
-    statusText.style.color = "#15803d";
-  }else if(mode === "error"){
-    statusCard.classList.add("error");
-    statusText.style.color = "#dc2626";
-  }
-}
-
-function updateStatus(status, current = null, total = null){
-  let counterText = "";
-
-  if(current !== null && total !== null){
-    counterText = " (" + current + " / " + total + ")";
-  }
-
-  statusCard.classList.remove("processing", "done", "error");
-
-  if(status === "sending"){
-    statusCard.classList.add("processing");
-    statusText.style.color = "#0d6efd";
-    statusText.textContent = "جاري إرسال الطلب..." + counterText;
-    statusBar.style.width = "20%";
-    addStatusLog("جاري إرسال الطلب" + counterText);
-  } else if(status === "new"){
-    statusCard.classList.add("processing");
-    statusText.style.color = "#0d6efd";
-    statusText.textContent = "تم إرسال الطلب، بانتظار المعالجة..." + counterText;
-    statusBar.style.width = "50%";
-    addStatusLog("تم إرسال الطلب، بانتظار المعالجة" + counterText);
-  } else if(status === "processing"){
-    statusCard.classList.add("processing");
-    statusText.style.color = "#0d6efd";
-    statusText.textContent = "الطلب قيد المعالجة..." + counterText;
-    statusBar.style.width = "70%";
-    addStatusLog("الطلب قيد المعالجة" + counterText);
-  } else if(status === "done"){
-  statusCard.classList.add("done");
-  statusCard.classList.add("success-anim");
-
-  statusText.style.color = "#15803d";
-  statusText.textContent = "تم إنجاز الطلب بنجاح" + counterText;
-  statusBar.style.width = "100%";
-
-  const icon = document.getElementById("successIcon");
-  if(icon){
-    icon.style.display = "block";
-  }
-
-  launchSuccessCelebration();
-  addStatusLog("تم إنجاز الطلب بنجاح" + counterText);
-
+function resetStatusCard(delay = 1500) {
   setTimeout(() => {
-    statusCard.classList.remove("success-anim");
-    if(icon) icon.style.display = "none";
-  }, 1200);
-} else if(status === "error"){
-    statusCard.classList.add("error");
-    statusText.style.color = "#dc2626";
-    if(!statusText.textContent || statusText.textContent.includes("جاري")){
-      statusText.textContent = "صار خطأ أثناء معالجة الطلب" + counterText;
-    }
-    statusBar.style.width = "100%";
-    addStatusLog("خطأ أثناء معالجة الطلب" + counterText);
-  }
-}
-function resetStatusCard(delay = 3000) {
-  setTimeout(() => {
-    hideStatusCard();
+    statusOverlay.classList.remove("show");
     statusBar.style.width = "0%";
-    statusText.textContent = "جاري إرسال الطلب...";
-    const maxLogs = 4;
-if (statusLog.children.length >= maxLogs) {
-  statusLog.removeChild(statusLog.firstChild);
-}
+    statusText.textContent = "جاري الاستيراد...";
+    statusLog.innerHTML = "";
     statusCard.classList.remove("processing", "done", "error");
     statusText.style.color = "";
   }, delay);
 }
-function waitForRequestCompletion(requestTime, current = null, total = null, timeoutMs = 180000) {
-  return new Promise((resolve, reject) => {
-    const latestRef = ref(db, "requests/latest");
-    const startedAt = Date.now();
-    
-    const unsubscribe = onValue(latestRef, (snapshot) => {
-      if (!snapshot.exists()) return;
-      
-      const data = snapshot.val();
-      if (!data || data.time !== requestTime) return;
-      
-      if (data.status === "new") {
-        updateStatus("new", current, total);
-      } else if (data.status === "processing") {
-        updateStatus("processing", current, total);
-      } else if (data.status === "done") {
-        updateStatus("done", current, total);
-        unsubscribe();
-        resolve("done");
-      } else if (data.status === "error") {
-        if (data.message) {
-          statusText.textContent = data.message;
-        } else {
-          updateStatus("error", current, total);
-        }
-        
-        statusBar.style.width = "100%";
-        unsubscribe();
-        reject(new Error(data.message || "error"));
-      }
-      
-      if (Date.now() - startedAt > timeoutMs) {
-        unsubscribe();
-        reject(new Error("timeout"));
-      }
-    });
-    
-    setTimeout(() => {
-      try { unsubscribe(); } catch {}
-      reject(new Error("timeout"));
-    }, timeoutMs + 500);
-  });
-}
-
-
-async function sendRequestToFirebase(message, customer, brand){
-  const requestTime = Date.now();
-
-  await set(ref(db, "requests/latest"), {
-    text: message,
-    customer: customer,
-    brand: brand,
-    status: "new",
-    time: requestTime
-  });
-
-  return requestTime;
-}
-
-async function saveCustomersToFirebase(data){
-  await set(ref(db, "customersByBrand"), data);
-}
-
-async function loadCustomersFromFirebase(){
-  const snapshot = await get(child(ref(db), "customersByBrand"));
-  if(snapshot.exists()){
-    return snapshot.val();
-  }
-  return null;
-}
-
-async function deleteCustomersFromFirebase(){
-  await remove(ref(db, "customersByBrand"));
-}
-
-async function loadFirebaseCustomers(){
-  try{
-    const firebaseData = await loadCustomersFromFirebase();
-
-    if(firebaseData && typeof firebaseData === "object"){
-      customersByBrand = {
-        FOREVER: Array.isArray(firebaseData.FOREVER) ? firebaseData.FOREVER : [],
-        CHARACTER: Array.isArray(firebaseData.CHARACTER) ? firebaseData.CHARACTER : [],
-        ROSELLA: Array.isArray(firebaseData.ROSELLA) ? firebaseData.ROSELLA : [],
-        FUTURE: Array.isArray(firebaseData.FUTURE) ? firebaseData.FUTURE : []
-      };
-
-      Object.keys(customersByBrand).forEach(brand => {
-        customersByBrand[brand] = customersByBrand[brand].map(item => {
-          if(typeof item === "string"){
-            return { id: Date.now() + Math.random(), name: item };
-          }
-          return item;
-        });
-      });
-    }else{
-      customersByBrand = {
-        FOREVER: [],
-        CHARACTER: [],
-        ROSELLA: [],
-        FUTURE: []
-      };
-    }
-  }catch(error){
-    console.log("تعذر تحميل الزباين من Firebase", error);
-    customersByBrand = {
-      FOREVER: [],
-      CHARACTER: [],
-      ROSELLA: [],
-      FUTURE: []
-    };
-  }
-}
-
-async function sendYearToFirebase(){
-  const year = document.getElementById("yearSelect").value;
-
-  try{
-    showStatusCard();
-    prepareStatusCard("processing");
-    statusText.textContent = "جاري إرسال السنة...";
-    statusBar.style.width = "20%";
-    addStatusLog("جاري إرسال السنة");
-
-    await set(ref(db, "systemCommands/changeYear"), {
-      year: year,
-      status: "new",
-      time: Date.now()
-    });
-
-    waitForYearChange();
-  }catch(error){
-    showStatusCard();
-    prepareStatusCard("error");
-    statusText.textContent = "صار خطأ بإرسال السنة";
-    statusBar.style.width = "100%";
-    addStatusLog("خطأ في إرسال السنة");
-    alert("صار خطأ بإرسال السنة");
-  }
-}
-window.sendYearToFirebase = sendYearToFirebase;
-
-async function restartBayanFromWeb() {
-  try {
-    showStatusCard();
-    statusCard.classList.remove("processing", "done", "error");
-    statusCard.classList.add("processing");
-    
-    statusText.textContent = "جاري إرسال أمر إعادة التشغيل...";
-    statusText.style.color = "#0d6efd";
-    const maxLogs = 4;
-if (statusLog.children.length >= maxLogs) {
-  statusLog.removeChild(statusLog.firstChild);
-}
-    lastRestartMessage = "";
-    statusBar.style.width = "8%";
-    
-    addStatusLog("جاري إرسال أمر إعادة التشغيل");
-    
-    await set(ref(db, "systemCommands/restartBayan"), {
-      action: "restart",
-      time: Date.now(),
-      status: "new"
-    });
-    
-    waitForRestartBayan();
-    
-  } catch (error) {
-    statusCard.classList.remove("processing", "done");
-    statusCard.classList.add("error");
-    statusText.textContent = "صار خطأ بإرسال أمر إعادة التشغيل";
-    statusText.style.color = "#dc2626";
-    statusBar.style.width = "100%";
-    addStatusLog("خطأ في إرسال أمر إعادة التشغيل");
-    alert("صار خطأ بإرسال أمر إعادة التشغيل");
-  }
-}
-window.restartBayanFromWeb = restartBayanFromWeb;
-
-async function deleteSavedData(){
-  const password = prompt("ادخل الباسورد لحذف البيانات");
-  if(password === null) return;
-
-  if(password !== DELETE_PASSWORD){
-    alert("الباسورد غير صحيح");
-    return;
-  }
-
-  try{
-    await deleteCustomersFromFirebase();
-  }catch(error){
-    console.log("تعذر حذف بيانات Firebase", error);
-  }
-
-  customersByBrand = {
-    FOREVER: [],
-    CHARACTER: [],
-    ROSELLA: [],
-    FUTURE: []
-  };
-
-  clearForm();
-  closeSearch();
-  results.innerHTML = "";
-
-  alert("تم حذف البيانات السحابية بنجاح");
-}
-window.deleteSavedData = deleteSavedData;
-
-document.getElementById("excelFile").addEventListener("change", function(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  
-  const reader = new FileReader();
-  
-  reader.onload = async function(evt) {
-    try {
-      const data = new Uint8Array(evt.target.result);
-      const workbook = XLSX.read(data, { type: "array" });
-      const sheet = workbook.Sheets[workbook.SheetNames[0]];
-      const rows = XLSX.utils.sheet_to_json(sheet);
-      
-      if (!rows.length) {
-        alert("فشل الاستيراد: ملف الإكسل فارغ");
-        return;
-      }
-      
-      const firstRow = rows[0];
-      const hasName = Object.prototype.hasOwnProperty.call(firstRow, "الاسم");
-      const hasBrandFull = Object.prototype.hasOwnProperty.call(firstRow, "البراند");
-      const hasBrandShort = Object.prototype.hasOwnProperty.call(firstRow, "براند");
-      const hasBrand = hasBrandFull || hasBrandShort;
-      
-      if (!hasName && !hasBrand) {
-        alert("فشل الاستيراد: الملف ما بيه عمود (الاسم) ولا عمود (البراند/براند)");
-        return;
-      }
-      
-      if (!hasName) {
-        alert("فشل الاستيراد: العمود المطلوب (الاسم) مفقود");
-        return;
-      }
-      
-      if (!hasBrand) {
-        alert("فشل الاستيراد: العمود المطلوب للبراند لازم يكون باسم (البراند) أو (براند)");
-        return;
-      }
-      
-      let importedCount = 0;
-      let skippedCount = 0;
-      let errorMessages = [];
-      
-      const updatedCustomersByBrand = {
-        FOREVER: Array.isArray(customersByBrand.FOREVER) ? [...customersByBrand.FOREVER] : [],
-        CHARACTER: Array.isArray(customersByBrand.CHARACTER) ? [...customersByBrand.CHARACTER] : [],
-        ROSELLA: Array.isArray(customersByBrand.ROSELLA) ? [...customersByBrand.ROSELLA] : [],
-        FUTURE: Array.isArray(customersByBrand.FUTURE) ? [...customersByBrand.FUTURE] : []
-      };
-      
-      let maxId = 0;
-      Object.keys(updatedCustomersByBrand).forEach(brandKey => {
-        (updatedCustomersByBrand[brandKey] || []).forEach(item => {
-          const itemId = Number(item.id || 0);
-          if (itemId > maxId) maxId = itemId;
-        });
-      });
-      
-      rows.forEach((row, index) => {
-        const rowNumber = index + 2;
-        
-        const name = String(row["الاسم"] || "").trim();
-        let brand = String(row["البراند"] || row["براند"] || "").trim().toUpperCase();
-        
-        if (!name) {
-          skippedCount++;
-          errorMessages.push("السطر " + rowNumber + ": الاسم فارغ");
-          return;
-        }
-        
-        if (!brand) {
-          skippedCount++;
-          errorMessages.push("السطر " + rowNumber + ": البراند فارغ");
-          return;
-        }
-        
-        if (
-          brand === "ROZLA" ||
-          brand === "ROSELLA" ||
-          brand === "ROSLLA" ||
-          brand.includes("ROZLA") ||
-          brand.includes("ROSELLA") ||
-          brand.includes("ROSLLA") ||
-          brand.includes("روزلا")
-        ) {
-          brand = "ROSELLA";
-        } else if (
-          brand === "FOREVER" ||
-          brand.includes("FOREVER") ||
-          brand.includes("فور")
-        ) {
-          brand = "FOREVER";
-        } else if (
-          brand === "CHARACTER" ||
-          brand.includes("CHARACTER") ||
-          brand.includes("كاركتر")
-        ) {
-          brand = "CHARACTER";
-        } else if (
-          brand === "FUTURE" ||
-          brand === "GENERAL" ||
-          brand.includes("FUTURE") ||
-          brand.includes("GENERAL") ||
-          brand.includes("فيوتشر") ||
-          brand.includes("جنرال")
-        ) {
-          brand = "FUTURE";
-        } else {
-          skippedCount++;
-          errorMessages.push("السطر " + rowNumber + ": براند غير معروف → " + brand);
-          return;
-        }
-        
-        const alreadyExists = updatedCustomersByBrand[brand].some(item =>
-          String(item.name).trim() === name
-        );
-        
-        if (alreadyExists) {
-          skippedCount++;
-          errorMessages.push("السطر " + rowNumber + ": الاسم مكرر → " + name);
-          return;
-        }
-        
-        maxId++;
-        updatedCustomersByBrand[brand].push({
-          id: maxId,
-          name: name
-        });
-        importedCount++;
-      });
-      
-      if (importedCount === 0) {
-        let details = errorMessages.length ? "\n\nالأسباب:\n- " + errorMessages.join("\n- ") : "";
-        alert("فشل الاستيراد: ما تم استيراد أي اسم جديد" + details);
-        return;
-      }
-      
-      customersByBrand = updatedCustomersByBrand;
-      await saveCustomersToFirebase(customersByBrand);
-      
-      let successMsg = "تم الاستيراد السحابي بنجاح. عدد الأسماء الجديدة: " + importedCount;
-      
-      if (skippedCount) {
-        successMsg += "\nالأسطر المهملة: " + skippedCount;
-      }
-      
-      if (errorMessages.length) {
-        successMsg += "\n\nتفاصيل الأسطر المهملة:\n- " + errorMessages.join("\n- ");
-      }
-      
-      alert(successMsg);
-      
-    } catch (error) {
-      alert("فشل الاستيراد: " + error.message);
-    } finally {
-      e.target.value = "";
-    }
-  };
-  
-  reader.onerror = function() {
-    alert("فشل الاستيراد: تعذر قراءة الملف");
-    e.target.value = "";
-  };
-  
-  reader.readAsArrayBuffer(file);
-});
-
-
-
-async function submitRequest() {
-  const customer = document.getElementById("customerName").value.trim();
-  const brand = selectedBrand;
-  
-  if (!customer) {
-    alert("اختر الزبون");
-    return;
-  }
-  
-  if (!brand) {
-    alert("اختر البراند");
-    return;
-  }
-  
-  const message = customer + " | " + brand;
-  
-  try {
-    setSubmitLoading(true);
-    
-    showStatusCard();
-    prepareStatusCard("processing");
-    updateStatus("sending");
-    
-    lastRequestTime = await sendRequestToFirebase(message, customer, brand);
-    
-    await waitForRequestCompletion(lastRequestTime);
-    resetStatusCard(3000);
-  } catch (error) {
-    resetStatusCard(2500);
-    alert("صار خطأ بالإرسال");
-  } finally {
-    setSubmitLoading(false);
-  }
-}
-window.submitRequest = submitRequest;
-
-
-async function sendSelectedCustomers() {
-  if (selectedCustomers.size === 0) {
-    alert("ماكو أسماء محددة");
-    return;
-  }
-  
-  setBulkSendLoading(true);
-  setSubmitLoading(true);
-  
-  const selectedIds = Array.from(selectedCustomers);
-  const total = selectedIds.length;
-  
-  closeSearch();
-  
-  try {
-    for (let i = 0; i < total; i++) {
-      const id = String(selectedIds[i]);
-      const current = i + 1;
-      
-      let foundItem = null;
-      let foundBrand = "";
-      
-      Object.keys(customersByBrand).forEach(brand => {
-        const item = (customersByBrand[brand] || []).find(x => String(x.id) === id);
-        if (item && !foundItem) {
-          foundItem = item;
-          foundBrand = brand;
-        }
-      });
-      
-      if (!foundItem) {
-        alert("ما لكيت السجل المحدد: " + id);
-        return;
-      }
-      
-      const customer = foundItem.name;
-      const brand = foundBrand;
-      
-      try {
-        document.getElementById("customerName").value = customer;
-        previewCustomer.textContent = customer;
-        previewBrand.textContent = brand;
-        
-        showStatusCard();
-        prepareStatusCard("processing");
-        updateStatus("sending", current, total);
-        
-        const requestTime = await sendRequestToFirebase(
-          customer + " | " + brand,
-          customer,
-          brand
-        );
-        
-        await waitForRequestCompletion(requestTime, current, total);
-        
-        if (current === total) {
-          resetStatusCard(3000);
-        }
-        
-        await new Promise(resolve => setTimeout(resolve, 1000));
-      } catch (error) {
-        updateStatus("error", current, total);
-        resetStatusCard(2500);
-        alert("توقف الإرسال عند الزبون: " + customer + " / " + brand);
-        return;
-      }
-    }
-    
-
-  } finally {
-    setBulkSendLoading(false, selectedCustomers.size);
-    setSubmitLoading(false);
-  }
-}
-window.sendSelectedCustomers = sendSelectedCustomers;
-
-function waitForYearChange(){
-  const yearRef = ref(db, "systemCommands/changeYear");
-  let lastYearMessage = "";
-
-  const unsubscribe = onValue(yearRef, (snapshot) => {
-    if(!snapshot.exists()) return;
-
-    const data = snapshot.val();
-    if(!data) return;
-
-    statusCard.classList.remove("processing", "done", "error");
-
-    if(data.status === "new"){
-      statusCard.classList.add("processing");
-      statusText.style.color = "#0d6efd";
-      statusText.textContent = "تم إرسال السنة، بانتظار التنفيذ...";
-      statusBar.style.width = "35%";
-
-      const msg = "تم إرسال السنة، بانتظار التنفيذ";
-      if(lastYearMessage !== msg){
-        addStatusLog(msg);
-        lastYearMessage = msg;
-      }
-    }
-    else if(data.status === "processing"){
-      statusCard.classList.add("processing");
-      statusText.style.color = "#0d6efd";
-      statusText.textContent = "جاري تغيير السنة...";
-      statusBar.style.width = "70%";
-
-      const msg = "جاري تغيير السنة";
-      if(lastYearMessage !== msg){
-        addStatusLog(msg);
-        lastYearMessage = msg;
-      }
-    }
-    else if(data.status === "done"){
-      statusCard.classList.add("done");
-      statusText.style.color = "#15803d";
-      statusText.textContent = "تم تغيير السنة بنجاح";
-      playSuccessSound();
-      launchSuccessCelebration();
-      statusBar.style.width = "100%";
-
-      const msg = "تم تغيير السنة بنجاح";
-      if(lastYearMessage !== msg){
-        addStatusLog(msg);
-        lastYearMessage = msg;
-      }
-
-      setTimeout(() => {
-        hideStatusCard();
-        statusBar.style.width = "0%";
-        statusLog.innerHTML = "";
-        statusCard.classList.remove("processing", "done", "error");
-        statusText.style.color = "";
-      }, 3000);
-
-      unsubscribe();
-    }
-    else if(data.status === "error"){
-      statusCard.classList.add("error");
-      statusText.style.color = "#dc2626";
-      statusText.textContent = data.message || "صار خطأ أثناء تغيير السنة";
-      statusBar.style.width = "100%";
-
-      const msg = data.message || "خطأ أثناء تغيير السنة";
-      if(lastYearMessage !== msg){
-        addStatusLog(msg);
-        lastYearMessage = msg;
-      }
-
-      unsubscribe();
-    }
-  });
-}
-
-
-
-let successAudioCtx = null;
-let audioUnlocked = false;
-
-function unlockSuccessAudio(){
-  try{
-    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-    if(!AudioContextClass) return;
-
-    if(!successAudioCtx){
-      successAudioCtx = new AudioContextClass();
-    }
-
-    if(successAudioCtx.state === "suspended"){
-      successAudioCtx.resume();
-    }
-
-    const osc = successAudioCtx.createOscillator();
-    const gain = successAudioCtx.createGain();
-
-    gain.gain.setValueAtTime(0.0001, successAudioCtx.currentTime);
-    osc.connect(gain);
-    gain.connect(successAudioCtx.destination);
-
-    osc.start(successAudioCtx.currentTime);
-    osc.stop(successAudioCtx.currentTime + 0.01);
-
-    audioUnlocked = true;
-  }catch(e){}
-}
-
-document.addEventListener("click", unlockSuccessAudio, { passive: true });
-document.addEventListener("touchstart", unlockSuccessAudio, { passive: true });
-
-function playSuccessSound(){
-  try{
-    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-    if(!AudioContextClass) return;
-
-    if(!successAudioCtx){
-      successAudioCtx = new AudioContextClass();
-    }
-
-    if(successAudioCtx.state === "suspended"){
-      successAudioCtx.resume();
-    }
-
-    const now = successAudioCtx.currentTime;
-    const osc1 = successAudioCtx.createOscillator();
-    const osc2 = successAudioCtx.createOscillator();
-    const gain = successAudioCtx.createGain();
-
-    osc1.type = "sine";
-    osc2.type = "sine";
-
-    osc1.frequency.setValueAtTime(740, now);
-    osc2.frequency.setValueAtTime(988, now + 0.08);
-
-    gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(0.08, now + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.28);
-
-    osc1.connect(gain);
-    osc2.connect(gain);
-    gain.connect(successAudioCtx.destination);
-
-    osc1.start(now);
-    osc2.start(now + 0.08);
-    osc1.stop(now + 0.22);
-    osc2.stop(now + 0.28);
-  }catch(e){}
-}
 
 function addStatusLog(message) {
   if (!message) return;
-  
+
   let prefix = "• ";
   let color = "#444";
   let rowClass = "";
   let bg = "#ffffff";
   let borderColor = "#e6e9ef";
-  
+
   if (message.includes("تم")) {
     prefix = "✅ ";
     color = "#15803d";
@@ -2387,141 +897,216 @@ function addStatusLog(message) {
     bg = "#fef2f2";
     borderColor = "#fecaca";
   }
-  
-  const maxLogs = 4;
-if (statusLog.children.length >= maxLogs) {
-  statusLog.removeChild(statusLog.firstChild);
-}
-  
+
+  statusLog.innerHTML = "";
+
   const row = document.createElement("div");
   row.className = rowClass;
   row.innerHTML = `<span style="font-size:16px">${prefix}</span><span>${message}</span>`;
   row.style.color = color;
   row.style.background = bg;
   row.style.borderColor = borderColor;
-  
+
   statusLog.appendChild(row);
 }
 
+function updateStatus(status){
+  if(status === "sending"){
+    statusText.textContent = "جاري استيراد ملف الإكسل...";
+    statusText.style.color = "#0d6efd";
+    statusBar.style.width = "20%";
+    statusCard.classList.remove("done", "error");
+    statusCard.classList.add("processing");
+    addStatusLog("جاري استيراد ملف الإكسل");
+  } 
+  else if(status === "new"){
+    statusText.textContent = "تم رفع الملف، بانتظار المعالجة...";
+    statusText.style.color = "#0d6efd";
+    statusBar.style.width = "50%";
+    statusCard.classList.remove("done", "error");
+    statusCard.classList.add("processing");
+    addStatusLog("تم رفع الملف، بانتظار المعالجة");
+  }
+  else if(status === "processing"){
+    statusText.textContent = "جارٍ معالجة بيانات الفاتورة...";
+    statusText.style.color = "#0d6efd";
+    statusBar.style.width = "70%";
+    statusCard.classList.remove("done", "error");
+    statusCard.classList.add("processing");
+    addStatusLog("جاري معالجة بيانات الفاتورة");
+  }
+  else if(status === "done"){
+    statusText.textContent = "تم استيراد الفاتورة بنجاح";
+    statusText.style.color = "#15803d";
+    statusBar.style.width = "100%";
+    statusCard.classList.remove("processing", "error");
+    statusCard.classList.add("done");
+    addStatusLog("تم استيراد الفاتورة بنجاح");
+  }
+  else if(status === "error"){
+    statusText.textContent = "صار خطأ أثناء استيراد الفاتورة";
+    statusText.style.color = "#dc2626";
+    statusBar.style.width = "100%";
+    statusCard.classList.remove("processing", "done");
+    statusCard.classList.add("error");
+    addStatusLog("خطأ أثناء استيراد الفاتورة");
+  }
+}
+function clearInvoiceForm(){
+  selectedBrand = "";
 
+  invoiceNumber.value = "";
+  invoiceCustomer.value = "";
 
+  previewBrand.textContent = "—";
+  previewCustomer.textContent = "—";
+  previewInvoice.textContent = "—";
 
-function launchSuccessCelebration(){
-  const overlayEl = document.getElementById("statusOverlay");
-  const layer = document.getElementById("confettiLayer");
-  if(!layer) return;
-
-  overlayEl.classList.add("success-celebration");
-  layer.innerHTML = "";
-  layer.classList.add("show");
-
-  const colors = ["#22c55e","#0d6efd","#f59e0b","#ef4444","#a855f7","#14b8a6"];
-  const shapes = ["shape-circle","shape-strip",""];
-  const count = 34;
-
-  for(let i = 0; i < count; i++){
-    const piece = document.createElement("div");
-    piece.className = "confetti-piece " + shapes[Math.floor(Math.random() * shapes.length)];
-    piece.style.left = Math.random() * 100 + "vw";
-    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
-    piece.style.transform = "rotate(" + (Math.random() * 360) + "deg)";
-    piece.style.animationDuration = (2.8 + Math.random() * 1.6) + "s, " + (1.2 + Math.random() * 0.8) + "s";
-    piece.style.animationDelay = (Math.random() * 0.25) + "s, " + (Math.random() * 0.25) + "s";
-    piece.style.opacity = "1";
-    layer.appendChild(piece);
+  document.querySelectorAll(".brand-btn").forEach(b => b.classList.remove("active"));
+}
+function simulateImport(type){
+  if(!invoiceNumber.value.trim()){
+    alert("ادخل رقم الفاتورة");
+    return;
   }
 
+  if(!selectedBrand){
+    alert("اختر البراند");
+    return;
+  }
+
+  if(!invoiceCustomer.value.trim()){
+    alert("اختر الزبون");
+    return;
+  }
+
+  showStatusCard();
+  updateStatus("sending");
+
   setTimeout(() => {
-    layer.classList.remove("show");
-    layer.innerHTML = "";
-    overlayEl.classList.remove("success-celebration");
-  }, 4200);
+    updateStatus("new");
+  }, 600);
+
+  setTimeout(() => {
+    updateStatus("processing");
+  }, 1400);
+
+  setTimeout(() => {
+  updateStatus("done");
+
+  setTimeout(() => {
+    clearInvoiceForm();
+  }, 400);
+
+  resetStatusCard(1800);
+}, 2400);
 }
 
+async function sendInvoiceRequest(fileType) {
+  const invoiceNo = invoiceNumber.value.trim();
+  const customerName = invoiceCustomer.value.trim();
+  const brand = selectedBrand.trim();
 
-function waitForRestartBayan() {
-  const restartRef = ref(db, "systemCommands/restartBayan");
-  
-  const unsubscribe = onValue(restartRef, (snapshot) => {
-    if (!snapshot.exists()) return;
-    
-    const data = snapshot.val();
-    if (!data) return;
-    
-    if (data.message && data.message !== lastRestartMessage) {
-      addStatusLog(data.message);
-      lastRestartMessage = data.message;
-    }
-    
-    statusCard.classList.remove("processing", "done", "error");
-    
-    if (data.status === "new") {
-      statusCard.classList.add("processing");
-      statusText.textContent = "تم بدء إعادة التشغيل...";
-      statusText.style.color = "#0d6efd";
-      statusBar.style.width = "12%";
-    }
-    else if (data.status === "processing") {
-      statusCard.classList.add("processing");
-      statusText.textContent = "جاري تنفيذ إعادة التشغيل...";
-      statusText.style.color = "#0d6efd";
-      
-      if (data.message) {
-        if (data.message.includes("فور افر") || data.message.includes("فورافر") || data.message.includes("FOREVER")) {
-          statusBar.style.width = "33%";
-        }
-        else if (data.message.includes("كاركتر") || data.message.includes("CHARACTER")) {
-          statusBar.style.width = "66%";
-        }
-        else if (data.message.includes("روزلا") || data.message.includes("ROSELLA")) {
-          statusBar.style.width = "90%";
-        }
-        else {
-          statusBar.style.width = "20%";
-        }
-      } else {
-        statusBar.style.width = "20%";
+  if (!invoiceNo) {
+    alert("ادخل رقم الفاتورة");
+    return;
+  }
+
+  if (!brand) {
+    alert("اختر البراند");
+    return;
+  }
+
+  if (!customerName) {
+    alert("اختر الزبون");
+    return;
+  }
+
+  const requestId = "REQ_" + Date.now();
+
+  const payload = {
+    id: requestId,
+    type: "fetch_invoice",
+    status: "pending",
+    brand: brand,
+    invoiceNo: invoiceNo,
+    customerName: customerName,
+    fileType: fileType || "pdf",
+    createdAt: new Date().toISOString()
+  };
+
+  try {
+    showStatusCard();
+    statusText.textContent = "جاري إرسال الطلب...";
+    statusText.style.color = "#0d6efd";
+    statusBar.style.width = "15%";
+    statusCard.classList.remove("done", "error");
+    statusCard.classList.add("processing");
+    addStatusLog("جاري إرسال الطلب");
+
+    const requestRef = ref(db, "requests/latest");
+    await set(requestRef, payload);
+
+    statusText.textContent = "تم إرسال الطلب";
+    statusText.style.color = "#0d6efd";
+    statusBar.style.width = "35%";
+    addStatusLog("تم إرسال الطلب إلى النظام");
+
+    const stopWatch = onValue(requestRef, (snapshot) => {
+      const data = snapshot.val();
+      if (!data) return;
+      if (data.id !== requestId) return;
+
+      if (data.status === "processing") {
+        statusText.textContent = data.message || "جاري تنفيذ الطلب";
+        statusText.style.color = "#0d6efd";
+        statusBar.style.width = "70%";
+        statusCard.classList.remove("done", "error");
+        statusCard.classList.add("processing");
+        addStatusLog(data.message || "جاري تنفيذ الطلب");
       }
-    }
-    else if (data.status === "done") {
-      statusCard.classList.add("done");
-      statusText.textContent = "اكتملت إعادة التشغيل";
-      playSuccessSound();
-      launchSuccessCelebration();
-      statusText.style.color = "#15803d";
-      statusBar.style.width = "100%";
-      
-      addStatusLog("تمت إعادة تشغيل البيان بالكامل");
-      
-      setTimeout(() => {
-        hideStatusCard();
-        statusBar.style.width = "0%";
-        const maxLogs = 4;
-if (statusLog.children.length >= maxLogs) {
-  statusLog.removeChild(statusLog.firstChild);
-}
-        lastRestartMessage = "";
-        statusCard.classList.remove("processing", "done", "error");
-        statusText.style.color = "";
-      }, 3000);
-      
-      unsubscribe();
-    }
-    else if (data.status === "error") {
-      statusCard.classList.add("error");
-      statusText.textContent = data.message || "صار خطأ أثناء إعادة التشغيل";
-      statusText.style.color = "#dc2626";
-      statusBar.style.width = "100%";
-      
-      if (data.message && data.message !== lastRestartMessage) {
-        addStatusLog(data.message);
-        lastRestartMessage = data.message;
+
+      if (data.status === "done") {
+        statusText.textContent = data.message || "تمت العملية بنجاح";
+        statusText.style.color = "#15803d";
+        statusBar.style.width = "100%";
+        statusCard.classList.remove("processing", "error");
+        statusCard.classList.add("done");
+        addStatusLog(data.message || "تمت العملية بنجاح");
+
+        setTimeout(() => {
+          clearInvoiceForm();
+          resetStatusCard(1200);
+        }, 500);
+
+        stopWatch();
       }
-      
-      unsubscribe();
-    }
-  });
+
+      if (data.status === "error") {
+        statusText.textContent = data.message || "صار خطأ أثناء التنفيذ";
+        statusText.style.color = "#dc2626";
+        statusBar.style.width = "100%";
+        statusCard.classList.remove("processing", "done");
+        statusCard.classList.add("error");
+        addStatusLog(data.message || "صار خطأ أثناء التنفيذ");
+        stopWatch();
+      }
+    });
+
+  } catch (error) {
+    console.error(error);
+    showStatusCard();
+    statusText.textContent = "فشل إرسال الطلب";
+    statusText.style.color = "#dc2626";
+    statusBar.style.width = "100%";
+    statusCard.classList.remove("processing", "done");
+    statusCard.classList.add("error");
+    addStatusLog("فشل إرسال الطلب إلى Firebase");
+  }
 }
+window.sendInvoiceRequest = sendInvoiceRequest;
+window.simulateImport = simulateImport;
+
 await loadFirebaseCustomers();
 </script>
 
