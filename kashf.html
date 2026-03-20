@@ -21,7 +21,31 @@
   <!-- مكتبات -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js">
+let audioUnlocked = false;
+
+document.addEventListener("click", () => {
+  if(audioUnlocked) return;
+
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if(!AudioContextClass) return;
+
+  const ctx = new AudioContextClass();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+
+  gain.gain.value = 0.0001;
+
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+
+  osc.start();
+  osc.stop(ctx.currentTime + 0.01);
+
+  audioUnlocked = true;
+});
+
+</script>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -611,6 +635,453 @@ display:flex;
 width:min(92%, 560px);
 }
 
+
+
+/* تحسينات انميشن ناعمة بدون تغيير الوظائف */
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes softPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.97); }
+  100% { transform: scale(1); }
+}
+
+@keyframes overlaySlideUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+body{
+  animation: pageFadeIn .45s ease;
+}
+
+.top-bar,
+.input-group,
+.section-title,
+.info-box,
+.bottom-bar{
+  animation: pageFadeIn .45s ease;
+}
+
+.input-group:nth-of-type(1){ animation-delay:.03s; }
+.input-group:nth-of-type(2){ animation-delay:.06s; }
+.input-group:nth-of-type(3){ animation-delay:.09s; }
+.info-box{ animation-delay:.12s; }
+.bottom-bar{ animation-delay:.15s; }
+
+.top-bar,
+.input-group,
+.section-title,
+.info-box,
+.bottom-bar{
+  animation-fill-mode: both;
+}
+
+.card,
+.info-box,
+.menu-btn,
+.brand-btn,
+.btn,
+.year-btn-save,
+.search-item,
+.sidebar-item,
+#searchInput,
+.input-group input,
+.input-group select{
+  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease, background-color .22s ease, opacity .22s ease;
+}
+
+.menu-btn:hover,
+.year-btn-save:hover,
+.btn:hover,
+.brand-btn:hover,
+.sidebar-item:hover,
+.search-item:hover,
+.info-box:hover{
+  transform: translateY(-2px);
+}
+
+.menu-btn:active,
+.year-btn-save:active,
+.btn:active,
+.brand-btn:active,
+.sidebar-item:active,
+.search-item:active{
+  animation: softPop .22s ease;
+}
+
+.brand-btn.active{
+  animation: pulse .35s ease;
+}
+
+.input-group input:focus,
+.input-group select:focus{
+  border-color:#0d6efd;
+  box-shadow:0 0 0 4px rgba(13,110,253,.10), 0 10px 24px rgba(13,110,253,.08);
+  outline:none;
+}
+
+#searchOverlay{
+  opacity:0;
+  transform: translateY(18px);
+  pointer-events:none;
+  transition: opacity .28s ease, transform .28s ease;
+}
+
+#searchOverlay.show{
+  display:block;
+  opacity:1;
+  transform: translateY(0);
+  pointer-events:auto;
+}
+
+#searchOverlay .search-top,
+#searchOverlay .search-actions,
+#searchOverlay .selected-count-box,
+#searchOverlay .search-brand-box,
+#searchOverlay #searchResults,
+#searchOverlay .bulk-send-bar{
+  animation: overlaySlideUp .28s ease;
+}
+
+.search-item{
+  animation: fadeSlide .25s ease forwards;
+}
+
+#statusOverlay .overlay-card{
+  animation: overlaySlideUp .3s ease;
+}
+
+
+
+:root{
+  --ease-premium:cubic-bezier(.22,1,.36,1);
+}
+
+body::before{
+content:"";
+position:fixed;
+inset:0;
+pointer-events:none;
+background:
+radial-gradient(circle at 12% 10%, rgba(13,110,253,.07), transparent 24%),
+radial-gradient(circle at 88% 18%, rgba(79,140,255,.06), transparent 22%),
+radial-gradient(circle at 50% 100%, rgba(13,110,253,.05), transparent 26%);
+z-index:-1;
+animation:bgFloat 12s ease-in-out infinite alternate;
+}
+
+@keyframes bgFloat{
+0%{transform:translateY(0) scale(1);}
+100%{transform:translateY(-8px) scale(1.02);}
+}
+
+.container{
+animation:pageEnter .7s var(--ease-premium);
+}
+
+@keyframes pageEnter{
+0%{opacity:0;transform:translateY(24px) scale(.985);}
+100%{opacity:1;transform:translateY(0) scale(1);}
+}
+
+.top-bar,.input-group,.section-title,.info-box{
+animation:softRise .65s var(--ease-premium);
+animation-fill-mode:both;
+}
+
+.top-bar{animation-delay:.02s}
+.input-group:nth-of-type(1){animation-delay:.08s}
+.input-group:nth-of-type(2){animation-delay:.14s}
+.input-group:nth-of-type(3){animation-delay:.20s}
+.section-title{animation-delay:.26s}
+.info-box{animation-delay:.32s}
+
+@keyframes softRise{
+from{opacity:0;transform:translateY(14px);}
+to{opacity:1;transform:translateY(0);}
+}
+
+.card,.info-box,.menu-btn,.year-btn-save,.brand-btn,.btn,.search-item,.sidebar-item,#statusCard{
+transition:transform .24s var(--ease-premium), box-shadow .24s var(--ease-premium), border-color .24s ease, background .24s ease, opacity .24s ease;
+will-change:transform;
+}
+
+.card:hover,.info-box:hover{
+transform:translateY(-2px);
+box-shadow:0 14px 32px rgba(0,0,0,.08);
+}
+
+.menu-btn:hover,.year-btn-save:hover,.btn:hover,.sidebar-item:hover{
+transform:translateY(-2px) scale(1.01);
+}
+
+.menu-btn:active,.year-btn-save:active,.btn:active,.brand-btn:active,.sidebar-item:active,.search-item:active{
+transform:scale(.97);
+}
+
+.brand-btn{
+position:relative;
+overflow:hidden;
+}
+
+.brand-btn::after,.btn-primary::after,.year-btn-save::after{
+content:"";
+position:absolute;
+top:0;
+left:-120%;
+width:80%;
+height:100%;
+background:linear-gradient(90deg, transparent, rgba(255,255,255,.48), transparent);
+transform:skewX(-20deg);
+transition:left .65s var(--ease-premium);
+pointer-events:none;
+}
+
+.brand-btn:hover::after,.btn-primary:hover::after,.year-btn-save:hover::after{
+left:135%;
+}
+
+.brand-btn.active{
+transform:translateY(-1px) scale(1.02);
+box-shadow:0 12px 24px rgba(13,110,253,.18);
+animation:activeBrandPop .35s var(--ease-premium);
+}
+
+@keyframes activeBrandPop{
+0%{transform:scale(.92);}
+70%{transform:scale(1.04);}
+100%{transform:translateY(-1px) scale(1.02);}
+}
+
+.input-group input,
+.input-group select,
+#searchInput{
+transition:border-color .22s ease, box-shadow .22s ease, transform .22s ease, background .22s ease;
+}
+
+.input-group input:focus,
+.input-group select:focus,
+#searchInput:focus{
+transform:translateY(-1px);
+}
+
+#searchOverlay{
+opacity:0;
+visibility:hidden;
+transform:translateY(18px) scale(.985);
+transition:opacity .28s ease, transform .32s var(--ease-premium), visibility .28s ease;
+}
+
+#searchOverlay.show{
+opacity:1;
+visibility:visible;
+transform:translateY(0) scale(1);
+}
+
+.search-item{
+transform-origin:center;
+animation:resultIn .28s var(--ease-premium) both;
+}
+
+.search-item:nth-child(1){animation-delay:.01s}
+.search-item:nth-child(2){animation-delay:.03s}
+.search-item:nth-child(3){animation-delay:.05s}
+.search-item:nth-child(4){animation-delay:.07s}
+.search-item:nth-child(5){animation-delay:.09s}
+.search-item:nth-child(6){animation-delay:.11s}
+
+@keyframes resultIn{
+from{opacity:0;transform:translateY(10px) scale(.985);}
+to{opacity:1;transform:translateY(0) scale(1);}
+}
+
+.sidebar{
+transition:right .32s var(--ease-premium), box-shadow .28s ease;
+}
+
+.sidebar.open{
+box-shadow:-14px 0 30px rgba(0,0,0,.15);
+}
+
+.sidebar-overlay{
+backdrop-filter:blur(3px);
+-webkit-backdrop-filter:blur(3px);
+animation:overlayFade .25s ease;
+}
+
+@keyframes overlayFade{
+from{opacity:0;} to{opacity:1;}
+}
+
+.bottom-bar{
+backdrop-filter:blur(12px);
+-webkit-backdrop-filter:blur(12px);
+background:rgba(255,255,255,.88);
+border:1px solid rgba(255,255,255,.6);
+box-shadow:0 -8px 24px rgba(0,0,0,.05);
+}
+
+.btn-primary{
+position:relative;
+overflow:hidden;
+box-shadow:0 10px 24px rgba(13,110,253,.24);
+}
+
+.btn-primary:hover{
+box-shadow:0 14px 30px rgba(13,110,253,.28);
+}
+
+#statusOverlay{
+background:rgba(255,255,255,.22);
+animation:overlayFade .25s ease;
+}
+
+#statusCard.processing{
+animation:statusBreath 1.7s ease-in-out infinite;
+}
+
+#statusCard.done{
+animation:donePop .55s var(--ease-premium);
+}
+
+#statusCard.error{
+animation:errorShake .38s ease;
+}
+
+@keyframes statusBreath{
+0%,100%{transform:translateY(0) scale(1);}
+50%{transform:translateY(-1px) scale(1.01);}
+}
+
+@keyframes donePop{
+0%{transform:scale(.96);opacity:.8;}
+65%{transform:scale(1.02);opacity:1;}
+100%{transform:scale(1);}
+}
+
+@keyframes errorShake{
+0%,100%{transform:translateX(0);}
+25%{transform:translateX(4px);}
+50%{transform:translateX(-4px);}
+75%{transform:translateX(2px);}
+}
+
+#statusBar{
+background:linear-gradient(90deg,#0d6efd,#6ea8fe,#0d6efd);
+background-size:200% 100%;
+animation:barFlow 2.2s linear infinite;
+}
+
+@keyframes barFlow{
+0%{background-position:0% 50%;}
+100%{background-position:200% 50%;}
+}
+
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{
+    animation:none !important;
+    transition:none !important;
+    scroll-behavior:auto !important;
+  }
+}
+
+
+/* === Success Animation Added === */
+@keyframes successPop {
+  0% { transform: scale(0.8); opacity: 0; }
+  50% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); }
+}
+@keyframes successGlow {
+  0% { box-shadow: 0 0 0 rgba(34,197,94,0); }
+  50% { box-shadow: 0 0 25px rgba(34,197,94,.5); }
+  100% { box-shadow: 0 0 0 rgba(34,197,94,0); }
+}
+@keyframes checkBounce {
+  0% { transform: scale(0); }
+  60% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+.success-check {
+  font-size: 42px;
+  text-align: center;
+  margin-bottom: 10px;
+  animation: checkBounce .5s ease;
+}
+#statusCard.success-anim {
+  animation: successPop .4s ease, successGlow 1s ease;
+}
+
+
+/* === Ultra Success Effects Added === */
+@keyframes overlayFlash {
+  0% { opacity: 0; }
+  25% { opacity: .22; }
+  100% { opacity: 0; }
+}
+@keyframes confettiFall {
+  0% { transform: translateY(-120px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(115vh) rotate(720deg); opacity: 0; }
+}
+@keyframes confettiSwing {
+  0% { margin-left: 0; }
+  50% { margin-left: 18px; }
+  100% { margin-left: -18px; }
+}
+@keyframes donePulseStrong {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.02); }
+  70% { transform: scale(1.01); }
+  100% { transform: scale(1); }
+}
+#statusOverlay.success-celebration::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:radial-gradient(circle at center, rgba(34,197,94,.18), rgba(255,255,255,0) 60%);
+  animation: overlayFlash .85s ease forwards;
+}
+#statusCard.success-anim{
+  animation: successPop .4s ease, successGlow 1s ease, donePulseStrong .9s ease;
+}
+#confettiLayer{
+  position:fixed;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+  z-index:3500;
+  display:none;
+}
+#confettiLayer.show{
+  display:block;
+}
+.confetti-piece{
+  position:absolute;
+  top:-40px;
+  width:10px;
+  height:18px;
+  border-radius:4px;
+  opacity:0;
+  animation-name: confettiFall, confettiSwing;
+  animation-timing-function: linear, ease-in-out;
+  animation-fill-mode: forwards, forwards;
+}
+.confetti-piece.shape-circle{
+  width:12px;
+  height:12px;
+  border-radius:50%;
+}
+.confetti-piece.shape-strip{
+  width:8px;
+  height:22px;
+  border-radius:3px;
+}
+
 </style>
 </head>
 
@@ -710,6 +1181,7 @@ width:min(92%, 560px);
 <div id="statusOverlay">
   <div class="overlay-card">
     <div id="statusCard" class="card" style="display:block;">
+      <div id="successIcon" style="display:none;" class="success-check">✅</div>
       <div class="section-title">
         <i class="bi bi-hourglass-split"></i>
         حالة الطلب
@@ -730,6 +1202,8 @@ width:min(92%, 560px);
     </div>
   </div>
 </div>
+
+<div id="confettiLayer"></div>
 
 </div>
 
@@ -952,7 +1426,7 @@ function openSearch(){
     return;
   }
 
-  overlay.style.display = "block";
+  overlay.classList.add("show");
   searchInput.value = "";
   searchBrandTitle.textContent = "البراند المختار: " + selectedBrand;
 
@@ -1033,7 +1507,7 @@ function scoreCustomerMatch(name, query){
 }
 
 function closeSearch(){
-  overlay.style.display = "none";
+  overlay.classList.remove("show");
   selectionMode = false;
   selectedCustomers.clear();
   updateSelectedUI();
@@ -1223,12 +1697,26 @@ function updateStatus(status, current = null, total = null){
     statusBar.style.width = "70%";
     addStatusLog("الطلب قيد المعالجة" + counterText);
   } else if(status === "done"){
-    statusCard.classList.add("done");
-    statusText.style.color = "#15803d";
-    statusText.textContent = "تم إنجاز الطلب بنجاح" + counterText;
-    statusBar.style.width = "100%";
-    addStatusLog("تم إنجاز الطلب بنجاح" + counterText);
-  } else if(status === "error"){
+  statusCard.classList.add("done");
+  statusCard.classList.add("success-anim");
+
+  statusText.style.color = "#15803d";
+  statusText.textContent = "تم إنجاز الطلب بنجاح" + counterText;
+  statusBar.style.width = "100%";
+
+  const icon = document.getElementById("successIcon");
+  if(icon){
+    icon.style.display = "block";
+  }
+
+  launchSuccessCelebration();
+  addStatusLog("تم إنجاز الطلب بنجاح" + counterText);
+
+  setTimeout(() => {
+    statusCard.classList.remove("success-anim");
+    if(icon) icon.style.display = "none";
+  }, 1200);
+} else if(status === "error"){
     statusCard.classList.add("error");
     statusText.style.color = "#dc2626";
     if(!statusText.textContent || statusText.textContent.includes("جاري")){
@@ -1238,7 +1726,7 @@ function updateStatus(status, current = null, total = null){
     addStatusLog("خطأ أثناء معالجة الطلب" + counterText);
   }
 }
-function resetStatusCard(delay = 1500) {
+function resetStatusCard(delay = 3000) {
   setTimeout(() => {
     hideStatusCard();
     statusBar.style.width = "0%";
@@ -1655,8 +2143,7 @@ async function submitRequest() {
     lastRequestTime = await sendRequestToFirebase(message, customer, brand);
     
     await waitForRequestCompletion(lastRequestTime);
-    resetStatusCard(1500);
-    alert("تم إرسال الطلب بنجاح");
+    resetStatusCard(3000);
   } catch (error) {
     resetStatusCard(2500);
     alert("صار خطأ بالإرسال");
@@ -1723,7 +2210,7 @@ async function sendSelectedCustomers() {
         await waitForRequestCompletion(requestTime, current, total);
         
         if (current === total) {
-          resetStatusCard(1500);
+          resetStatusCard(3000);
         }
         
         await new Promise(resolve => setTimeout(resolve, 1000));
@@ -1735,7 +2222,7 @@ async function sendSelectedCustomers() {
       }
     }
     
-    alert("تم إرسال جميع المحددين بنجاح");
+
   } finally {
     setBulkSendLoading(false, selectedCustomers.size);
     setSubmitLoading(false);
@@ -1783,6 +2270,8 @@ function waitForYearChange(){
       statusCard.classList.add("done");
       statusText.style.color = "#15803d";
       statusText.textContent = "تم تغيير السنة بنجاح";
+      playSuccessSound();
+      launchSuccessCelebration();
       statusBar.style.width = "100%";
 
       const msg = "تم تغيير السنة بنجاح";
@@ -1797,7 +2286,7 @@ function waitForYearChange(){
         statusLog.innerHTML = "";
         statusCard.classList.remove("processing", "done", "error");
         statusText.style.color = "";
-      }, 1500);
+      }, 3000);
 
       unsubscribe();
     }
@@ -1818,6 +2307,39 @@ function waitForYearChange(){
   });
 }
 
+
+
+function playSuccessSound(){
+  try{
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if(!AudioContextClass) return;
+
+    const ctx = new AudioContextClass();
+    const now = ctx.currentTime;
+
+    const osc1 = ctx.createOscillator();
+    const osc2 = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc1.type = "sine";
+    osc2.type = "sine";
+    osc1.frequency.setValueAtTime(740, now);
+    osc2.frequency.setValueAtTime(988, now + 0.08);
+
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.08, now + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.28);
+
+    osc1.connect(gain);
+    osc2.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc1.start(now);
+    osc2.start(now + 0.08);
+    osc1.stop(now + 0.22);
+    osc2.stop(now + 0.28);
+  }catch(e){}
+}
 
 function addStatusLog(message) {
   if (!message) return;
@@ -1867,6 +2389,40 @@ if (statusLog.children.length >= maxLogs) {
 
 
 
+
+function launchSuccessCelebration(){
+  const overlayEl = document.getElementById("statusOverlay");
+  const layer = document.getElementById("confettiLayer");
+  if(!layer) return;
+
+  overlayEl.classList.add("success-celebration");
+  layer.innerHTML = "";
+  layer.classList.add("show");
+
+  const colors = ["#22c55e","#0d6efd","#f59e0b","#ef4444","#a855f7","#14b8a6"];
+  const shapes = ["shape-circle","shape-strip",""];
+  const count = 34;
+
+  for(let i = 0; i < count; i++){
+    const piece = document.createElement("div");
+    piece.className = "confetti-piece " + shapes[Math.floor(Math.random() * shapes.length)];
+    piece.style.left = Math.random() * 100 + "vw";
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.transform = "rotate(" + (Math.random() * 360) + "deg)";
+    piece.style.animationDuration = (2.8 + Math.random() * 1.6) + "s, " + (1.2 + Math.random() * 0.8) + "s";
+    piece.style.animationDelay = (Math.random() * 0.25) + "s, " + (Math.random() * 0.25) + "s";
+    piece.style.opacity = "1";
+    layer.appendChild(piece);
+  }
+
+  setTimeout(() => {
+    layer.classList.remove("show");
+    layer.innerHTML = "";
+    overlayEl.classList.remove("success-celebration");
+  }, 4200);
+}
+
+
 function waitForRestartBayan() {
   const restartRef = ref(db, "systemCommands/restartBayan");
   
@@ -1914,6 +2470,8 @@ function waitForRestartBayan() {
     else if (data.status === "done") {
       statusCard.classList.add("done");
       statusText.textContent = "اكتملت إعادة التشغيل";
+      playSuccessSound();
+      launchSuccessCelebration();
       statusText.style.color = "#15803d";
       statusBar.style.width = "100%";
       
@@ -1929,7 +2487,7 @@ if (statusLog.children.length >= maxLogs) {
         lastRestartMessage = "";
         statusCard.classList.remove("processing", "done", "error");
         statusText.style.color = "";
-      }, 2500);
+      }, 3000);
       
       unsubscribe();
     }
