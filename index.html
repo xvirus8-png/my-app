@@ -173,6 +173,17 @@ function goTo(page){
     window.location.href = page;
   },500);
 }
+
+window.addEventListener('pageshow', function(){
+  document.body.classList.remove('fade-out');
+  document.body.style.opacity = '1';
+});
+
+document.addEventListener('DOMContentLoaded', function(){
+  document.body.classList.remove('fade-out');
+  document.body.style.opacity = '1';
+});
+
 </script>
 
 </body>
