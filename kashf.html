@@ -587,6 +587,30 @@ to{
 #statusLog div.error{
   animation: fadeSlide .3s ease forwards, shakeSoft .35s ease;
 }
+
+
+/* Overlay حالة الطلب فوق كل الشاشة */
+#statusOverlay{
+position:fixed;
+inset:0;
+display:none;
+align-items:flex-start;
+justify-content:center;
+padding-top:90px;
+background:rgba(255,255,255,.18);
+backdrop-filter:blur(8px);
+-webkit-backdrop-filter:blur(8px);
+z-index:3000;
+}
+
+#statusOverlay.show{
+display:flex;
+}
+
+#statusOverlay .overlay-card{
+width:min(92%, 560px);
+}
+
 </style>
 </head>
 
@@ -635,7 +659,8 @@ to{
     <div class="input-group">
      
 
-      <div class="year-row">
+      <label>اختر السنة</label>
+<div class="year-row">
         <select id="yearSelect">
           <option value="2020">2020</option>
           <option value="2021">2021</option>
@@ -654,7 +679,8 @@ to{
 
     <div class="input-group">
       
-      <div class="quick-brands">
+      <label>اختر البراند</label>
+<div class="quick-brands">
         <button type="button" class="brand-btn" onclick="setBrand('FOREVER',this)">FOREVER</button>
         <button type="button" class="brand-btn" onclick="setBrand('CHARACTER',this)">CHARACTER</button>
         <button type="button" class="brand-btn" onclick="setBrand('ROSELLA',this)">ROSELLA</button>
@@ -663,8 +689,11 @@ to{
     </div>
 
 <div class="input-group">
+  <label>اسم الزبون</label>
   <input type="text" id="customerName" placeholder="اضغط للبحث" onclick="openSearch()" readonly>
 </div>
+
+<div class="section-title">المعاينة 👁️</div>
 
 <div class="info-box">
   <div class="info-row">
@@ -678,23 +707,27 @@ to{
   </div>
 </div>
 
-<div id="statusCard" class="card" style="display:none;">
-  <div class="section-title">
-    <i class="bi bi-hourglass-split"></i>
-    حالة الطلب
-  </div>
+<div id="statusOverlay">
+  <div class="overlay-card">
+    <div id="statusCard" class="card" style="display:block;">
+      <div class="section-title">
+        <i class="bi bi-hourglass-split"></i>
+        حالة الطلب
+      </div>
 
-  <div id="statusText">جاري إرسال الطلب...</div>
+      <div id="statusText">جاري إرسال الطلب...</div>
 
-  <div id="statusLog" style="
-    font-size:14px;
-    line-height:1.8;
-    margin-bottom:10px;
-    color:#444;
-  "></div>
+      <div id="statusLog" style="
+        font-size:14px;
+        line-height:1.8;
+        margin-bottom:10px;
+        color:#444;
+      "></div>
 
-  <div class="status-track">
-    <div id="statusBar"></div>
+      <div class="status-track">
+        <div id="statusBar"></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -777,6 +810,7 @@ const statusCard = document.getElementById("statusCard");
 const statusText = document.getElementById("statusText");
 const statusBar = document.getElementById("statusBar");
 const statusLog = document.getElementById("statusLog");
+const statusOverlay = document.getElementById("statusOverlay");
 let lastRestartMessage = "";
 const startSelectBtn = document.getElementById("startSelectBtn");
 const selectionTools = document.getElementById("selectionTools");
@@ -1135,7 +1169,30 @@ function renderResults(list){
 }
 
 function showStatusCard(){
+  statusOverlay.classList.add("show");
   statusCard.style.display = "block";
+}
+
+function hideStatusCard(){
+  statusOverlay.classList.remove("show");
+}
+
+function prepareStatusCard(mode = "processing"){
+  statusLog.innerHTML = "";
+  statusBar.style.width = "0%";
+  statusText.style.color = "";
+  statusCard.classList.remove("processing", "done", "error");
+
+  if(mode === "processing"){
+    statusCard.classList.add("processing");
+    statusText.style.color = "#0d6efd";
+  }else if(mode === "done"){
+    statusCard.classList.add("done");
+    statusText.style.color = "#15803d";
+  }else if(mode === "error"){
+    statusCard.classList.add("error");
+    statusText.style.color = "#dc2626";
+  }
 }
 
 function updateStatus(status, current = null, total = null){
@@ -1145,31 +1202,51 @@ function updateStatus(status, current = null, total = null){
     counterText = " (" + current + " / " + total + ")";
   }
 
+  statusCard.classList.remove("processing", "done", "error");
+
   if(status === "sending"){
+    statusCard.classList.add("processing");
+    statusText.style.color = "#0d6efd";
     statusText.textContent = "جاري إرسال الطلب..." + counterText;
     statusBar.style.width = "20%";
+    addStatusLog("جاري إرسال الطلب" + counterText);
   } else if(status === "new"){
+    statusCard.classList.add("processing");
+    statusText.style.color = "#0d6efd";
     statusText.textContent = "تم إرسال الطلب، بانتظار المعالجة..." + counterText;
     statusBar.style.width = "50%";
+    addStatusLog("تم إرسال الطلب، بانتظار المعالجة" + counterText);
   } else if(status === "processing"){
+    statusCard.classList.add("processing");
+    statusText.style.color = "#0d6efd";
     statusText.textContent = "الطلب قيد المعالجة..." + counterText;
     statusBar.style.width = "70%";
+    addStatusLog("الطلب قيد المعالجة" + counterText);
   } else if(status === "done"){
+    statusCard.classList.add("done");
+    statusText.style.color = "#15803d";
     statusText.textContent = "تم إنجاز الطلب بنجاح" + counterText;
     statusBar.style.width = "100%";
+    addStatusLog("تم إنجاز الطلب بنجاح" + counterText);
   } else if(status === "error"){
+    statusCard.classList.add("error");
+    statusText.style.color = "#dc2626";
     if(!statusText.textContent || statusText.textContent.includes("جاري")){
       statusText.textContent = "صار خطأ أثناء معالجة الطلب" + counterText;
     }
     statusBar.style.width = "100%";
+    addStatusLog("خطأ أثناء معالجة الطلب" + counterText);
   }
 }
 function resetStatusCard(delay = 1500) {
   setTimeout(() => {
-    statusCard.style.display = "none";
+    hideStatusCard();
     statusBar.style.width = "0%";
     statusText.textContent = "جاري إرسال الطلب...";
-    statusLog.innerHTML = "";
+    const maxLogs = 4;
+if (statusLog.children.length >= maxLogs) {
+  statusLog.removeChild(statusLog.firstChild);
+}
     statusCard.classList.remove("processing", "done", "error");
     statusText.style.color = "";
   }, delay);
@@ -1293,8 +1370,10 @@ async function sendYearToFirebase(){
 
   try{
     showStatusCard();
+    prepareStatusCard("processing");
     statusText.textContent = "جاري إرسال السنة...";
     statusBar.style.width = "20%";
+    addStatusLog("جاري إرسال السنة");
 
     await set(ref(db, "systemCommands/changeYear"), {
       year: year,
@@ -1305,8 +1384,10 @@ async function sendYearToFirebase(){
     waitForYearChange();
   }catch(error){
     showStatusCard();
+    prepareStatusCard("error");
     statusText.textContent = "صار خطأ بإرسال السنة";
     statusBar.style.width = "100%";
+    addStatusLog("خطأ في إرسال السنة");
     alert("صار خطأ بإرسال السنة");
   }
 }
@@ -1320,7 +1401,10 @@ async function restartBayanFromWeb() {
     
     statusText.textContent = "جاري إرسال أمر إعادة التشغيل...";
     statusText.style.color = "#0d6efd";
-    statusLog.innerHTML = "";
+    const maxLogs = 4;
+if (statusLog.children.length >= maxLogs) {
+  statusLog.removeChild(statusLog.firstChild);
+}
     lastRestartMessage = "";
     statusBar.style.width = "8%";
     
@@ -1565,6 +1649,7 @@ async function submitRequest() {
     setSubmitLoading(true);
     
     showStatusCard();
+    prepareStatusCard("processing");
     updateStatus("sending");
     
     lastRequestTime = await sendRequestToFirebase(message, customer, brand);
@@ -1626,6 +1711,7 @@ async function sendSelectedCustomers() {
         previewBrand.textContent = brand;
         
         showStatusCard();
+        prepareStatusCard("processing");
         updateStatus("sending", current, total);
         
         const requestTime = await sendRequestToFirebase(
@@ -1659,6 +1745,7 @@ window.sendSelectedCustomers = sendSelectedCustomers;
 
 function waitForYearChange(){
   const yearRef = ref(db, "systemCommands/changeYear");
+  let lastYearMessage = "";
 
   const unsubscribe = onValue(yearRef, (snapshot) => {
     if(!snapshot.exists()) return;
@@ -1666,32 +1753,66 @@ function waitForYearChange(){
     const data = snapshot.val();
     if(!data) return;
 
+    statusCard.classList.remove("processing", "done", "error");
+
     if(data.status === "new"){
-      showStatusCard();
+      statusCard.classList.add("processing");
+      statusText.style.color = "#0d6efd";
       statusText.textContent = "تم إرسال السنة، بانتظار التنفيذ...";
       statusBar.style.width = "35%";
+
+      const msg = "تم إرسال السنة، بانتظار التنفيذ";
+      if(lastYearMessage !== msg){
+        addStatusLog(msg);
+        lastYearMessage = msg;
+      }
     }
     else if(data.status === "processing"){
-      showStatusCard();
+      statusCard.classList.add("processing");
+      statusText.style.color = "#0d6efd";
       statusText.textContent = "جاري تغيير السنة...";
       statusBar.style.width = "70%";
+
+      const msg = "جاري تغيير السنة";
+      if(lastYearMessage !== msg){
+        addStatusLog(msg);
+        lastYearMessage = msg;
+      }
     }
     else if(data.status === "done"){
-      showStatusCard();
+      statusCard.classList.add("done");
+      statusText.style.color = "#15803d";
       statusText.textContent = "تم تغيير السنة بنجاح";
       statusBar.style.width = "100%";
 
+      const msg = "تم تغيير السنة بنجاح";
+      if(lastYearMessage !== msg){
+        addStatusLog(msg);
+        lastYearMessage = msg;
+      }
+
       setTimeout(() => {
-        statusCard.style.display = "none";
+        hideStatusCard();
         statusBar.style.width = "0%";
+        statusLog.innerHTML = "";
+        statusCard.classList.remove("processing", "done", "error");
+        statusText.style.color = "";
       }, 1500);
 
       unsubscribe();
     }
     else if(data.status === "error"){
-      showStatusCard();
+      statusCard.classList.add("error");
+      statusText.style.color = "#dc2626";
       statusText.textContent = data.message || "صار خطأ أثناء تغيير السنة";
       statusBar.style.width = "100%";
+
+      const msg = data.message || "خطأ أثناء تغيير السنة";
+      if(lastYearMessage !== msg){
+        addStatusLog(msg);
+        lastYearMessage = msg;
+      }
+
       unsubscribe();
     }
   });
@@ -1729,7 +1850,10 @@ function addStatusLog(message) {
     borderColor = "#fecaca";
   }
   
-  statusLog.innerHTML = "";
+  const maxLogs = 4;
+if (statusLog.children.length >= maxLogs) {
+  statusLog.removeChild(statusLog.firstChild);
+}
   
   const row = document.createElement("div");
   row.className = rowClass;
@@ -1796,9 +1920,12 @@ function waitForRestartBayan() {
       addStatusLog("تمت إعادة تشغيل البيان بالكامل");
       
       setTimeout(() => {
-        statusCard.style.display = "none";
+        hideStatusCard();
         statusBar.style.width = "0%";
-        statusLog.innerHTML = "";
+        const maxLogs = 4;
+if (statusLog.children.length >= maxLogs) {
+  statusLog.removeChild(statusLog.firstChild);
+}
         lastRestartMessage = "";
         statusCard.classList.remove("processing", "done", "error");
         statusText.style.color = "";
