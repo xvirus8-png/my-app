@@ -229,7 +229,7 @@ flex:0 0 48px;
 }
 
 .year-btn-save:hover{
-transform:translateY(-1px);
+
 box-shadow:0 10px 22px rgba(13,110,253,.26);
 }
 
@@ -292,7 +292,7 @@ transition:.2s ease;
 .search-item:hover{
 background:#f8fbff;
 border-color:#cfe0ff;
-transform:translateY(-1px);
+
 box-shadow:0 6px 16px rgba(13,110,253,.08);
 }
 
@@ -604,6 +604,7 @@ z-index:3000;
 }
 
 #statusOverlay.show{
+  pointer-events:auto;
 display:flex;
 }
 
@@ -724,7 +725,7 @@ body{
 }
 
 .search-item{
-  animation: fadeSlide .25s ease forwards;
+  
 }
 
 #statusOverlay .overlay-card{
@@ -842,7 +843,7 @@ transition:border-color .22s ease, box-shadow .22s ease, transform .22s ease, ba
 .input-group input:focus,
 .input-group select:focus,
 #searchInput:focus{
-transform:translateY(-1px);
+
 }
 
 #searchOverlay{
@@ -860,7 +861,7 @@ transform:translateY(0) scale(1);
 
 .search-item{
 transform-origin:center;
-animation:resultIn .28s var(--ease-premium) both;
+
 }
 
 .search-item:nth-child(1){animation-delay:.01s}
@@ -1058,6 +1059,29 @@ animation:barFlow 2.2s linear infinite;
   border-radius:3px;
 }
 
+
+/* انميشن اكسل على زر إرسال الطلب */
+@keyframes excelPulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 rgba(13,110,253,0); }
+  50% { transform: scale(1.06); box-shadow: 0 0 18px rgba(13,110,253,.35); }
+  100% { transform: scale(1); box-shadow: 0 0 0 rgba(13,110,253,0); }
+}
+
+.excel-ready{
+  animation: excelPulse 1.2s infinite;
+}
+
+
+/* eye animation safe */
+@keyframes blinkEye {
+  0%, 90%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.1); }
+}
+.eye {
+  display:inline-block;
+  animation: blinkEye 6s infinite;
+}
+
 </style>
 </head>
 
@@ -1140,7 +1164,7 @@ animation:barFlow 2.2s linear infinite;
   <input type="text" id="customerName" placeholder="اضغط للبحث" onclick="openSearch()" readonly>
 </div>
 
-<div class="section-title">المعاينة 👁️</div>
+<div class="section-title">المعاينة <span class="eye">👁️</span></div>
 
 <div class="info-box">
   <div class="info-row">
@@ -1186,7 +1210,7 @@ animation:barFlow 2.2s linear infinite;
 <div class="bottom-bar">
   <div class="bottom-wrap">
     <button class="btn btn-secondary" onclick="clearForm()">تفريغ</button>
- <button class="btn btn-primary" id="submitBtn" onclick="submitRequest()">إرسال الطلب</button>
+ <button class="btn btn-primary excel-submit-btn" id="submitBtn" onclick="submitRequest()">إرسال الطلب</button>
   </div>
 </div>
 
@@ -1287,6 +1311,7 @@ function setBrand(brand, btn){
   previewBrand.textContent = brand;
   document.getElementById("customerName").value = "";
   previewCustomer.textContent = "—";
+  checkSubmitReadyState();
 }
 window.setBrand = setBrand;
 
@@ -1296,6 +1321,7 @@ function clearForm(){
   previewBrand.textContent = "—";
   document.getElementById("customerName").value = "";
   document.querySelectorAll(".brand-btn").forEach(b => b.classList.remove("active"));
+  checkSubmitReadyState();
 }
 window.clearForm = clearForm;
 function setSubmitLoading(isLoading) {
@@ -1610,6 +1636,7 @@ function renderResults(list){
           });
         }
 
+        checkSubmitReadyState();
         closeSearch();
       };
     }
@@ -2522,6 +2549,21 @@ if (statusLog.children.length >= maxLogs) {
     }
   });
 }
+
+function checkSubmitReadyState(){
+  const customer = document.getElementById("customerName").value.trim();
+  const isReady = !!(customer && selectedBrand);
+
+  const submitBtnEl = document.querySelector(".excel-submit-btn");
+  if(!submitBtnEl) return;
+
+  if(isReady){
+    submitBtnEl.classList.add("excel-ready");
+  }else{
+    submitBtnEl.classList.remove("excel-ready");
+  }
+}
+
 await loadFirebaseCustomers();
 </script>
 
