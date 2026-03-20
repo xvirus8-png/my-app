@@ -397,6 +397,104 @@ to{
 #statusLog div.error{
   animation: fadeSlide .3s ease forwards, shakeSoft .35s ease;
 }
+
+<style>
+.btn::after{
+content:"";
+position:absolute;
+top:0;
+left:-75%;
+width:50%;
+height:100%;
+background:linear-gradient(120deg,transparent,rgba(255,255,255,.4),transparent);
+transform:skewX(-25deg);
+transition:.5s;
+}
+.btn:hover::after{
+left:125%;
+}
+
+<style>
+@keyframes eyeBlink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.1); }
+}
+.eye-anim {
+  display:inline-block;
+  animation: eyeBlink 3s infinite;
+}
+
+<style>
+@keyframes shakeBtn {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(2px); }
+  50% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+  100% { transform: translateX(0); }
+}
+.btn.shake {
+  animation: shakeBtn .4s ease;
+}
+</style>
+
+</style>
+
+
+<style>
+@keyframes shakeBtn {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(2px); }
+  50% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+  100% { transform: translateX(0); }
+}
+.btn.shake {
+  animation: shakeBtn .4s ease;
+}
+</style>
+
+</style>
+
+
+<style>
+@keyframes eyeBlink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.1); }
+}
+.eye-anim {
+  display:inline-block;
+  animation: eyeBlink 3s infinite;
+}
+
+<style>
+@keyframes shakeBtn {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(2px); }
+  50% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+  100% { transform: translateX(0); }
+}
+.btn.shake {
+  animation: shakeBtn .4s ease;
+}
+</style>
+
+</style>
+
+
+<style>
+@keyframes shakeBtn {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(2px); }
+  50% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+  100% { transform: translateX(0); }
+}
+.btn.shake {
+  animation: shakeBtn .4s ease;
+}
+</style>
+
 </style>
 </head>
 
@@ -414,11 +512,13 @@ to{
   </div>
 
   <div class="input-group">
-    <input type="text" id="invoiceNumber" placeholder="ادخل رقم الفاتورة" inputmode="numeric" pattern="[0-9]*">
+    <label style="font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:6px;font-size:14px;color:#0f172a;"><i class="bi bi-hash"></i> رقم الفاتورة</label>
+<input type="text" id="invoiceNumber" placeholder="ادخل رقم الفاتورة" inputmode="numeric" pattern="[0-9]*">
   </div>
 
   <div class="input-group">
-    <div class="quick-brands">
+    <label style="font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:6px;font-size:14px;color:#0f172a;"><i class="bi bi-tags"></i> اختر البراند</label>
+<div class="quick-brands">
       <button type="button" class="brand-btn" onclick="setBrand('FOREVER',this)">FOREVER</button>
       <button type="button" class="brand-btn" onclick="setBrand('CHARACTER',this)">CHARACTER</button>
       <button type="button" class="brand-btn" onclick="setBrand('ROSELLA',this)">ROSELLA</button>
@@ -431,7 +531,8 @@ to{
     <input type="text" id="invoiceCustomer" placeholder="اضغط للبحث" onclick="openSearch()" readonly>
   </div>
 
-  <div class="info-box">
+  <label style="font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:6px;font-size:14px;color:#0f172a;">المعاينة <span class="eye-anim">👁️</span></label>
+<div class="info-box">
     <div class="info-row">
       <div>البراند</div>
       <div id="previewBrand">—</div>
@@ -472,8 +573,8 @@ to{
 
 <div class="bottom-bar">
   <div class="bottom-wrap">
- <button class="btn btn-secondary" onclick="sendInvoiceRequest('excel')">استيراد Excel</button>
-<button class="btn btn-primary" onclick="sendInvoiceRequest('pdf')">استيراد PDF</button>
+ <button class="btn btn-secondary" style="background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;box-shadow:0 8px 25px rgba(34,197,94,.45),0 0 12px rgba(34,197,94,.35);transition:.2s;position:relative;overflow:hidden;" onclick="sendInvoiceRequest('excel')" onmousedown="this.style.transform='scale(.96)'" onmouseup="this.style.transform='scale(1)'">استيراد Excel</button>
+<button class="btn btn-primary" style="background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;border:none;box-shadow:0 8px 25px rgba(220,38,38,.45),0 0 12px rgba(220,38,38,.35);transition:.2s;position:relative;overflow:hidden;" onclick="sendInvoiceRequest('pdf')" onmousedown="this.style.transform='scale(.96)'" onmouseup="this.style.transform='scale(1)'">استيراد PDF</button>
   </div>
 </div>
 
@@ -1011,6 +1112,23 @@ window.sendInvoiceRequest = sendInvoiceRequest;
 window.simulateImport = simulateImport;
 
 await loadFirebaseCustomers();
+</script>
+
+
+<script>
+function checkReady(){
+  const invoice = document.getElementById('invoiceNumber').value.trim();
+  const customer = document.getElementById('invoiceCustomer').value.trim();
+  if(invoice && customer && selectedBrand){
+    document.querySelectorAll('.btn').forEach(btn=>{
+      btn.classList.add('shake');
+      setTimeout(()=>btn.classList.remove('shake'),400);
+    });
+  }
+}
+
+document.getElementById('invoiceNumber').addEventListener('input', checkReady);
+document.getElementById('invoiceCustomer').addEventListener('input', checkReady);
 </script>
 
 </body>
