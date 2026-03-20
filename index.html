@@ -9,6 +9,7 @@
 
 <style>
 body{
+  overflow:hidden;
   background:#f5f7fa;
   font-family:system-ui;
 }
@@ -57,18 +58,104 @@ body{
   background:#eef4ff;
   color:#0d6efd;
 }
+
+/* logo animation */
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(-10px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* buttons upgrade safe */
+.btn{
+  padding:16px 18px;
+  border-radius:16px;
+  box-shadow:0 6px 15px rgba(0,0,0,.06);
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+
+.btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 25px rgba(13,110,253,.12);
+}
+
+.btn:active{
+  transform:scale(.98);
+}
+
+.btn i{
+  font-size:18px;
+  transition:.2s;
+}
+
+.btn:hover i{
+  transform:scale(1.1);
+}
+
+/* colors */
+.btn-primary{
+  background:linear-gradient(135deg,#0d6efd,#0b5ed7);
+}
+
+.btn-secondary{
+  background:#f4f8ff;
+  border:1px solid #dbe4ff;
+}
+
+
+/* full background */
+body{
+  overflow:hidden;
+  background:linear-gradient(135deg,#e6f0ff,#f8fbff);
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* card floating */
+.card{
+  position:relative;
+  z-index:2;
+  box-shadow:0 20px 40px rgba(0,0,0,.08);
+  border-radius:20px;
+}
+
+/* container full center */
+.container{
+  width:100%;
+  padding:20px;
+}
+
+
+/* Kashf style button animation */
+@keyframes softPop{
+  0%{transform:scale(1);}
+  50%{transform:scale(.96);}
+  100%{transform:scale(1);}
+}
+
+.btn{
+  transition:.2s ease;
+}
+
+.btn:active{
+  animation:softPop .25s ease;
+}
+
+.btn:hover{
+  transform:translateY(-2px);
+}
+
 </style>
 </head>
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="نظام المحاسبة">
-<meta name="theme-color" content="#0d6efd">
-<link rel="apple-touch-icon" href="icon.png">
-<link rel="icon" type="image/png" href="icon.png">
+
 <body>
 
 <div class="container">
   <div class="card">
+    <div style="text-align:center;margin-bottom:15px;">
+      <img src="logo_clean.png" style="width:220px;max-width:85%;animation:fadeIn .6s ease;">
+    </div>
     
     <div class="title">اختيار القسم</div>
 
