@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>فاتورة بيع</title>
 
 <link rel="icon" type="image/png" href="icon.png">
@@ -474,6 +474,45 @@ to{
   animation: blinkEye 6s infinite;
 }
 
+
+/* انميشن اكسل على زر Excel و PDF */
+@keyframes excelPulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 rgba(22,163,74,0); }
+  50% { transform: scale(1.06); box-shadow: 0 0 18px rgba(22,163,74,.35); }
+  100% { transform: scale(1); box-shadow: 0 0 0 rgba(22,163,74,0); }
+}
+
+.excel-ready{
+  animation: excelPulse 1.2s infinite;
+}
+
+
+/* strong no scroll / no zoom */
+html, body{
+  width:100%;
+  height:100%;
+  overflow:hidden !important;
+  overscroll-behavior:none;
+  touch-action:manipulation;
+  -ms-touch-action:manipulation;
+}
+
+body{
+  position:fixed;
+  inset:0;
+}
+
+/* keep overlay/search usable */
+#searchOverlay{
+  overflow:hidden;
+}
+
+#searchResults{
+  overflow:auto !important;
+  -webkit-overflow-scrolling:touch;
+  max-height:52vh;
+}
+
 </style>
 </head>
 
@@ -671,11 +710,13 @@ function setBrand(brand, btn){
   previewBrand.textContent = brand;
   invoiceCustomer.value = "";
   previewCustomer.textContent = "—";
+  checkReadyState();
 }
 window.setBrand = setBrand;
 
 invoiceNumber.addEventListener("input", () => {
   previewInvoice.textContent = invoiceNumber.value.trim() || "—";
+  checkReadyState();
 });
 
 function getCustomersForSearch(){
@@ -844,6 +885,7 @@ function renderResults(list){
     div.onclick = () => {
       invoiceCustomer.value = item.name;
       previewCustomer.textContent = item.name;
+      checkReadyState();
       closeSearch();
     };
 
@@ -963,6 +1005,7 @@ function clearInvoiceForm(){
   previewInvoice.textContent = "—";
 
   document.querySelectorAll(".brand-btn").forEach(b => b.classList.remove("active"));
+  checkReadyState();
 }
 function simulateImport(type){
   if(!invoiceNumber.value.trim()){
@@ -1107,7 +1150,43 @@ async function sendInvoiceRequest(fileType) {
 window.sendInvoiceRequest = sendInvoiceRequest;
 window.simulateImport = simulateImport;
 
+
+function checkReadyState(){
+  const isReady = !!(
+    invoiceNumber.value.trim() &&
+    selectedBrand &&
+    invoiceCustomer.value.trim()
+  );
+
+  const targetButtons = document.querySelectorAll(".excel-btn, .pdf-btn");
+  targetButtons.forEach(btn => {
+    if(isReady){
+      btn.classList.add("excel-ready");
+    }else{
+      btn.classList.remove("excel-ready");
+    }
+  });
+}
+
 await loadFirebaseCustomers();
+</script>
+
+
+<script>
+document.addEventListener('gesturestart', function(e){ e.preventDefault(); }, {passive:false});
+document.addEventListener('gesturechange', function(e){ e.preventDefault(); }, {passive:false});
+document.addEventListener('gestureend', function(e){ e.preventDefault(); }, {passive:false});
+
+document.addEventListener('touchmove', function(e){
+  const inSearch = e.target.closest('#searchResults');
+  if(!inSearch){
+    e.preventDefault();
+  }
+}, {passive:false});
+
+document.addEventListener('dblclick', function(e){
+  e.preventDefault();
+}, {passive:false});
 </script>
 
 </body>
