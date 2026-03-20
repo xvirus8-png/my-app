@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   
   <title>طلب كشف حساب</title>
   
@@ -1080,6 +1080,17 @@ animation:barFlow 2.2s linear infinite;
 .eye {
   display:inline-block;
   animation: blinkEye 6s infinite;
+}
+
+
+/* disable scroll */
+body{
+  overflow:hidden;
+}
+
+/* allow search scroll only */
+#searchResults{
+  overflow:auto;
 }
 
 </style>
