@@ -398,102 +398,81 @@ to{
   animation: fadeSlide .3s ease forwards, shakeSoft .35s ease;
 }
 
-<style>
-.btn::after{
-content:"";
-position:absolute;
-top:0;
-left:-75%;
-width:50%;
-height:100%;
-background:linear-gradient(120deg,transparent,rgba(255,255,255,.4),transparent);
-transform:skewX(-25deg);
-transition:.5s;
-}
-.btn:hover::after{
-left:125%;
+/* brand animation like kashf */
+@keyframes softPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(.96); }
+  100% { transform: scale(1); }
 }
 
-<style>
-@keyframes eyeBlink {
+.brand-btn{
+  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease, background .22s ease;
+}
+
+.brand-btn:active{
+  animation: softPop .22s ease;
+}
+
+.brand-btn.active{
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 10px 22px rgba(13,110,253,.20);
+}
+
+/* fullscreen status overlay like kashf */
+#statusOverlay{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:flex-start;
+  justify-content:center;
+  padding-top:90px;
+  background:rgba(255,255,255,.18);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  z-index:3000;
+}
+
+#statusOverlay.show{
+  display:flex;
+}
+
+#statusOverlay .overlay-card{
+  width:min(92%,560px);
+  animation:overlaySlideUp .3s ease;
+}
+
+@keyframes overlaySlideUp{
+  from{opacity:0;transform:translateY(22px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+
+/* colors */
+.excel-btn{
+  background:#16a34a !important;
+  color:#fff !important;
+}
+.pdf-btn{
+  background:#dc2626 !important;
+  color:#fff !important;
+}
+
+/* eye blink */
+@keyframes blinkEye{
   0%, 90%, 100% { transform: scaleY(1); }
   95% { transform: scaleY(0.1); }
 }
-.eye-anim {
+
+.section-title:has(👁️){
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.section-title span.eye{
   display:inline-block;
-  animation: eyeBlink 3s infinite;
+  animation: blinkEye 6s infinite;
 }
-
-<style>
-@keyframes shakeBtn {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(2px); }
-  50% { transform: translateX(-2px); }
-  75% { transform: translateX(2px); }
-  100% { transform: translateX(0); }
-}
-.btn.shake {
-  animation: shakeBtn .4s ease;
-}
-</style>
-
-</style>
-
-
-<style>
-@keyframes shakeBtn {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(2px); }
-  50% { transform: translateX(-2px); }
-  75% { transform: translateX(2px); }
-  100% { transform: translateX(0); }
-}
-.btn.shake {
-  animation: shakeBtn .4s ease;
-}
-</style>
-
-</style>
-
-
-<style>
-@keyframes eyeBlink {
-  0%, 90%, 100% { transform: scaleY(1); }
-  95% { transform: scaleY(0.1); }
-}
-.eye-anim {
-  display:inline-block;
-  animation: eyeBlink 3s infinite;
-}
-
-<style>
-@keyframes shakeBtn {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(2px); }
-  50% { transform: translateX(-2px); }
-  75% { transform: translateX(2px); }
-  100% { transform: translateX(0); }
-}
-.btn.shake {
-  animation: shakeBtn .4s ease;
-}
-</style>
-
-</style>
-
-
-<style>
-@keyframes shakeBtn {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(2px); }
-  50% { transform: translateX(-2px); }
-  75% { transform: translateX(2px); }
-  100% { transform: translateX(0); }
-}
-.btn.shake {
-  animation: shakeBtn .4s ease;
-}
-</style>
 
 </style>
 </head>
@@ -512,12 +491,12 @@ left:125%;
   </div>
 
   <div class="input-group">
-    <label style="font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:6px;font-size:14px;color:#0f172a;"><i class="bi bi-hash"></i> رقم الفاتورة</label>
+    <label class="section-title">رقم الفاتورة</label>
 <input type="text" id="invoiceNumber" placeholder="ادخل رقم الفاتورة" inputmode="numeric" pattern="[0-9]*">
   </div>
 
   <div class="input-group">
-    <label style="font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:6px;font-size:14px;color:#0f172a;"><i class="bi bi-tags"></i> اختر البراند</label>
+    <label class="section-title">اختر البراند</label>
 <div class="quick-brands">
       <button type="button" class="brand-btn" onclick="setBrand('FOREVER',this)">FOREVER</button>
       <button type="button" class="brand-btn" onclick="setBrand('CHARACTER',this)">CHARACTER</button>
@@ -531,7 +510,7 @@ left:125%;
     <input type="text" id="invoiceCustomer" placeholder="اضغط للبحث" onclick="openSearch()" readonly>
   </div>
 
-  <label style="font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:6px;font-size:14px;color:#0f172a;">المعاينة <span class="eye-anim">👁️</span></label>
+  <label class="section-title">المعاينة <span class="eye">👁️</span></label>
 <div class="info-box">
     <div class="info-row">
       <div>البراند</div>
@@ -549,23 +528,27 @@ left:125%;
     </div>
   </div>
 
-  <div id="statusCard" class="card" style="display:none;">
-    <div class="section-title">
-      <i class="bi bi-hourglass-split"></i>
-      حالة الطلب
-    </div>
+  <div id="statusOverlay">
+    <div class="overlay-card">
+      <div id="statusCard" class="card" style="display:block;">
+        <div class="section-title">
+          <i class="bi bi-hourglass-split"></i>
+          حالة الطلب
+        </div>
 
-    <div id="statusText">جاري الاستيراد...</div>
+        <div id="statusText">جاري الاستيراد...</div>
 
-    <div id="statusLog" style="
-      font-size:14px;
-      line-height:1.8;
-      margin-bottom:10px;
-      color:#444;
-    "></div>
+        <div id="statusLog" style="
+          font-size:14px;
+          line-height:1.8;
+          margin-bottom:10px;
+          color:#444;
+        "></div>
 
-    <div class="status-track">
-      <div id="statusBar"></div>
+        <div class="status-track">
+          <div id="statusBar"></div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -573,8 +556,8 @@ left:125%;
 
 <div class="bottom-bar">
   <div class="bottom-wrap">
- <button class="btn btn-secondary" style="background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;box-shadow:0 8px 25px rgba(34,197,94,.45),0 0 12px rgba(34,197,94,.35);transition:.2s;position:relative;overflow:hidden;" onclick="sendInvoiceRequest('excel')" onmousedown="this.style.transform='scale(.96)'" onmouseup="this.style.transform='scale(1)'">استيراد Excel</button>
-<button class="btn btn-primary" style="background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;border:none;box-shadow:0 8px 25px rgba(220,38,38,.45),0 0 12px rgba(220,38,38,.35);transition:.2s;position:relative;overflow:hidden;" onclick="sendInvoiceRequest('pdf')" onmousedown="this.style.transform='scale(.96)'" onmouseup="this.style.transform='scale(1)'">استيراد PDF</button>
+ <button class="btn btn-secondary excel-btn" onclick="sendInvoiceRequest('excel')">استيراد Excel</button>
+<button class="btn btn-primary pdf-btn" onclick="sendInvoiceRequest('pdf')">استيراد PDF</button>
   </div>
 </div>
 
@@ -630,6 +613,7 @@ const statusCard = document.getElementById("statusCard");
 const statusText = document.getElementById("statusText");
 const statusBar = document.getElementById("statusBar");
 const statusLog = document.getElementById("statusLog");
+const statusOverlay = document.getElementById("statusOverlay");
 
 async function loadCustomersFromFirebase(){
   const snapshot = await get(child(ref(db), "customersByBrand"));
@@ -868,12 +852,13 @@ function renderResults(list){
 }
 
 function showStatusCard(){
+  statusOverlay.classList.add("show");
   statusCard.style.display = "block";
 }
 
 function resetStatusCard(delay = 1500) {
   setTimeout(() => {
-    statusCard.style.display = "none";
+    statusOverlay.classList.remove("show");
     statusBar.style.width = "0%";
     statusText.textContent = "جاري الاستيراد...";
     statusLog.innerHTML = "";
@@ -928,6 +913,7 @@ function addStatusLog(message) {
 function updateStatus(status){
   if(status === "sending"){
     statusText.textContent = "جاري استيراد ملف الإكسل...";
+    statusText.style.color = "#0d6efd";
     statusBar.style.width = "20%";
     statusCard.classList.remove("done", "error");
     statusCard.classList.add("processing");
@@ -935,6 +921,7 @@ function updateStatus(status){
   } 
   else if(status === "new"){
     statusText.textContent = "تم رفع الملف، بانتظار المعالجة...";
+    statusText.style.color = "#0d6efd";
     statusBar.style.width = "50%";
     statusCard.classList.remove("done", "error");
     statusCard.classList.add("processing");
@@ -942,6 +929,7 @@ function updateStatus(status){
   }
   else if(status === "processing"){
     statusText.textContent = "جارٍ معالجة بيانات الفاتورة...";
+    statusText.style.color = "#0d6efd";
     statusBar.style.width = "70%";
     statusCard.classList.remove("done", "error");
     statusCard.classList.add("processing");
@@ -949,6 +937,7 @@ function updateStatus(status){
   }
   else if(status === "done"){
     statusText.textContent = "تم استيراد الفاتورة بنجاح";
+    statusText.style.color = "#15803d";
     statusBar.style.width = "100%";
     statusCard.classList.remove("processing", "error");
     statusCard.classList.add("done");
@@ -956,6 +945,7 @@ function updateStatus(status){
   }
   else if(status === "error"){
     statusText.textContent = "صار خطأ أثناء استيراد الفاتورة";
+    statusText.style.color = "#dc2626";
     statusBar.style.width = "100%";
     statusCard.classList.remove("processing", "done");
     statusCard.classList.add("error");
@@ -1048,6 +1038,7 @@ async function sendInvoiceRequest(fileType) {
   try {
     showStatusCard();
     statusText.textContent = "جاري إرسال الطلب...";
+    statusText.style.color = "#0d6efd";
     statusBar.style.width = "15%";
     statusCard.classList.remove("done", "error");
     statusCard.classList.add("processing");
@@ -1057,6 +1048,7 @@ async function sendInvoiceRequest(fileType) {
     await set(requestRef, payload);
 
     statusText.textContent = "تم إرسال الطلب";
+    statusText.style.color = "#0d6efd";
     statusBar.style.width = "35%";
     addStatusLog("تم إرسال الطلب إلى النظام");
 
@@ -1067,6 +1059,7 @@ async function sendInvoiceRequest(fileType) {
 
       if (data.status === "processing") {
         statusText.textContent = data.message || "جاري تنفيذ الطلب";
+        statusText.style.color = "#0d6efd";
         statusBar.style.width = "70%";
         statusCard.classList.remove("done", "error");
         statusCard.classList.add("processing");
@@ -1075,6 +1068,7 @@ async function sendInvoiceRequest(fileType) {
 
       if (data.status === "done") {
         statusText.textContent = data.message || "تمت العملية بنجاح";
+        statusText.style.color = "#15803d";
         statusBar.style.width = "100%";
         statusCard.classList.remove("processing", "error");
         statusCard.classList.add("done");
@@ -1090,6 +1084,7 @@ async function sendInvoiceRequest(fileType) {
 
       if (data.status === "error") {
         statusText.textContent = data.message || "صار خطأ أثناء التنفيذ";
+        statusText.style.color = "#dc2626";
         statusBar.style.width = "100%";
         statusCard.classList.remove("processing", "done");
         statusCard.classList.add("error");
@@ -1102,6 +1097,7 @@ async function sendInvoiceRequest(fileType) {
     console.error(error);
     showStatusCard();
     statusText.textContent = "فشل إرسال الطلب";
+    statusText.style.color = "#dc2626";
     statusBar.style.width = "100%";
     statusCard.classList.remove("processing", "done");
     statusCard.classList.add("error");
@@ -1112,23 +1108,6 @@ window.sendInvoiceRequest = sendInvoiceRequest;
 window.simulateImport = simulateImport;
 
 await loadFirebaseCustomers();
-</script>
-
-
-<script>
-function checkReady(){
-  const invoice = document.getElementById('invoiceNumber').value.trim();
-  const customer = document.getElementById('invoiceCustomer').value.trim();
-  if(invoice && customer && selectedBrand){
-    document.querySelectorAll('.btn').forEach(btn=>{
-      btn.classList.add('shake');
-      setTimeout(()=>btn.classList.remove('shake'),400);
-    });
-  }
-}
-
-document.getElementById('invoiceNumber').addEventListener('input', checkReady);
-document.getElementById('invoiceCustomer').addEventListener('input', checkReady);
 </script>
 
 </body>
