@@ -21,31 +21,7 @@
   <!-- مكتبات -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js">
-let audioUnlocked = false;
-
-document.addEventListener("click", () => {
-  if(audioUnlocked) return;
-
-  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-  if(!AudioContextClass) return;
-
-  const ctx = new AudioContextClass();
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-
-  gain.gain.value = 0.0001;
-
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-
-  osc.start();
-  osc.stop(ctx.currentTime + 0.01);
-
-  audioUnlocked = true;
-});
-
-</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -2309,20 +2285,60 @@ function waitForYearChange(){
 
 
 
+let successAudioCtx = null;
+let audioUnlocked = false;
+
+function unlockSuccessAudio(){
+  try{
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if(!AudioContextClass) return;
+
+    if(!successAudioCtx){
+      successAudioCtx = new AudioContextClass();
+    }
+
+    if(successAudioCtx.state === "suspended"){
+      successAudioCtx.resume();
+    }
+
+    const osc = successAudioCtx.createOscillator();
+    const gain = successAudioCtx.createGain();
+
+    gain.gain.setValueAtTime(0.0001, successAudioCtx.currentTime);
+    osc.connect(gain);
+    gain.connect(successAudioCtx.destination);
+
+    osc.start(successAudioCtx.currentTime);
+    osc.stop(successAudioCtx.currentTime + 0.01);
+
+    audioUnlocked = true;
+  }catch(e){}
+}
+
+document.addEventListener("click", unlockSuccessAudio, { passive: true });
+document.addEventListener("touchstart", unlockSuccessAudio, { passive: true });
+
 function playSuccessSound(){
   try{
     const AudioContextClass = window.AudioContext || window.webkitAudioContext;
     if(!AudioContextClass) return;
 
-    const ctx = new AudioContextClass();
-    const now = ctx.currentTime;
+    if(!successAudioCtx){
+      successAudioCtx = new AudioContextClass();
+    }
 
-    const osc1 = ctx.createOscillator();
-    const osc2 = ctx.createOscillator();
-    const gain = ctx.createGain();
+    if(successAudioCtx.state === "suspended"){
+      successAudioCtx.resume();
+    }
+
+    const now = successAudioCtx.currentTime;
+    const osc1 = successAudioCtx.createOscillator();
+    const osc2 = successAudioCtx.createOscillator();
+    const gain = successAudioCtx.createGain();
 
     osc1.type = "sine";
     osc2.type = "sine";
+
     osc1.frequency.setValueAtTime(740, now);
     osc2.frequency.setValueAtTime(988, now + 0.08);
 
@@ -2332,7 +2348,7 @@ function playSuccessSound(){
 
     osc1.connect(gain);
     osc2.connect(gain);
-    gain.connect(ctx.destination);
+    gain.connect(successAudioCtx.destination);
 
     osc1.start(now);
     osc2.start(now + 0.08);
