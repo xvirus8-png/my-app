@@ -334,6 +334,7 @@ to{
 }
 
 #statusCard {
+  position:relative;
   transition: .25s ease;
   margin-top: 15px;
 }
@@ -513,12 +514,108 @@ body{
   max-height:52vh;
 }
 
+
+
+/* === Enhanced Success Animation === */
+@keyframes successPop {
+  0% { transform: scale(0.7); opacity: 0; }
+  40% { transform: scale(1.15); opacity: 1; }
+  70% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+@keyframes successGlow {
+  0% { box-shadow: 0 0 0 rgba(34,197,94,0); }
+  50% { box-shadow: 0 0 35px rgba(34,197,94,.6); }
+  100% { box-shadow: 0 0 0 rgba(34,197,94,0); }
+}
+
+@keyframes checkBounce {
+  0% { transform: scale(0) rotate(-20deg); opacity: 0; }
+  60% { transform: scale(1.3) rotate(5deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+.success-check{
+  font-size:50px;
+  text-align:center;
+  margin-bottom:10px;
+  display:none;
+  animation: checkBounce .6s ease;
+}
+
+#statusCard.success-anim{
+  animation: successPop .5s ease, successGlow 1.2s ease;
+}
+
+@keyframes successPop {
+  0% { transform: scale(.86); opacity: .7; }
+  55% { transform: scale(1.04); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes successGlow {
+  0% { box-shadow: 0 0 0 rgba(34,197,94,0); }
+  50% { box-shadow: 0 0 22px rgba(34,197,94,.35); }
+  100% { box-shadow: 0 0 0 rgba(34,197,94,0); }
+}
+@keyframes checkBounce {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.success-check{
+  font-size:42px;
+  text-align:center;
+  margin-bottom:10px;
+  display:none;
+  animation: checkBounce .5s ease;
+}
+#statusCard.success-anim{
+  animation: successPop .4s ease, successGlow 1s ease;
+}
+
+
+/* falling celebration strips */
+@keyframes confettiFall {
+  0% { transform: translateY(-120px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(420px) rotate(720deg); opacity: 0; }
+}
+@keyframes confettiSwing {
+  0% { margin-left: 0; }
+  50% { margin-left: 18px; }
+  100% { margin-left: -18px; }
+}
+#cardConfettiLayer{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+  z-index:2;
+  display:none;
+  border-radius:18px;
+}
+#cardConfettiLayer.show{
+  display:block;
+}
+.confetti-piece{
+  position:absolute;
+  top:-40px;
+  width:8px;
+  height:22px;
+  border-radius:3px;
+  opacity:1;
+  animation-name: confettiFall, confettiSwing;
+  animation-timing-function: linear, ease-in-out;
+  animation-fill-mode: forwards, forwards;
+}
+
 </style>
 </head>
 
 <body>
 
 <div class="container">
+<button onclick="testCelebration()" style="margin:10px 0;padding:10px 15px;border:none;border-radius:10px;background:#22c55e;color:#fff;font-weight:bold;">🎉 تجربة الاحتفال</button>
 
   <div class="top-bar">
     <div style="display:flex;align-items:center;gap:10px;">
@@ -544,10 +641,7 @@ body{
     </div>
   </div>
 
-  <div class="input-group">
-    <label>اسم الزبون</label>
-    <input type="text" id="invoiceCustomer" placeholder="اضغط للبحث" onclick="openSearch()" readonly>
-  </div>
+
 
   <label class="section-title">المعاينة <span class="eye">👁️</span></label>
 <div class="info-box">
@@ -570,6 +664,8 @@ body{
   <div id="statusOverlay">
     <div class="overlay-card">
       <div id="statusCard" class="card" style="display:block;">
+        <div id="cardConfettiLayer"></div>
+        <div id="successIcon" class="success-check">✅</div>
         <div class="section-title">
           <i class="bi bi-hourglass-split"></i>
           حالة الطلب
@@ -903,11 +999,156 @@ function resetStatusCard(delay = 1500) {
     statusOverlay.classList.remove("show");
     statusBar.style.width = "0%";
     statusText.textContent = "جاري الاستيراد...";
-    statusLog.innerHTML = "";
+    const maxLogs = 4;
+  if (statusLog.children.length >= maxLogs) {
+    statusLog.removeChild(statusLog.firstChild);
+  }
     statusCard.classList.remove("processing", "done", "error");
     statusText.style.color = "";
   }, delay);
 }
+
+
+let successAudioCtx = null;
+
+function unlockSuccessAudio(){
+  try{
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if(!AudioContextClass) return;
+    if(!successAudioCtx){
+      successAudioCtx = new AudioContextClass();
+    }
+    if(successAudioCtx.state === "suspended"){
+      successAudioCtx.resume();
+    }
+    const osc = successAudioCtx.createOscillator();
+    const gain = successAudioCtx.createGain();
+    gain.gain.setValueAtTime(0.0001, successAudioCtx.currentTime);
+    osc.connect(gain);
+    gain.connect(successAudioCtx.destination);
+    osc.start(successAudioCtx.currentTime);
+    osc.stop(successAudioCtx.currentTime + 0.01);
+  }catch(e){}
+}
+document.addEventListener("click", unlockSuccessAudio, { passive: true });
+document.addEventListener("touchstart", unlockSuccessAudio, { passive: true });
+
+function playSuccessSound(){
+  try{
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if(!AudioContextClass) return;
+    if(!successAudioCtx){
+      successAudioCtx = new AudioContextClass();
+    }
+    if(successAudioCtx.state === "suspended"){
+      successAudioCtx.resume();
+    }
+    const now = successAudioCtx.currentTime;
+    const osc1 = successAudioCtx.createOscillator();
+    const osc2 = successAudioCtx.createOscillator();
+    const gain = successAudioCtx.createGain();
+
+    osc1.type = "sine";
+    osc2.type = "sine";
+    osc1.frequency.setValueAtTime(740, now);
+    osc2.frequency.setValueAtTime(988, now + 0.08);
+
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.08, now + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.28);
+
+    osc1.connect(gain);
+    osc2.connect(gain);
+    gain.connect(successAudioCtx.destination);
+
+    osc1.start(now);
+    osc2.start(now + 0.08);
+    osc1.stop(now + 0.22);
+    osc2.stop(now + 0.28);
+  }catch(e){}
+}
+
+
+function launchCardConfetti(){
+  const layer = document.getElementById("cardConfettiLayer");
+  if(!layer) return;
+
+  layer.innerHTML = "";
+  layer.classList.add("show");
+
+  const colors = ["#22c55e","#0d6efd","#f59e0b","#ef4444","#a855f7","#14b8a6"];
+  const count = 24;
+
+  for(let i = 0; i < count; i++){
+    const piece = document.createElement("div");
+    piece.className = "confetti-piece";
+    piece.style.left = Math.random() * 100 + "%";
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.transform = "rotate(" + (Math.random() * 360) + "deg)";
+    piece.style.animationDuration = (2.3 + Math.random() * 1.2) + "s, " + (1 + Math.random() * .6) + "s";
+    piece.style.animationDelay = (Math.random() * 0.25) + "s, " + (Math.random() * 0.25) + "s";
+    layer.appendChild(piece);
+  }
+
+  setTimeout(() => {
+    layer.classList.remove("show");
+    layer.innerHTML = "";
+  }, 3200);
+}
+
+function triggerInvoiceSuccess(message){
+  statusText.textContent = message || "تمت العملية بنجاح";
+  statusText.style.color = "#15803d";
+  statusBar.style.width = "100%";
+  statusCard.classList.remove("processing", "error");
+  statusCard.classList.add("done");
+  statusCard.classList.add("success-anim");
+
+  const icon = document.getElementById("successIcon");
+  if(icon){
+    icon.style.display = "block";
+  }
+
+  playSuccessSound();
+  launchCardConfetti();
+  addStatusLog(message || "تمت العملية بنجاح");
+
+  setTimeout(() => {
+    statusCard.classList.remove("success-anim");
+    if(icon) icon.style.display = "none";
+  }, 1200);
+}
+
+
+window.triggerInvoiceSuccess = triggerInvoiceSuccess;
+
+function testCelebration(){
+  if (typeof showStatusCard === "function") {
+    showStatusCard();
+  } else {
+    const overlay = document.getElementById("statusOverlay");
+    const card = document.getElementById("statusCard");
+    if(overlay) overlay.classList.add("show");
+    if(card) card.style.display = "block";
+  }
+
+  triggerInvoiceSuccess("تجربة الاحتفال");
+
+  setTimeout(() => {
+    const icon = document.getElementById("successIcon");
+    if(icon) icon.style.display = "none";
+    statusCard.classList.remove("success-anim");
+    if (typeof resetStatusCard === "function") {
+      resetStatusCard(200);
+    } else {
+      const overlay = document.getElementById("statusOverlay");
+      if(overlay) overlay.classList.remove("show");
+    }
+  }, 1800);
+}
+
+window.testCelebration = testCelebration;
+
 
 function addStatusLog(message) {
   if (!message) return;
@@ -940,7 +1181,10 @@ function addStatusLog(message) {
     borderColor = "#fecaca";
   }
 
-  statusLog.innerHTML = "";
+  const maxLogs = 4;
+  if (statusLog.children.length >= maxLogs) {
+    statusLog.removeChild(statusLog.firstChild);
+  }
 
   const row = document.createElement("div");
   row.className = rowClass;
@@ -978,12 +1222,7 @@ function updateStatus(status){
     addStatusLog("جاري معالجة بيانات الفاتورة");
   }
   else if(status === "done"){
-    statusText.textContent = "تم استيراد الفاتورة بنجاح";
-    statusText.style.color = "#15803d";
-    statusBar.style.width = "100%";
-    statusCard.classList.remove("processing", "error");
-    statusCard.classList.add("done");
-    addStatusLog("تم استيراد الفاتورة بنجاح");
+    triggerInvoiceSuccess("تم استيراد الفاتورة بنجاح");
   }
   else if(status === "error"){
     statusText.textContent = "صار خطأ أثناء استيراد الفاتورة";
@@ -1018,10 +1257,7 @@ function simulateImport(type){
     return;
   }
 
-  if(!invoiceCustomer.value.trim()){
-    alert("اختر الزبون");
-    return;
-  }
+  // اسم الزبون اختياري
 
   showStatusCard();
   updateStatus("sending");
@@ -1060,10 +1296,7 @@ async function sendInvoiceRequest(fileType) {
     return;
   }
 
-  if (!customerName) {
-    alert("اختر الزبون");
-    return;
-  }
+  // اسم الزبون اختياري
 
   const requestId = "REQ_" + Date.now();
 
@@ -1074,7 +1307,7 @@ async function sendInvoiceRequest(fileType) {
     brand: brand,
     invoiceNo: invoiceNo,
     customerName: customerName,
-    fileType: fileType || "pdf",
+    fileType: fileType,
     createdAt: new Date().toISOString()
   };
 
@@ -1110,12 +1343,7 @@ async function sendInvoiceRequest(fileType) {
       }
 
       if (data.status === "done") {
-        statusText.textContent = data.message || "تمت العملية بنجاح";
-        statusText.style.color = "#15803d";
-        statusBar.style.width = "100%";
-        statusCard.classList.remove("processing", "error");
-        statusCard.classList.add("done");
-        addStatusLog(data.message || "تمت العملية بنجاح");
+        triggerInvoiceSuccess(data.message || "تمت العملية بنجاح");
 
         setTimeout(() => {
           clearInvoiceForm();
@@ -1154,8 +1382,7 @@ window.simulateImport = simulateImport;
 function checkReadyState(){
   const isReady = !!(
     invoiceNumber.value.trim() &&
-    selectedBrand &&
-    invoiceCustomer.value.trim()
+    selectedBrand
   );
 
   const targetButtons = document.querySelectorAll(".excel-btn, .pdf-btn");
