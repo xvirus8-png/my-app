@@ -641,10 +641,7 @@ body{
     </div>
   </div>
 
-  <div class="input-group">
-    <label>اسم الزبون</label>
-    <input type="text" id="invoiceCustomer" placeholder="اضغط للبحث" onclick="openSearch()" readonly>
-  </div>
+
 
   <label class="section-title">المعاينة <span class="eye">👁️</span></label>
 <div class="info-box">
@@ -1381,39 +1378,6 @@ async function sendInvoiceRequest(fileType) {
 window.sendInvoiceRequest = sendInvoiceRequest;
 window.simulateImport = simulateImport;
 
-const SWIPE_BACK_URL = "index.html";
-let swipeStartX = 0;
-let swipeStartY = 0;
-let swipeTracking = false;
-
-function goToMainMenu(){
-  window.location.href = SWIPE_BACK_URL;
-}
-
-window.goToMainMenu = goToMainMenu;
-
-document.addEventListener('touchstart', function(e){
-  if(!e.touches || !e.touches.length) return;
-  const touch = e.touches[0];
-  swipeStartX = touch.clientX;
-  swipeStartY = touch.clientY;
-  swipeTracking = swipeStartX <= 40;
-}, {passive:true});
-
-document.addEventListener('touchend', function(e){
-  if(!swipeTracking || !e.changedTouches || !e.changedTouches.length) return;
-
-  const touch = e.changedTouches[0];
-  const deltaX = touch.clientX - swipeStartX;
-  const deltaY = Math.abs(touch.clientY - swipeStartY);
-
-  swipeTracking = false;
-
-  if(deltaX >= 90 && deltaY <= 70){
-    goToMainMenu();
-  }
-}, {passive:true});
-
 
 function checkReadyState(){
   const isReady = !!(
@@ -1434,6 +1398,37 @@ function checkReadyState(){
 await loadFirebaseCustomers();
 </script>
 
+
+
+<script>
+let startX = 0;
+let startY = 0;
+let isSwiping = false;
+
+document.addEventListener("touchstart", (e) => {
+  const touch = e.touches[0];
+  startX = touch.clientX;
+  startY = touch.clientY;
+
+  if (startX > window.innerWidth - 40) {
+    isSwiping = true;
+  }
+});
+
+document.addEventListener("touchend", (e) => {
+  if (!isSwiping) return;
+
+  const touch = e.changedTouches[0];
+  const diffX = touch.clientX - startX;
+  const diffY = Math.abs(touch.clientY - startY);
+
+  isSwiping = false;
+
+  if (diffX < -90 && diffY < 70) {
+    window.location.href = "index.html";
+  }
+});
+</script>
 
 <script>
 document.addEventListener('gesturestart', function(e){ e.preventDefault(); }, {passive:false});
