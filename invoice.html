@@ -1410,7 +1410,7 @@ document.addEventListener("touchstart", (e) => {
   startX = touch.clientX;
   startY = touch.clientY;
 
-  if (startX > window.innerWidth - 40) {
+  if (startX >= window.innerWidth - 60) {
     isSwiping = true;
   }
 });
@@ -1419,12 +1419,15 @@ document.addEventListener("touchend", (e) => {
   if (!isSwiping) return;
 
   const touch = e.changedTouches[0];
-  const diffX = touch.clientX - startX;
-  const diffY = Math.abs(touch.clientY - startY);
+  const endX = touch.clientX;
+  const endY = touch.clientY;
+
+  const moveX = endX - startX;
+  const moveY = Math.abs(endY - startY);
 
   isSwiping = false;
 
-  if (diffX < -90 && diffY < 70) {
+  if (startX > endX && Math.abs(moveX) > 80 && moveY < 80) {
     window.location.href = "index.html";
   }
 });
@@ -1437,7 +1440,7 @@ document.addEventListener('gestureend', function(e){ e.preventDefault(); }, {pas
 
 document.addEventListener('touchmove', function(e){
   const inSearch = e.target.closest('#searchResults');
-  if(!inSearch){
+  if(!inSearch && !(e.touches[0].clientX > window.innerWidth - 60)){
     e.preventDefault();
   }
 }, {passive:false});
