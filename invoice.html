@@ -1410,8 +1410,10 @@ document.addEventListener("touchstart", (e) => {
   startX = touch.clientX;
   startY = touch.clientY;
 
-  if (startX >= window.innerWidth - 60) {
+  if (startX >= window.innerWidth - 80) {
     isSwiping = true;
+  } else {
+    isSwiping = false;
   }
 });
 
@@ -1427,7 +1429,7 @@ document.addEventListener("touchend", (e) => {
 
   isSwiping = false;
 
-  if (startX > endX && Math.abs(moveX) > 80 && moveY < 80) {
+  if (endX < startX && Math.abs(moveX) > 100 && moveY < 80) {
     window.location.href = "index.html";
   }
 });
@@ -1440,7 +1442,8 @@ document.addEventListener('gestureend', function(e){ e.preventDefault(); }, {pas
 
 document.addEventListener('touchmove', function(e){
   const inSearch = e.target.closest('#searchResults');
-  if(!inSearch && !(e.touches[0].clientX > window.innerWidth - 60)){
+
+  if(!inSearch && !(e.touches[0].clientX > window.innerWidth - 80)){
     e.preventDefault();
   }
 }, {passive:false});
