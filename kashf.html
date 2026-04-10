@@ -1093,11 +1093,106 @@ body{
   overflow:auto;
 }
 
+
+/* صفحات داخل نفس الملف */
+.app-page{display:none}
+.app-page.active{display:block}
+.files-page-top{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:16px;
+}
+.files-back-btn{
+  width:46px;
+  height:46px;
+  border:none;
+  border-radius:12px;
+  background:#fff;
+  box-shadow:0 4px 12px rgba(0,0,0,.08);
+  font-size:20px;
+  cursor:pointer;
+}
+.files-title{
+  font-size:22px;
+  font-weight:800;
+}
+.files-tools{
+  display:flex;
+  gap:10px;
+  margin-bottom:14px;
+}
+.files-tools .btn{
+  flex:1;
+}
+#filesPageList{
+  margin-top:12px;
+}
+.file-row-card{
+  background:#fff;
+  border-radius:16px;
+  padding:12px 14px;
+  margin-bottom:10px;
+  box-shadow:0 8px 20px rgba(0,0,0,.06);
+  display:flex;
+  align-items:center;
+  gap:12px;
+  border:1px solid #edf2ff;
+}
+.file-row-check{
+  width:20px;
+  height:20px;
+  accent-color:#0d6efd;
+  flex:0 0 auto;
+}
+.file-row-icon{
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-size:18px;
+  flex:0 0 42px;
+  background:linear-gradient(135deg,#0d6efd,#4f8cff);
+}
+.file-row-info{
+  flex:1;
+  min-width:0;
+}
+.file-row-name{
+  font-size:14px;
+  font-weight:800;
+  color:#1f2a44;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  margin-bottom:4px;
+}
+.file-row-meta{
+  font-size:12px;
+  color:#6e7b96;
+}
+.file-empty{
+  background:#fff;
+  border-radius:16px;
+  padding:18px;
+  text-align:center;
+  color:#6e7b96;
+  font-weight:700;
+  box-shadow:0 8px 20px rgba(0,0,0,.06);
+}
+.hidden-native-input{
+  display:none;
+}
+
 </style>
 </head>
 
 <body>
 
+<div id="pageMain" class="app-page active">
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
 <div class="sidebar" id="sidebar">
@@ -1138,7 +1233,20 @@ body{
 
   
 
-    <div class="input-group">
+  
+  <div class="card" style="padding:14px;margin-bottom:15px;cursor:pointer;" onclick="openFilesPage()">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#0d6efd,#4f8cff);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;">
+        <i class="bi bi-folder2-open"></i>
+      </div>
+      <div>
+        <div style="font-weight:800;font-size:16px;margin-bottom:4px;">صفحة الملفات</div>
+        <div style="font-size:13px;color:#6e7b96;">استعراض الملفات وتحديدها وإرسال المحدد</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="input-group">
      
 
       <label>اختر السنة</label>
@@ -1220,7 +1328,7 @@ body{
 
 <div class="bottom-bar">
   <div class="bottom-wrap">
-    <button class="btn btn-secondary" onclick="clearForm()">تفريغ</button>
+    <button class="btn btn-secondary" onclick="deleteAllFiles()">🗑️ حذف الملفات</button>
  <button class="btn btn-primary excel-submit-btn" id="submitBtn" onclick="submitRequest()">إرسال الطلب</button>
   </div>
 </div>
@@ -1254,7 +1362,53 @@ body{
   </div>
 </div>
 
+
+</div>
+
+<div id="pageFiles" class="app-page" style="overflow-y:auto;height:100vh;">
+  <div class="container">
+    <div class="files-page-top">
+      <button class="files-back-btn" onclick="backToMainPage()"><i class="bi bi-arrow-right"></i></button>
+      <div class="files-title">الملفات</div>
+    </div>
+
+    <div class="card" style="margin-bottom:14px;">
+      <div class="section-title"><i class="bi bi-folder2-open"></i> إدارة الملفات</div>
+      <div style="font-size:13px;color:#6e7b96;line-height:1.8;margin-bottom:12px;">
+        اختر ملفات من الجهاز أو Google Drive أو iCloud، وبعدها تگدر تحددها وترسل المحدد.
+      </div>
+
+      <div class="files-tools">
+        <button class="btn btn-primary" type="button" onclick="openFilesPickerPage()">اختيار ملفات</button>
+        <button class="btn btn-secondary" type="button" onclick="openFolderPickerPage()">اختيار مجلد</button>
+      </div>
+
+      <div class="files-tools">
+        <button class="btn btn-secondary" type="button" onclick="selectAllPickedFiles()">تحديد الكل</button>
+        <button class="btn btn-secondary" type="button" onclick="clearPickedSelection()">إلغاء التحديد</button>
+      </div>
+
+      <div class="files-tools">
+        <button class="btn btn-secondary" type="button" onclick="clearPickedFiles()">مسح القائمة</button>
+      </div>
+
+      <div style="font-size:12px;color:#6e7b96;line-height:1.8;margin-top:4px;">
+        محاولة ربط أقرب للمجلد: زر <b>اختيار مجلد</b> قد يجلب كل ملفات المجلد دفعة واحدة إذا دعمه iPhone/المتصفح.
+      </div>
+
+      <input type="file" id="filesPageInput" class="hidden-native-input" multiple>
+      <input type="file" id="folderPageInput" class="hidden-native-input" webkitdirectory multiple>
+      <div id="filesPageList" class="file-empty">ماكو ملفات مختارة حالياً</div>
+    </div>
+
+    <div class="bottom-wrap" style="margin-top:10px;">
+      <button class="btn btn-primary" type="button" id="sendPickedFilesBtn" onclick="sendPickedFiles()" disabled>إرسال المحدد</button>
+    </div>
+  </div>
+</div>
+
 <script type="module">
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getDatabase, ref, set, get, child, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
@@ -1657,8 +1811,12 @@ function renderResults(list){
 }
 
 function showStatusCard(){
+  clearTimeout(window.__statusDoneHideTimer);
   statusOverlay.classList.add("show");
   statusCard.style.display = "block";
+  statusCard.classList.remove("success-anim");
+  const icon = document.getElementById("successIcon");
+  if(icon) icon.style.display = "none";
 }
 
 function hideStatusCard(){
@@ -1725,6 +1883,17 @@ function updateStatus(status, current = null, total = null){
 
   launchSuccessCelebration();
   addStatusLog("تم إنجاز الطلب بنجاح" + counterText);
+
+  clearTimeout(window.__statusDoneHideTimer);
+  window.__statusDoneHideTimer = setTimeout(() => {
+    hideStatusCard();
+    statusBar.style.width = "0%";
+    statusLog.innerHTML = "";
+    statusCard.classList.remove("processing", "done", "error", "success-anim");
+    statusText.textContent = "جاري إرسال الطلب...";
+    statusText.style.color = "";
+    if(icon) icon.style.display = "none";
+  }, 2500);
 
   setTimeout(() => {
     statusCard.classList.remove("success-anim");
@@ -1962,6 +2131,29 @@ async function deleteSavedData(){
 }
 window.deleteSavedData = deleteSavedData;
 
+
+async function deleteAllFiles(){
+  const ok = confirm("هل تريد حذف كل ملفات PDF؟");
+  if(!ok) return;
+
+  try{
+    await fetch("https://kashf-system-default-rtdb.firebaseio.com/systemCommands/deleteFiles.json", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: true,
+        time: Date.now()
+      })
+    });
+
+    alert("تم إرسال أمر الحذف");
+  }catch(err){
+    alert("فشل إرسال أمر الحذف");
+    console.error(err);
+  }
+}
+window.deleteAllFiles = deleteAllFiles;
+
 document.getElementById("excelFile").addEventListener("change", function(e) {
   const file = e.target.files[0];
   if (!file) return;
@@ -2141,6 +2333,7 @@ async function submitRequest() {
   }
   
   if (!brand) {
+    allowScreenSleep();
     alert("اختر البراند");
     return;
   }
@@ -2162,6 +2355,7 @@ async function submitRequest() {
     resetStatusCard(2500);
     alert("صار خطأ بالإرسال");
   } finally {
+    allowScreenSleep();
     setSubmitLoading(false);
   }
 }
@@ -2169,7 +2363,10 @@ window.submitRequest = submitRequest;
 
 
 async function sendSelectedCustomers() {
+  keepScreenAwake();
+
   if (selectedCustomers.size === 0) {
+    allowScreenSleep();
     alert("ماكو أسماء محددة");
     return;
   }
@@ -2199,6 +2396,7 @@ async function sendSelectedCustomers() {
       });
       
       if (!foundItem) {
+        allowScreenSleep();
         alert("ما لكيت السجل المحدد: " + id);
         return;
       }
@@ -2231,6 +2429,7 @@ async function sendSelectedCustomers() {
       } catch (error) {
         updateStatus("error", current, total);
         resetStatusCard(2500);
+        allowScreenSleep();
         alert("توقف الإرسال عند الزبون: " + customer + " / " + brand);
         return;
       }
@@ -2238,6 +2437,7 @@ async function sendSelectedCustomers() {
     
 
   } finally {
+    allowScreenSleep();
     setBulkSendLoading(false, selectedCustomers.size);
     setSubmitLoading(false);
   }
@@ -2561,6 +2761,25 @@ if (statusLog.children.length >= maxLogs) {
   });
 }
 
+
+function keepScreenAwake(){
+  const v = document.getElementById("keepAwakeVideo");
+  if(!v) return;
+  const playPromise = v.play();
+  if(playPromise && typeof playPromise.catch === "function"){
+    playPromise.catch(() => {});
+  }
+}
+
+function allowScreenSleep(){
+  const v = document.getElementById("keepAwakeVideo");
+  if(!v) return;
+  try{
+    v.pause();
+    v.currentTime = 0;
+  }catch(e){}
+}
+
 function checkSubmitReadyState(){
   const customer = document.getElementById("customerName").value.trim();
   const isReady = !!(customer && selectedBrand);
@@ -2575,8 +2794,197 @@ function checkSubmitReadyState(){
   }
 }
 
+
+let pickedFilesPage = [];
+let pickedFilesSelected = new Set();
+
+function openFilesPage(){
+  document.getElementById("pageMain").classList.remove("active");
+  document.getElementById("pageFiles").classList.add("active");
+}
+window.openFilesPage = openFilesPage;
+
+function backToMainPage(){
+  document.getElementById("pageFiles").classList.remove("active");
+  document.getElementById("pageMain").classList.add("active");
+}
+window.backToMainPage = backToMainPage;
+
+function openFilesPickerPage(){
+  const input = document.getElementById("filesPageInput");
+  if(input) input.click();
+}
+window.openFilesPickerPage = openFilesPickerPage;
+
+
+function openFolderPickerPage(){
+  const input = document.getElementById("folderPageInput");
+  if(input) input.click();
+}
+window.openFolderPickerPage = openFolderPickerPage;
+
+function normalizePickedFiles(files){
+  pickedFilesSelected.clear();
+  pickedFilesPage = Array.from(files || []).map((file, index) => ({
+    id: String(Date.now()) + "_" + index + "_" + file.name,
+    name: file.webkitRelativePath || file.name,
+    size: file.size || 0,
+    nativeFile: file
+  }));
+  renderPickedFilesPage();
+}
+
+function formatFilesPageSize(bytes){
+  if(bytes < 1024) return bytes + " B";
+  if(bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+  if(bytes < 1024 * 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+  return (bytes / (1024 * 1024 * 1024)).toFixed(1) + " GB";
+}
+
+function detectFilesPageType(name){
+  const lower = String(name || "").toLowerCase();
+  if(lower.endsWith(".pdf")) return "PDF";
+  if(lower.endsWith(".xlsx") || lower.endsWith(".xls") || lower.endsWith(".csv")) return "Excel";
+  if(lower.endsWith(".doc") || lower.endsWith(".docx")) return "Word";
+  if(lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png") || lower.endsWith(".webp")) return "صورة";
+  return "ملف";
+}
+
+function getFilesPageIcon(type){
+  if(type === "PDF") return "bi-file-earmark-pdf-fill";
+  if(type === "Excel") return "bi-file-earmark-excel-fill";
+  if(type === "Word") return "bi-file-earmark-word-fill";
+  if(type === "صورة") return "bi-file-earmark-image-fill";
+  return "bi-file-earmark-fill";
+}
+
+function getFilesPageColor(type){
+  if(type === "PDF") return "linear-gradient(135deg,#ef4444,#fb7185)";
+  if(type === "Excel") return "linear-gradient(135deg,#16a34a,#22c55e)";
+  if(type === "Word") return "linear-gradient(135deg,#2563eb,#60a5fa)";
+  if(type === "صورة") return "linear-gradient(135deg,#7c3aed,#a78bfa)";
+  return "linear-gradient(135deg,#475569,#94a3b8)";
+}
+
+function updatePickedFilesButton(){
+  const btn = document.getElementById("sendPickedFilesBtn");
+  if(!btn) return;
+  const count = pickedFilesSelected.size;
+  btn.disabled = count === 0;
+  btn.textContent = count ? `إرسال المحدد (${count})` : "إرسال المحدد";
+}
+
+function renderPickedFilesPage(){
+  const wrap = document.getElementById("filesPageList");
+  if(!wrap) return;
+
+  if(!pickedFilesPage.length){
+    wrap.className = "file-empty";
+    wrap.innerHTML = "ماكو ملفات مختارة حالياً";
+    updatePickedFilesButton();
+    return;
+  }
+
+  wrap.className = "";
+  wrap.innerHTML = pickedFilesPage.map(file => {
+    const checked = pickedFilesSelected.has(file.id) ? "checked" : "";
+    const type = detectFilesPageType(file.name);
+    const icon = getFilesPageIcon(type);
+    const color = getFilesPageColor(type);
+    return `
+      <div class="file-row-card" onclick="togglePickedFile('${file.id}')">
+        <input class="file-row-check" type="checkbox" ${checked} onclick="event.stopPropagation()" onchange="togglePickedFile('${file.id}')">
+        <div class="file-row-icon" style="background:${color};">
+          <i class="bi ${icon}"></i>
+        </div>
+        <div class="file-row-info">
+          <div class="file-row-name">${String(file.name || "")}</div>
+          <div class="file-row-meta">${formatFilesPageSize(file.size || 0)} • ${type}</div>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  updatePickedFilesButton();
+}
+
+function togglePickedFile(id){
+  if(pickedFilesSelected.has(id)) pickedFilesSelected.delete(id);
+  else pickedFilesSelected.add(id);
+  renderPickedFilesPage();
+}
+window.togglePickedFile = togglePickedFile;
+
+function selectAllPickedFiles(){
+  pickedFilesPage.forEach(file => pickedFilesSelected.add(file.id));
+  renderPickedFilesPage();
+}
+window.selectAllPickedFiles = selectAllPickedFiles;
+
+function clearPickedSelection(){
+  pickedFilesSelected.clear();
+  renderPickedFilesPage();
+}
+window.clearPickedSelection = clearPickedSelection;
+
+function clearPickedFiles(){
+  pickedFilesSelected.clear();
+  pickedFilesPage = [];
+  const input = document.getElementById("filesPageInput");
+  if(input) input.value = "";
+  renderPickedFilesPage();
+}
+window.clearPickedFiles = clearPickedFiles;
+
+async function sendPickedFiles(){
+  const selected = pickedFilesPage.filter(file => pickedFilesSelected.has(file.id)).map(x => x.nativeFile);
+  if(!selected.length){
+    alert("حدد ملف واحد على الأقل");
+    return;
+  }
+
+  try{
+    if(navigator.canShare && navigator.canShare({ files: selected })){
+      await navigator.share({
+        files: selected,
+        title: "مشاركة الملفات",
+        text: "الملفات المحددة"
+      });
+    }else{
+      alert("المشاركة المباشرة غير مدعومة هنا");
+    }
+  }catch(error){
+    if(error && error.name !== "AbortError"){
+      alert("صار خطأ بالمشاركة");
+    }
+  }
+}
+window.sendPickedFiles = sendPickedFiles;
+
+const filesPageInput = document.getElementById("filesPageInput");
+if(filesPageInput){
+  filesPageInput.addEventListener("change", function(e){
+    normalizePickedFiles(e.target.files);
+  });
+}
+
+const folderPageInput = document.getElementById("folderPageInput");
+if(folderPageInput){
+  folderPageInput.addEventListener("change", function(e){
+    normalizePickedFiles(e.target.files);
+  });
+}
+
+
 await loadFirebaseCustomers();
 </script>
+
+
+<video id="keepAwakeVideo" loop muted playsinline style="position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;left:-9999px;top:-9999px;">
+  <source src="data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAAGZnJlZQAAAm1tZGF0AAACrgYF//+q
+3EXpvebZSLeWLNgg2SPu73gyNjQgLSBjb3JlIDE2NCByMzA5NSBiZWU0MDAwIC0gSC4yNjQvTVBFRy00IEFWQyBjb2RlYyAtIENvcHlsZWZ0IDIwMDMtMjAyMiAtIGh0dHA6Ly93d3cudmlkZW9sYW4ub3JnL3g yNjQuaHRtbCAtIG9wdGlvbnM6IGNhYmFjPTEgcmVmPTEgZGVibG9jaz0wOjA6MCBhbmFseXNlPTA6MCBtZT1kaWEgc3VibWU9MCBwc3k9MCBwc3lfcmQ9MC4wMDowLjAwIG1peGVkX3JlZj0wIG1lX3JhbmdlPTE2IGNocm9tYV9tZT0wIHRyZWxsaXM9MC A4eDhkY3Q9MCBjcW09MCBkZWFkem9uZT0yMSwxMSBmYXN0X3Bza2lwPTEgY2hyb21hX3FwX29mZnNldD0wIHRocmVhZHM9MSBsb29rYWhlYWRfdGhyZWFkcz0xIHNsaWNlZF90aHJlYWRzPTAgbnI9MCBkZWNpbWF0ZT0xIGludGVybGFjZWQ9MCBibHVyYXlfY29tcGF0PTA gY29uc3RyYWluZWRfaW50cmE9MCBiZnJhbWVzPTAgd2VpZ2h0cD0wIGtleWludD0xIGtleWludF9taW49MSBzY2VuZWN1dD0wIGludHJhX3JlZnJlc2g9MCByYz1jcnYgbWJ0cmVlPTAgY3JmPTUxLjAgcWNvbXA9MC42MCBxcG1pbj0wIHFwbWF4PTY5IHFwc3RlcD00IGlwX3JhdGlvPTEuNDAgYXE9MAAAABxpZHRzAAAAAAAAAABlAAAD6AAAABhpc28yYXZjMW1wNDEAAABsbW9vdgAAAGxtdmhkAAAAAAAAAAAAAAAAAAAD6AAABdwAAQAAAQAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAjR0cmFrAAAAXHRraGQAAAADAAAAAAAAAAAAAAABAAAAAAAAA+gAAAAAAABdwAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAQAAAAEAAAAAAAkZWR0cwAAABxlbHN0AAAAAAAAAAEAAAXcAAAEAAABAAAAAAGmbWRpYQAAACBtZGhkAAAAAAAAAAAAAAAAAAAyAAAAEABVxAAAAAAALWhkbHIAAAAAAAAAAHZpZGUAAAAAAAAAAAAAAABWaWRlb0hhbmRsZXIAAAAB/W1pbmYAAAAUdm1oZAAAAAEAAAAAAAAAAAAAACRkaW5mAAAAHGRyZWYAAAAAAAAAAQAAAAx1cmwgAAAAAQAAAa1zdGJsAAAA0XN0c2QAAAAAAAAAAQAAAMFhdmMxAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAQABAEgAAABIAAAAAAAAAAEVTGF2YzU5LjM3LjEwMAAAAAAAABj//wAAADVhdmNDAWQACv/hABdnZAAKrNlCBEAAAAMAEAAAAwA8DxIllgEABmjr48siwP34+AAAAAAQcGFzcAAAAAEAAAAUYml0cgAAAAAAAC4tAAAAABhzdHRzAAAAAAAAAAEAAAABAAACAAAAABRzdHNzAAAAAAAAAAEAAAABAAAAFHN0c2MAAAAAAAAAAQAAAAEAAAABAAAAAQAAABRzdHN6AAAAAAAAAHUAAAABAAAAFHN0Y28AAAAAAAAAAQAAADYAAABidWR0YQAAAFptZXRhAAAAAAAAACFoZGxyAAAAAAAAAABtZGlyYXBwbAAAAAAAAAAAAAAALWlsc3QAAAAlqXRvbwAAAB1kYXRhAAAAAQAAAABMYXZmNTkuMjcuMTAw" type="video/mp4">
+</video>
+
 
 </body>
 </html>
