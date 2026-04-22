@@ -737,7 +737,6 @@ const previewCustomer = document.getElementById("previewCustomer");
 const previewInvoice = document.getElementById("previewInvoice");
 
 const invoiceNumber = document.getElementById("invoiceNumber");
-const invoiceCustomer = document.getElementById("invoiceCustomer");
 
 const overlay = document.getElementById("searchOverlay");
 const searchInput = document.getElementById("searchInput");
@@ -804,7 +803,6 @@ function setBrand(brand, btn){
   btn.classList.add("active");
 
   previewBrand.textContent = brand;
-  invoiceCustomer.value = "";
   previewCustomer.textContent = "—";
   checkReadyState();
 }
@@ -979,7 +977,6 @@ function renderResults(list){
     div.innerText = item.name;
 
     div.onclick = () => {
-      invoiceCustomer.value = item.name;
       previewCustomer.textContent = item.name;
       checkReadyState();
       closeSearch();
@@ -1237,7 +1234,6 @@ function clearInvoiceForm(){
   selectedBrand = "";
 
   invoiceNumber.value = "";
-  invoiceCustomer.value = "";
 
   previewBrand.textContent = "—";
   previewCustomer.textContent = "—";
@@ -1283,7 +1279,7 @@ function simulateImport(type){
 
 async function sendInvoiceRequest(fileType) {
   const invoiceNo = invoiceNumber.value.trim();
-  const customerName = invoiceCustomer.value.trim();
+  const customerName = "";
   const brand = selectedBrand.trim();
 
   if (!invoiceNo) {
