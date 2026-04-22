@@ -1234,7 +1234,7 @@ body{
   
 
   
-  <div class="card" style="padding:14px;margin-bottom:15px;cursor:pointer;" onclick="openFilesPage()">
+  <div class="card" style="padding:14px;margin-bottom:15px;cursor:pointer;" onclick="openShortcutPDF()">
     <div style="display:flex;align-items:center;gap:12px;">
       <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#0d6efd,#4f8cff);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;">
         <i class="bi bi-folder2-open"></i>
@@ -2803,6 +2803,11 @@ function openFilesPage(){
   document.getElementById("pageFiles").classList.add("active");
 }
 window.openFilesPage = openFilesPage;
+
+function openShortcutPDF(){
+  window.location.href = "shortcuts://run-shortcut?name=pdf";
+}
+window.openShortcutPDF = openShortcutPDF;
 
 function backToMainPage(){
   document.getElementById("pageFiles").classList.remove("active");
