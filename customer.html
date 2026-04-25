@@ -1169,31 +1169,6 @@ async function saveCustomerCard(){
     return;
   }
 
-  if(customerNumber.value.trim().length !== 11){
-    alert("رقم الزبون لازم يكون 11 رقم");
-    return;
-  }
-
-  if(!governorateInput.value.trim()){
-    alert("اختر المحافظة");
-    return;
-  }
-
-  if(!selectedBrand){
-    alert("اختر البراند");
-    return;
-  }
-
-  if(!delegateSelect.value){
-    alert("اختر المندوب");
-    return;
-  }
-
-  if(!discountSelect.value){
-    alert("اختر الخصم");
-    return;
-  }
-
   saveBtn.disabled = true;
   saveBtn.textContent = "جاري الحفظ...";
 
@@ -1204,18 +1179,18 @@ async function saveCustomerCard(){
 
     const payload = {
       name: customerName.value.trim(),
-      number: customerNumber.value.trim(),
-      governorate: governorateInput.value.trim(),
-      brand: selectedBrand,
-      delegate: delegateSelect.value,
-      discount: discountSelect.value,
+      number: customerNumber.value.trim() || "",
+      governorate: governorateInput.value.trim() || "",
+      brand: selectedBrand || "",
+      delegate: delegateSelect.value || "",
+      discount: discountSelect.value || "",
       time: Date.now()
     };
 
     const requestId = await sendCustomerCardRequest(payload);
 
-updateStatus("new");
-watchCustomerCardStatus(requestId);
+    updateStatus("new");
+    watchCustomerCardStatus(requestId);
   }catch(error){
     updateStatus("error");
     resetStatusCard(2200);
@@ -1227,7 +1202,8 @@ watchCustomerCardStatus(requestId);
     }, 400);
   }
 }
-  let activeCustomerCardRequestId = null;
+
+let activeCustomerCardRequestId = null;
 let customerCardStatusUnsubscribe = null;
 
 function watchCustomerCardStatus(requestId){
