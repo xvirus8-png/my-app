@@ -671,8 +671,7 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, set, get, child, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
+import { getDatabase, ref, set, get, child, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 const app = initializeApp({
   apiKey: "AIzaSyDaQ7Ur6f7_ugSTy2_u0-gPEtUsFzhh82U",
   authDomain: "kashf-system.firebaseapp.com",
@@ -1152,9 +1151,16 @@ function clearForm(){
 }
 window.clearForm = clearForm;
 
-async function saveCustomerCardToFirebase(payload){
-  const id = Date.now();
-  await set(ref(db, "customerCards/" + id), payload);
+async function sendCustomerCardRequest(payload){
+  const requestId = Date.now();
+
+  await set(ref(db, "requests/customerCard/latest"), {
+    id: requestId,
+    status: "new",
+    ...payload
+  });
+
+  return requestId;
 }
 
 async function saveCustomerCard(){
@@ -1206,19 +1212,10 @@ async function saveCustomerCard(){
       time: Date.now()
     };
 
-    setTimeout(() => updateStatus("new"), 500);
-    setTimeout(() => updateStatus("processing"), 1200);
+    const requestId = await sendCustomerCardRequest(payload);
 
-    await new Promise(resolve => setTimeout(resolve, 1600));
-    await saveCustomerCardToFirebase(payload);
-
-    updateStatus("done");
-
-    setTimeout(() => {
-      clearForm();
-    }, 400);
-
-    resetStatusCard(1800);
+updateStatus("new");
+watchCustomerCardStatus(requestId);
   }catch(error){
     updateStatus("error");
     resetStatusCard(2200);
@@ -1229,6 +1226,52 @@ async function saveCustomerCard(){
       saveBtn.textContent = "حفظ";
     }, 400);
   }
+}
+  let activeCustomerCardRequestId = null;
+let customerCardStatusUnsubscribe = null;
+
+function watchCustomerCardStatus(requestId){
+  activeCustomerCardRequestId = requestId;
+
+  if(customerCardStatusUnsubscribe){
+    customerCardStatusUnsubscribe();
+    customerCardStatusUnsubscribe = null;
+  }
+
+  customerCardStatusUnsubscribe = onValue(ref(db, "requests/customerCard/latest"), snapshot => {
+    if(!snapshot.exists()) return;
+
+    const data = snapshot.val();
+
+    if(String(data.id) !== String(activeCustomerCardRequestId)) return;
+
+    if(data.status){
+      updateStatus(data.status);
+    }
+
+    if(data.message){
+      addStatusLog(data.message);
+    }
+
+    if(data.status === "done"){
+      setTimeout(() => clearForm(), 400);
+      resetStatusCard(1800);
+
+      if(customerCardStatusUnsubscribe){
+        customerCardStatusUnsubscribe();
+        customerCardStatusUnsubscribe = null;
+      }
+    }
+
+    if(data.status === "error"){
+      resetStatusCard(2200);
+
+      if(customerCardStatusUnsubscribe){
+        customerCardStatusUnsubscribe();
+        customerCardStatusUnsubscribe = null;
+      }
+    }
+  });
 }
 window.saveCustomerCard = saveCustomerCard;
 
