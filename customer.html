@@ -1163,7 +1163,36 @@ async function sendCustomerCardRequest(payload){
   return requestId;
 }
 
+async function saveCustomerCard(){
+  if(!customerName.value.trim()){
+    alert("ادخل اسم الزبون");
+    return;
+  }
 
+  if(customerNumber.value.trim().length !== 11){
+    alert("رقم الزبون لازم يكون 11 رقم");
+    return;
+  }
+
+  if(!governorateInput.value.trim()){
+    alert("اختر المحافظة");
+    return;
+  }
+
+  if(!selectedBrand){
+    alert("اختر البراند");
+    return;
+  }
+
+  if(!delegateSelect.value){
+    alert("اختر المندوب");
+    return;
+  }
+
+  if(!discountSelect.value){
+    alert("اختر الخصم");
+    return;
+  }
 
   saveBtn.disabled = true;
   saveBtn.textContent = "جاري الحفظ...";
@@ -1173,15 +1202,15 @@ async function sendCustomerCardRequest(payload){
     showStatusOverlay();
     updateStatus("sending");
 
-  const payload = {
-  name: customerName.value.trim(),
-  number: customerNumber.value.trim() || "",
-  governorate: governorateInput.value.trim() || "",
-  brand: selectedBrand,
-  delegate: delegateSelect.value || "",
-  discount: discountSelect.value || "",
-  time: Date.now()
-};
+    const payload = {
+      name: customerName.value.trim(),
+      number: customerNumber.value.trim(),
+      governorate: governorateInput.value.trim(),
+      brand: selectedBrand,
+      delegate: delegateSelect.value,
+      discount: discountSelect.value,
+      time: Date.now()
+    };
 
     const requestId = await sendCustomerCardRequest(payload);
 
